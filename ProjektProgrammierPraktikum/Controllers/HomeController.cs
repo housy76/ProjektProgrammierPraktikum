@@ -23,6 +23,11 @@ namespace ProjektProgrammierPraktikum.Controllers
         }
         //Test
 
+        public IActionResult TestController()
+        {
+            return View();
+        }
+
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
