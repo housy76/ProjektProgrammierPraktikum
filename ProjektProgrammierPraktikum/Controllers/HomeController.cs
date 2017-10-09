@@ -8,6 +8,7 @@ using ProjektProgrammierPraktikum.Models;
 
 namespace ProjektProgrammierPraktikum.Controllers
 {
+    //Testkommentar von Max
     public class HomeController : Controller
     {
         public IActionResult Index()
