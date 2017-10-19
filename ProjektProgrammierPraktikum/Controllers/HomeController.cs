@@ -22,10 +22,15 @@ namespace ProjektProgrammierPraktikum.Controllers
 
             return View();
         }
-        
+
         //Test
 
         public IActionResult TestController()
+        {
+            return View();
+        }
+
+        public IActionResult Startseite()
         {
             return View();
         }
