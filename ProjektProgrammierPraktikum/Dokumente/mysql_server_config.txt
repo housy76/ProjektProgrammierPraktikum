@@ -1,4 +1,12 @@
-﻿Um auf die MySQL datenbank auch über das Netzwerk
+﻿
+
+
+MySQL:
+User	root		PW:  test_1234
+User	project		PW:  test_1234		(create user 'project'@'localhost' identified by 'test_1234';)
+
+
+Um auf die MySQL datenbank auch über das Netzwerk
 zugreifen zu können sind folgende Schritte notwendig:
 
 http://www.sysadminslife.com/linux/quicktipp-mysql-externer-zugriff-erlauben-bind-address/
