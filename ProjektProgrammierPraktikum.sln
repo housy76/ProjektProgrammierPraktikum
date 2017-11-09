@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjektProgrammierPraktikum", "ProjektProgrammierPraktikum\ProjektProgrammierPraktikum.csproj", "{FFB46366-4538-41AC-A84F-4DE51FAD9AB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentToolData", "AppointmentToolData\AppointmentToolData.csproj", "{ED5704CD-FED1-49C3-9F1A-BD57ACACB277}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppointmentToolData", "AppointmentToolData\AppointmentToolData.csproj", "{ED5704CD-FED1-49C3-9F1A-BD57ACACB277}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
