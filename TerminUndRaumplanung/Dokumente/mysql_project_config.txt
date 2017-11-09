@@ -1,0 +1,6 @@
+﻿
+Changes in Project -> appsettings.json
+
+alter the connection string for the database connection like this:
+
+    "MvcMySqlTestContext": "Server=10.90.43.197;Database=project; user=project;password=test_1234"

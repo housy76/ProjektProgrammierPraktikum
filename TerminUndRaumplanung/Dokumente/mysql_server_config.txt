@@ -1,0 +1,112 @@
+﻿
+
+
+MySQL:
+User	root		PW:  test_1234
+User	project		PW:  test_1234		(create user 'project'@'localhost' identified by 'test_1234';)
+
+
+Um auf die MySQL datenbank auch über das Netzwerk
+zugreifen zu können sind folgende Schritte notwendig:
+
+http://www.sysadminslife.com/linux/quicktipp-mysql-externer-zugriff-erlauben-bind-address/
+
+
+Externen MySQL Zugriff in der my.cnf aktivieren:
+
+Der MySQL Server lauscht standardmäßig nur auf der localhost IP 
+Adresse (127.0.0.1). Folgender Eintrag in der my.cnf ist dafür 
+verantwortlich (/etc/my.cnf oder /etc/mysql/mysql.conf.d/mysqld.cnf):
+
+	bind-address = 127.0.0.1
+
+Um nun auch von anderen Rechnern auf den MySQL Server zugreifen 
+zu können, wird der „bind-address“ Eintrag geändert. 0.0.0.0 
+weist an, dass der MySQL Server auf alle, für ihn verfügbaren,
+IP Adressen lauscht:
+
+	bind-address = 0.0.0.0
+
+Mit „bind-address = 192.168.200.1“ kann der Server zB. auch konfiguriert
+werden, dass er nur über eine bestimmte IP Adresse verfügbar ist.
+
+MySQL Server neu starten, damit die Konfiguration übernommen wird:
+
+	/etc/init.d/mysql restart
+
+Verbindung überprüfen (mit einem telnet auf die IP Adresse/Hostname
+des Server und den MySQL Port 3306 kann überprüft werden ob der MySQL 
+Server korrekt antwortet):
+
+	telnet 192.168.200.1 3306
+
+
+
+
+Der standardmäßig eingerichtete user "root" hat nur per localhost
+Zugriff auf seine Datenbanken. 
+Deshalb muss sich dieser "lokale root" noch einen zweiten(!) 
+user "root" einrichten, der auch über das Netzwerk zugreifen darf.
+Der folgende Befehl muss im SQL Server ausgeführt werden!!!!
+	
+	mysql -u root -p
+	GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'  IDENTIFIED BY 'test_1234' WITH GRANT OPTION
+
+
+User für den externen Zugriff auf die MySQL Datenbank erlauben
+
+Der MySQL Server lässt nun grundsätzlich Verbindungen von anderen 
+(externen) IP Adressen zu, aber die Datenbank User müssen noch die 
+entsprechende Berechtigung erhalten.
+Auf die MySQL Konsole verbinden:
+
+mysql -u root -p
+
+folgende Befehle geben dem User (dein_user) die Berechtigung von jedem 
+Host aus (%) auf die Datenbank zuzugreifen:
+	
+	use mysql;
+	update user set host='%' where user='dein_user';
+	update db set host='%' where user='dein_user';
+
+Neuen MySQL Benutzer anlegen, damit externer Zugriff besteht (hier 
+wird ebenfalls das „%“ statt „localhost“ verwendet:
+
+	create user 'dein_user'@'%';
+
+
+
+MySQL Zugriff für bestimmte IP Adressen erlauben (MySQL IP Restriction)
+via iptables
+Den MySQL Zugriff kann man auch für bestimmte IP Adressen erlauben
+oder sperren. Hierzu behelfen wir uns anhand der Linux Firewall iptables.
+Unter Debian und den meisten Linux Distributionen ist iptables bereits 
+vorinstalliert.
+In folgender Regel wird definiert, dass auch der localhost weiterhin 
+auf den MySQL Dienst zugreifen darf:
+
+	iptables -A INPUT -i lo -p tcp --dport 3306 -j ACCEPT
+
+Mit folgenden Regeln wird der Zugriff (Port 3306) für die IP 
+Adressen 10.27.0.80 und 192.168.0.90 erlaubt und für alle anderen 
+gesperrt:
+
+	iptables -A INPUT -p tcp --dport 3306 -s 10.27.0.80 -j ACCEPT
+	iptables -A INPUT -p tcp --dport 3306 -s 192.168.0.90 -j ACCEPT
+	iptables -A INPUT -p tcp --dport 3306 -j REJECT --reject-with icmp-port-unreachable
+
+Wer sich nun fragt warum beim Sperrbefehl der Einsatz von REJECT 
+angewandt wird und nicht von DROP: Das hat den Grund, dass mit dem 
+REJECT die Verbindung schneller abgelehnt wird. Bei DROP wird die 
+Verbindung abgelehnt und der Client muss auf einen Timeout warten.
+Die iptables Regeln müssen nun noch dauerhaft gespeichert werden, 
+das sie sonst nach einem Reboot wieder vom System entfernt werden. 
+Anleitung zu: Iptables dauerhaft speichern
+Am einfachsten funktioniert das über das Programm „iptables-persistent“
+
+	apt-get install iptables-persistent
+
+Bei der Installation wird gefragt ob die Regel gleich in die 
+Konfigurationsdateien übernommen werden sollen. Das kann gleich 
+gemacht werden. Ansonsten befinden sich die Configfiles unter 
+/etc/iptables.
