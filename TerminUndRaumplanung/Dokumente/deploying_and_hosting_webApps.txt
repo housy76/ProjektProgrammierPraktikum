@@ -1,4 +1,4 @@
 ﻿
 #Link zur Anleitung um einen Linux .NetCore Webserver zu konfigurieren
 #und eine Anwendung darauf zu deployen
-https://docs.microsoft.com/en-us/aspnet/core/publishing/apache-proxy
+https://docs.microsoft.com/en-us/aspnet/core/publishing/linuxproduction?tabs=aspnetcore2x
