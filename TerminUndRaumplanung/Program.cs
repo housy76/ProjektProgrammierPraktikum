@@ -20,9 +20,7 @@ namespace TerminUndRaumplanung
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-            
-            //UseUrls is necessary for setting the web port for a fixed port to reach the application
-                .UseUrls("https://*:80")
+                .UseUrls("http://*:8080")
                 .Build();
     }
 }
