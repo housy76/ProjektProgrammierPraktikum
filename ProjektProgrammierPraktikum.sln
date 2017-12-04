@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TerminUndRaumplanung", "Ter
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppData", "AppData\AppData.csproj", "{CB14E94A-54D2-4B1E-8141-A6D6D47DF7D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppServices", "AppServices\AppServices.csproj", "{C2064F24-50BD-49D6-A910-F4BF3F1F8B13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{CB14E94A-54D2-4B1E-8141-A6D6D47DF7D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB14E94A-54D2-4B1E-8141-A6D6D47DF7D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB14E94A-54D2-4B1E-8141-A6D6D47DF7D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2064F24-50BD-49D6-A910-F4BF3F1F8B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2064F24-50BD-49D6-A910-F4BF3F1F8B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2064F24-50BD-49D6-A910-F4BF3F1F8B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2064F24-50BD-49D6-A910-F4BF3F1F8B13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
