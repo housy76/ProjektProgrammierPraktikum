@@ -1,8 +1,0 @@
-﻿IP:
-10.90.43.197
-
-User:
-vinf02
-
-Password:
-HShofVINF2017
