@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TerminUndRaumplanung.Data;
 using TerminUndRaumplanung.Models;
 using TerminUndRaumplanung.Services;
+using AppData;
+using AppServices;
 
 namespace TerminUndRaumplanung
 {
@@ -26,17 +23,22 @@ namespace TerminUndRaumplanung
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("MySqlConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
+            services.AddMvc();
+            services.AddSingleton(Configuration);
+            // so that AppointmentSurveyService is injected into controllers and other components that request IAppointmentSurvey
+            services.AddScoped<IAppointmentSurvey, AppointmentSurveyService>();
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddMvc();
+
+            services.AddDbContext<AppointmentContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("MySqlConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppointmentContext>()
+                .AddDefaultTokenProviders();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
