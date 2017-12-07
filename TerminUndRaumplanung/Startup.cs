@@ -32,7 +32,7 @@ namespace TerminUndRaumplanung
 
 
             services.AddDbContext<AppointmentContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(Configuration.GetConnectionString("MySqlConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppointmentContext>()
