@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using AppData;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using TerminUndRaumplanung.Services;
 
 namespace TerminUndRaumplanung.Services
 {

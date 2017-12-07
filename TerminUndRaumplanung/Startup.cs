@@ -4,10 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TerminUndRaumplanung.Models;
-using TerminUndRaumplanung.Services;
 using AppData;
 using AppServices;
+using AppData.Models;
 
 namespace TerminUndRaumplanung
 {
@@ -33,7 +32,7 @@ namespace TerminUndRaumplanung
 
 
             services.AddDbContext<AppointmentContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("MySqlConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppointmentContext>()

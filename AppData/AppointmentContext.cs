@@ -1,14 +1,13 @@
 ﻿using AppData.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AppData
 {
-    public class AppointmentContext : DbContext
+    public class AppointmentContext : IdentityDbContext<ApplicationUser>
     {
         public AppointmentContext(DbContextOptions options) : base(options) { }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<AppointmentSurvey> AppointmentSurveys { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Ressource> Ressources { get; set; }
