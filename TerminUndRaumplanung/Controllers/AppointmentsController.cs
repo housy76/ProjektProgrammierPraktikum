@@ -58,7 +58,8 @@ namespace TerminUndRaumplanung.Controllers
             var model = new Appointment
             {
                 StartTime = System.DateTime.Now,
-                EndTime = System.DateTime.Now,
+                
+                EndTime = System.DateTime.Now.AddHours(1),
                 Survey = _context
                                 .AppointmentSurveys
                                 .SingleOrDefault(s => s.Id == id)
