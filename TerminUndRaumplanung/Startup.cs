@@ -29,6 +29,8 @@ namespace TerminUndRaumplanung
             services.AddScoped<IAppointmentSurvey, AppointmentSurveyService>();
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IRessource, RessourceService>();
+            services.AddTransient<IBeamer, BeamerService>();
 
 
             services.AddDbContext<AppointmentContext>(options =>

@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20171207160514_Initial")]
-    partial class Initial
+    [Migration("20171213085527_ressources")]
+    partial class ressources
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -118,9 +118,13 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("EndTime");
 
+                    b.Property<int?>("RessourceId");
+
                     b.Property<DateTime>("StartTime");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RessourceId");
 
                     b.ToTable("BookedTimes");
                 });
@@ -130,16 +134,12 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("BookedTimesId");
-
                     b.Property<string>("Discriminator")
                         .IsRequired();
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookedTimesId");
 
                     b.ToTable("Ressources");
 
@@ -258,6 +258,7 @@ namespace AppData.Migrations
                 {
                     b.HasBaseType("AppData.Models.Ressource");
 
+                    b.Property<bool>("IsAvailable");
 
                     b.ToTable("Beamer");
 
@@ -286,11 +287,11 @@ namespace AppData.Migrations
                         .HasForeignKey("SurveyId");
                 });
 
-            modelBuilder.Entity("AppData.Models.Ressource", b =>
+            modelBuilder.Entity("AppData.Models.BookedTime", b =>
                 {
-                    b.HasOne("AppData.Models.BookedTime", "BookedTimes")
-                        .WithMany()
-                        .HasForeignKey("BookedTimesId");
+                    b.HasOne("AppData.Models.Ressource")
+                        .WithMany("BookedTimes")
+                        .HasForeignKey("RessourceId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
