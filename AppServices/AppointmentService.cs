@@ -55,9 +55,11 @@ namespace AppServices
                 .Ressources;
         }
 
-        public string GetRoom(int id)
+        //Simon
+        //changed entity type from string to Room
+        public Room GetRoom(int id)
         {
-            return
+            return 
                 GetAll()
                 .FirstOrDefault(a => a.Id == id)
                 .Room;

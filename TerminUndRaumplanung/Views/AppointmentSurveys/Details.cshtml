@@ -37,13 +37,9 @@
         <thead>
             <tr>
                 <th>
-
-                    @Html.ActionLink("Add Appointment", "Add", "Appointments", new { id = Model.SurveyId}, null)
-                    @*<a asp-controller="Appointments" 
-                       asp-action="Add" 
-                       get the survey id and hand it over to the other controller
-                       asp-route-id="@Model.SurveyId">Add Appointment
-                    </a>*@
+                    @*Simon*@
+                    @Html.ActionLink("Add Appointment", "Create", "Appointments", new { surveyId = Model.SurveyId}, null)
+                    
                 </th>
                 <th>Start Time</th>
                 <th>End Time</th>

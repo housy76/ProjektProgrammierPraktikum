@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20171213085527_ressources")]
-    partial class ressources
+    [Migration("20171213193622_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,13 +82,15 @@ namespace AppData.Migrations
 
                     b.Property<string>("Ressources");
 
-                    b.Property<string>("Room");
+                    b.Property<int?>("RoomId");
 
                     b.Property<DateTime>("StartTime");
 
                     b.Property<int?>("SurveyId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
 
                     b.HasIndex("SurveyId");
 
@@ -282,6 +284,10 @@ namespace AppData.Migrations
 
             modelBuilder.Entity("AppData.Models.Appointment", b =>
                 {
+                    b.HasOne("AppData.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId");
+
                     b.HasOne("AppData.Models.AppointmentSurvey", "Survey")
                         .WithMany("Appointments")
                         .HasForeignKey("SurveyId");

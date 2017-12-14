@@ -12,6 +12,12 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="hidden">
+                @Html.EditorFor(model => model.Survey.Id)
+            </div>
+            
+            
             <div class="form-group">
                 <label asp-for="StartTime" class="control-label"></label>
                 <input asp-for="StartTime" class="form-control" />
@@ -22,11 +28,17 @@
                 <input asp-for="EndTime" class="form-control" />
                 <span asp-validation-for="EndTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Room" class="control-label"></label>
-                <input asp-for="Room" class="form-control" />
-                <span asp-validation-for="Room" class="text-danger"></span>
+
+            
+            @*Simon*@
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Room.Name)
             </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Room.Name)
+                @Html.ValidationMessageFor(model => model.Room.Name)
+            </div>
+
             <div class="form-group">
                 <label asp-for="Ressources" class="control-label"></label>
                 <input asp-for="Ressources" class="form-control" />
