@@ -9,7 +9,10 @@ namespace AppData
     {
         IEnumerable<Appointment> GetAll();
         Appointment GetById(int id);
-        string GetRoom(int id);
+
+        //Simon
+        //changed entity type from string to Room
+        Room GetRoom(int id);
         string GetRessources(int id);
         DateTime GetStartTime(int id);
         DateTime GetEndTime(int id);

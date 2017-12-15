@@ -7,5 +7,6 @@ namespace AppData.Models
     public class Beamer : Ressource
     {
         //includes all entities from class ressource
+        public bool IsAvailable { get; set; }
     }
 }

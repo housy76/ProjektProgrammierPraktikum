@@ -7,10 +7,12 @@ namespace AppData
 {
     public interface IRessource
     {
-        IEnumerable<IRessource> GetAll();
+        void Add(Ressource newRessource);
+        IEnumerable<Ressource> GetAll();
         Ressource GetById(int id);
+        IEnumerable<Ressource> GetByName(string name);
         string GetName(int id);
-        BookedTime GetBookedTime(int id);
+        IEnumerable<BookedTime> GetBookedTimes(int id);
 
     }
 }

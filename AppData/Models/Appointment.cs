@@ -9,7 +9,10 @@ namespace AppData.Models
         public int Id { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public string Room { get; set; }
+
+        //Simon
+        //changed entity type from string to Room
+        public Room Room { get; set; }
         public string Ressources { get; set; }
 
         //Entity die die Referenz zum entsprechenden AppointmentSurvey Objekt

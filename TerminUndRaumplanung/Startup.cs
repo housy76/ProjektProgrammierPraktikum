@@ -22,13 +22,15 @@ namespace TerminUndRaumplanung
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            //Simon
             services.AddMvc();
             services.AddSingleton(Configuration);
             // so that AppointmentSurveyService is injected into controllers and other components that request IAppointmentSurvey
             services.AddScoped<IAppointmentSurvey, AppointmentSurveyService>();
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IRessource, RessourceService>();
+            services.AddTransient<IBeamer, BeamerService>();
 
 
             services.AddDbContext<AppointmentContext>(options =>

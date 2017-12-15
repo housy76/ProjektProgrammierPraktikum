@@ -50,10 +50,19 @@ user "root" einrichten, der auch über das Netzwerk zugreifen darf.
 Der folgende Befehl muss im SQL Server ausgeführt werden!!!!
 	
 	mysql -u root -p
-	GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'  IDENTIFIED BY 'test_1234' WITH GRANT OPTION
+	GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'  IDENTIFIED BY 'test_1234' WITH GRANT OPTION;
+	GRANT ALL PRIVILEGES ON *.* TO 'project'@'%'  IDENTIFIED BY 'test_1234' WITH GRANT OPTION;
 
 
 User für den externen Zugriff auf die MySQL Datenbank erlauben
+
+
+
+
+
+
+
+
 
 Der MySQL Server lässt nun grundsätzlich Verbindungen von anderen 
 (externen) IP Adressen zu, aber die Datenbank User müssen noch die 

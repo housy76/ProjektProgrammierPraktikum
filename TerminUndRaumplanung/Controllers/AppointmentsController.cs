@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppData;
 using AppData.Models;
-using Microsoft.AspNetCore.Routing;
-using TerminUndRaumplanung.Models;
 
 namespace TerminUndRaumplanung.Controllers
 {
@@ -45,56 +40,108 @@ namespace TerminUndRaumplanung.Controllers
             return View(appointment);
         }
 
-        //// GET: Appointments/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        ////// GET: Appointments/Create
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
 
 
-        //Add a New Appointment to an existing Survey
-        public IActionResult Add(int id)
+        ////Add a New Appointment to an existing Survey
+        //public IActionResult Add(int id)
+        //{
+        //    var model = new Appointment
+        //    {
+        //        StartTime = System.DateTime.Now,
+                
+        //        EndTime = System.DateTime.Now.AddHours(1),
+        //        Survey = _context
+        //                        .AppointmentSurveys
+        //                        .SingleOrDefault(s => s.Id == id)
+        //    };
+        //    return View(model);
+        //}
+
+
+        public IActionResult Create(int surveyId) 
+            //hand over the survey id from SurveyController or SurveyView
+            //parameter surveyId must not be named "id"!!! The second Create 
+            //Controller that stores the object into the database can't differentiate 
+            //between the Survey Id and the Appointment Id!
         {
             var model = new Appointment
             {
                 StartTime = System.DateTime.Now,
-                EndTime = System.DateTime.Now,
+                EndTime = System.DateTime.Now.AddHours(1),
                 Survey = _context
-                                .AppointmentSurveys
-                                .SingleOrDefault(s => s.Id == id)
+                    .AppointmentSurveys
+                    .SingleOrDefault(s => s.Id == surveyId)
             };
             return View(model);
         }
 
+
+
         // POST: Appointments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // To protect from overposting attacks, please enable the specific properties you want to 
+        // bind to, for more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-                    [Bind("Id,StartTime,EndTime,Room,Ressources")] Appointment appointment,
-                    [Bind("surveyId")] int? surveyId
+                    //Simon
+                    //binding now includes Room and Survey as direct object entities of 
+                    //Appointment with eager lodaing from the database
+            [Bind("Id,StartTime,EndTime,Room,Ressources,Survey")] Appointment appointment
             )
         {
-            appointment.Survey = _context.AppointmentSurveys.FirstOrDefault(s => s.Id == surveyId);
+            //get related Room Object from database and store it into the Appointment Object
+            appointment.Room = _context
+                                    .Rooms
+                                    .FirstOrDefault(r => r.Name.Contains(appointment.Room.Name));
+
+            //get related Survey object from database and store it into the Appointment object
+            appointment.Survey = _context
+                                    .AppointmentSurveys
+                                    .FirstOrDefault(s => s.Id == appointment.Survey.Id);
 
             if (ModelState.IsValid)
             {
                 _context.Add(appointment);
-                await _context.SaveChangesAsync(); 
-
-                return RedirectToAction(
-                    "Details",
-                    "AppointmentSurveys",
-                    //Man muss ein neues Objekt erzeugen, das wie die Variable der
-                    //empfangenden Methode des Controllers heißt.
-                    //Das Übergeben der id als direkte INT - Zahl funktioniert nicht.
-                    new { id = surveyId });
-
-                //return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             return View(appointment);
         }
+
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(
+        //            [Bind("Id,StartTime,EndTime,Ressources")] Appointment appointment,
+        //            [Bind("surveyId")] int? surveyId
+        //    )
+        //{
+        //    appointment.Survey = _context.AppointmentSurveys.FirstOrDefault(s => s.Id == surveyId);
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(appointment);
+        //        await _context.SaveChangesAsync(); 
+
+        //        return RedirectToAction(
+        //            "Details",
+        //            "AppointmentSurveys",
+        //            //Man muss ein neues Objekt erzeugen, das wie die Variable der
+        //            //empfangenden Methode des Controllers heißt.
+        //            //Das Übergeben der id als direkte INT - Zahl funktioniert nicht.
+        //            new { id = surveyId });
+
+        //        //return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(appointment);
+        //}
+
+
 
 
         //public async Task<IActionResult> Create(

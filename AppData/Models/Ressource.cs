@@ -8,7 +8,7 @@ namespace AppData.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public BookedTime BookedTimes { get; set; }
+        public IEnumerable<BookedTime> BookedTimes { get; set; }
 
     }
 }
