@@ -18,8 +18,8 @@ namespace AppData.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
             modelBuilder.Entity("AppData.Models.ApplicationUser", b =>
                 {
@@ -66,8 +66,7 @@ namespace AppData.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -165,8 +164,7 @@ namespace AppData.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -283,7 +281,7 @@ namespace AppData.Migrations
 
             modelBuilder.Entity("AppData.Models.Appointment", b =>
                 {
-                    b.HasOne("AppData.Models.Ressource", "Room")
+                    b.HasOne("AppData.Models.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId");
 
