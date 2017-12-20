@@ -13,9 +13,10 @@ namespace AppServices
         public Task SendEmailAsync(string emailAddress, string subject, string message)
         {
             // Command line argument must the the SMTP host.
-            SmtpClient client = new SmtpClient("smtp-2.hof-university.de");
-
-            client.Credentials = new NetworkCredential("vi-shummel", "#VV20151006");
+            SmtpClient client = new SmtpClient("smtp-2.hof-university.de")
+            {
+                Credentials = new NetworkCredential("vi-shummel", "#VV20151006")
+            };
 
             // Specify the e-mail sender.
             // Create a mailing address that includes a UTF8 character
@@ -32,9 +33,9 @@ namespace AppServices
             };
             // Include some non-ASCII characters in body and subject.
             string someArrows = new string(new char[] { '\u2190', '\u2191', '\u2192', '\u2193' });
-            mail.Body += Environment.NewLine + someArrows;
+            mail.Body += Environment.NewLine /*+ someArrows*/;
             mail.BodyEncoding = System.Text.Encoding.UTF8;
-            mail.Subject = subject + someArrows;
+            mail.Subject = subject /*+ someArrows*/;
             mail.SubjectEncoding = System.Text.Encoding.UTF8;
             // The userState can be any object that allows your callback 
             // method to identify this send operation.
