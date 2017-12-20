@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-TerminUndRaumplanung-A5B95606-B2FA-4AC3-8B37-A6C7145327DD</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\CustomProfile.pubxml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
@@ -26,6 +30,10 @@
   <ItemGroup>
     <ProjectReference Include="..\AppData\AppData.csproj" />
     <ProjectReference Include="..\AppServices\AppServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 </Project>
