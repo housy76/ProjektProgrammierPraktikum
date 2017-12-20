@@ -12,7 +12,7 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20171207162331_Initial")]
+    [Migration("20171220161112_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,13 +81,15 @@ namespace AppData.Migrations
 
                     b.Property<string>("Ressources");
 
-                    b.Property<string>("Room");
+                    b.Property<int?>("RoomId");
 
                     b.Property<DateTime>("StartTime");
 
-                    b.Property<int?>("SurveyId");
+                    b.Property<int>("SurveyId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
 
                     b.HasIndex("SurveyId");
 
@@ -99,11 +101,14 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Creator");
+                    b.Property<string>("Creator")
+                        .IsRequired();
 
-                    b.Property<string>("Members");
+                    b.Property<string>("Members")
+                        .IsRequired();
 
-                    b.Property<string>("Subject");
+                    b.Property<string>("Subject")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -117,9 +122,13 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("EndTime");
 
+                    b.Property<int?>("RessourceId");
+
                     b.Property<DateTime>("StartTime");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RessourceId");
 
                     b.ToTable("BookedTimes");
                 });
@@ -129,16 +138,13 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("BookedTimesId");
-
                     b.Property<string>("Discriminator")
                         .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BookedTimesId");
 
                     b.ToTable("Ressources");
 
@@ -256,6 +262,7 @@ namespace AppData.Migrations
                 {
                     b.HasBaseType("AppData.Models.Ressource");
 
+                    b.Property<bool>("IsAvailable");
 
                     b.ToTable("Beamer");
 
@@ -279,16 +286,21 @@ namespace AppData.Migrations
 
             modelBuilder.Entity("AppData.Models.Appointment", b =>
                 {
+                    b.HasOne("AppData.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId");
+
                     b.HasOne("AppData.Models.AppointmentSurvey", "Survey")
                         .WithMany("Appointments")
-                        .HasForeignKey("SurveyId");
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("AppData.Models.Ressource", b =>
+            modelBuilder.Entity("AppData.Models.BookedTime", b =>
                 {
-                    b.HasOne("AppData.Models.BookedTime", "BookedTimes")
-                        .WithMany()
-                        .HasForeignKey("BookedTimesId");
+                    b.HasOne("AppData.Models.Ressource")
+                        .WithMany("BookedTimes")
+                        .HasForeignKey("RessourceId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

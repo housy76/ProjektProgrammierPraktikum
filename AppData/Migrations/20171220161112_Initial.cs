@@ -15,9 +15,9 @@ namespace AppData.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Creator = table.Column<string>(nullable: true),
-                    Members = table.Column<string>(nullable: true),
-                    Subject = table.Column<string>(nullable: true)
+                    Creator = table.Column<string>(nullable: false),
+                    Members = table.Column<string>(nullable: false),
+                    Subject = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,40 +64,21 @@ namespace AppData.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookedTimes",
+                name: "Ressources",
                 columns: table => new
                 {
+                    IsAvailable = table.Column<bool>(nullable: true),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    StartTime = table.Column<DateTime>(nullable: false)
+                    Discriminator = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    BeamerIsAvailable = table.Column<bool>(nullable: true),
+                    NumberOfSeats = table.Column<int>(nullable: true),
+                    SpeakerIsAvailable = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookedTimes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    Ressources = table.Column<string>(nullable: true),
-                    Room = table.Column<string>(nullable: true),
-                    StartTime = table.Column<DateTime>(nullable: false),
-                    SurveyId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointments_AppointmentSurveys_SurveyId",
-                        column: x => x.SurveyId,
-                        principalTable: "AppointmentSurveys",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_Ressources", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -207,28 +188,59 @@ namespace AppData.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ressources",
+                name: "Appointments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    BookedTimesId = table.Column<int>(nullable: true),
-                    Discriminator = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    BeamerIsAvailable = table.Column<bool>(nullable: true),
-                    NumberOfSeats = table.Column<int>(nullable: true),
-                    SpeakerIsAvailable = table.Column<bool>(nullable: true)
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    Ressources = table.Column<string>(nullable: true),
+                    RoomId = table.Column<int>(nullable: true),
+                    StartTime = table.Column<DateTime>(nullable: false),
+                    SurveyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ressources", x => x.Id);
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ressources_BookedTimes_BookedTimesId",
-                        column: x => x.BookedTimesId,
-                        principalTable: "BookedTimes",
+                        name: "FK_Appointments_Ressources_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Ressources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Appointments_AppointmentSurveys_SurveyId",
+                        column: x => x.SurveyId,
+                        principalTable: "AppointmentSurveys",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookedTimes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    RessourceId = table.Column<int>(nullable: true),
+                    StartTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookedTimes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookedTimes_Ressources_RessourceId",
+                        column: x => x.RessourceId,
+                        principalTable: "Ressources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Appointments_RoomId",
+                table: "Appointments",
+                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_SurveyId",
@@ -273,9 +285,9 @@ namespace AppData.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ressources_BookedTimesId",
-                table: "Ressources",
-                column: "BookedTimesId");
+                name: "IX_BookedTimes_RessourceId",
+                table: "BookedTimes",
+                column: "RessourceId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -299,7 +311,7 @@ namespace AppData.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Ressources");
+                name: "BookedTimes");
 
             migrationBuilder.DropTable(
                 name: "AppointmentSurveys");
@@ -311,7 +323,7 @@ namespace AppData.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "BookedTimes");
+                name: "Ressources");
         }
     }
 }

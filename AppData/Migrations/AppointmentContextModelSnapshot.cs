@@ -84,7 +84,7 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("StartTime");
 
-                    b.Property<int?>("SurveyId");
+                    b.Property<int>("SurveyId");
 
                     b.HasKey("Id");
 
@@ -100,11 +100,14 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Creator");
+                    b.Property<string>("Creator")
+                        .IsRequired();
 
-                    b.Property<string>("Members");
+                    b.Property<string>("Members")
+                        .IsRequired();
 
-                    b.Property<string>("Subject");
+                    b.Property<string>("Subject")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -137,7 +140,8 @@ namespace AppData.Migrations
                     b.Property<string>("Discriminator")
                         .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -287,7 +291,8 @@ namespace AppData.Migrations
 
                     b.HasOne("AppData.Models.AppointmentSurvey", "Survey")
                         .WithMany("Appointments")
-                        .HasForeignKey("SurveyId");
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AppData.Models.BookedTime", b =>
