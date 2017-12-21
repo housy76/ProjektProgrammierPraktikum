@@ -19,7 +19,10 @@ namespace TerminUndRaumplanung.Controllers
         // GET: Appointments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Appointments.ToListAsync());
+            return View(await _context
+                .Appointments
+                .Include(a => a.Room)
+                .ToListAsync());
         }
 
         // GET: Appointments/Details/5
@@ -166,8 +169,10 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
+            //Simon
             var appointment = await _context.Appointments
                 .Include(a => a.Survey)
+                .Include(a => a.Room)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (appointment == null)
