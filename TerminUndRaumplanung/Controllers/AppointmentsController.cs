@@ -56,7 +56,7 @@ namespace TerminUndRaumplanung.Controllers
         //    var model = new Appointment
         //    {
         //        StartTime = System.DateTime.Now,
-                
+
         //        EndTime = System.DateTime.Now.AddHours(1),
         //        Survey = _context
         //                        .AppointmentSurveys
@@ -66,11 +66,11 @@ namespace TerminUndRaumplanung.Controllers
         //}
 
 
-        public IActionResult Create(int surveyId) 
-            //hand over the survey id from SurveyController or SurveyView
-            //parameter surveyId must not be named "id"!!! The second Create 
-            //Controller that stores the object into the database can't differentiate 
-            //between the Survey Id and the Appointment Id!
+        public IActionResult Create(int surveyId)
+        //hand over the survey id from SurveyController or SurveyView
+        //parameter surveyId must not be named "id"!!! The second Create 
+        //Controller that stores the object into the database can't differentiate 
+        //between the Survey Id and the Appointment Id!
         {
             var model = new Appointment
             {
@@ -91,9 +91,9 @@ namespace TerminUndRaumplanung.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-                    //Simon
-                    //binding now includes Room and Survey as direct object entities of 
-                    //Appointment with eager lodaing from the database
+            //Simon
+            //binding now includes Room and Survey as direct object entities of 
+            //Appointment with eager lodaing from the database
             [Bind("Id,StartTime,EndTime,Room,Ressources,Survey")] Appointment appointment
             )
         {
@@ -103,16 +103,26 @@ namespace TerminUndRaumplanung.Controllers
                                     .FirstOrDefault(r => r.Name.Contains(appointment.Room.Name));
 
             //get related Survey object from database and store it into the Appointment object
+            //_context.AppointmentSurveys.Where(s => s.Id == appointment.Survey.Id).Load();
             appointment.Survey = _context
                                     .AppointmentSurveys
                                     .FirstOrDefault(s => s.Id == appointment.Survey.Id);
+
+            //After model binding and validation are complete, you may want to repeat parts
+            //of it. For example, a user may have entered text in a field expecting an 
+            //integer, or you may need to compute a value for a model's property.
+            ModelState.Clear();
+            TryValidateModel(appointment);
 
             if (ModelState.IsValid)
             {
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //Simon
+                return RedirectToAction("Details", "AppointmentSurveys", new { id = appointment.Survey.Id });
+                //return RedirectToAction(nameof(Index));
             }
+
             return View(appointment);
         }
 
@@ -190,17 +200,17 @@ namespace TerminUndRaumplanung.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, 
+        public async Task<IActionResult> Edit(int id,
                     //Binding für das appointment Objekt wird benötigt!!
                     //alle Entities des Bindings werden im Update-Befehl aktualisiert
-                    
+
                     //Ohne Binding wird das Gesamte Objekt mit allen Entities aktualisiert.
                     //Dabei werden aber durch das Lazy Loading aus der Datenbank die
                     //zugehörigen Objekte, die als Entities vorhanden sind nicht automaitsch
                     //mitgeladen und sind somit null. Beim Update werden diese aber auch 
                     //mitaktualisiert und sind anschließend mit null in der Datenbank
-                    [Bind("Id,StartTime,EndTime,Room,Ressources")] Appointment appointment, 
-                    
+                    [Bind("Id,StartTime,EndTime,Room,Ressources")] Appointment appointment,
+
                     //zusätzlicher Übergabeparameter für die SurveyId dieses Appointments
                     //wird benötigt, um nach dem Speichern wieder auf die Ansicht der 
                     //Survey zurück zu kehren, von der man gekommen ist.
@@ -232,9 +242,9 @@ namespace TerminUndRaumplanung.Controllers
                 }
 
                 return RedirectToAction(
-                    "Details", 
+                    "Details",
                     "AppointmentSurveys",
-                    
+
                     //Man muss ein neues Objekt erzeugen, das wie die Variable der
                     //empfangenden Methode des Controllers heißt.
                     //Das Übergeben der id als direkte INT - Zahl funktioniert nicht.
@@ -243,7 +253,7 @@ namespace TerminUndRaumplanung.Controllers
             return View(appointment);
         }
 
-        
+
         // GET: Appointments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

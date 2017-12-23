@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20171219110414_LocalSQL")]
-    partial class LocalSQL
+    [Migration("20171223135650_FluentValidation2")]
+    partial class FluentValidation2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,11 +82,11 @@ namespace AppData.Migrations
 
                     b.Property<string>("Ressources");
 
-                    b.Property<int?>("RoomId");
+                    b.Property<int>("RoomId");
 
                     b.Property<DateTime>("StartTime");
 
-                    b.Property<int?>("SurveyId");
+                    b.Property<int>("SurveyId");
 
                     b.HasKey("Id");
 
@@ -102,11 +102,14 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Creator");
+                    b.Property<string>("Creator")
+                        .IsRequired();
 
-                    b.Property<string>("Members");
+                    b.Property<string>("Members")
+                        .IsRequired();
 
-                    b.Property<string>("Subject");
+                    b.Property<string>("Subject")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -139,7 +142,8 @@ namespace AppData.Migrations
                     b.Property<string>("Discriminator")
                         .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -286,11 +290,13 @@ namespace AppData.Migrations
                 {
                     b.HasOne("AppData.Models.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AppData.Models.AppointmentSurvey", "Survey")
                         .WithMany("Appointments")
-                        .HasForeignKey("SurveyId");
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AppData.Models.BookedTime", b =>

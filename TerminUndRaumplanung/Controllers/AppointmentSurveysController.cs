@@ -65,7 +65,8 @@ namespace TerminUndRaumplanung.Controllers
             {
                 _context.Add(appointmentSurvey);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //redirect to the detail view of this survey
+                return RedirectToAction("Details", "AppointmentSurveys", new { id = appointmentSurvey.Id });
             }
             return View(appointmentSurvey);
         }

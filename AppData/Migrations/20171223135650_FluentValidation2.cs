@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class InitialWithRessources : Migration
+    public partial class FluentValidation2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,10 +14,10 @@ namespace AppData.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Creator = table.Column<string>(nullable: true),
-                    Members = table.Column<string>(nullable: true),
-                    Subject = table.Column<string>(nullable: true)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Creator = table.Column<string>(nullable: false),
+                    Members = table.Column<string>(nullable: false),
+                    Subject = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,9 +69,9 @@ namespace AppData.Migrations
                 {
                     IsAvailable = table.Column<bool>(nullable: true),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Discriminator = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
                     BeamerIsAvailable = table.Column<bool>(nullable: true),
                     NumberOfSeats = table.Column<int>(nullable: true),
                     SpeakerIsAvailable = table.Column<bool>(nullable: true)
@@ -86,7 +86,7 @@ namespace AppData.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     RoleId = table.Column<string>(nullable: false)
@@ -107,7 +107,7 @@ namespace AppData.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
@@ -192,12 +192,12 @@ namespace AppData.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EndTime = table.Column<DateTime>(nullable: false),
                     Ressources = table.Column<string>(nullable: true),
-                    RoomId = table.Column<int>(nullable: true),
+                    RoomId = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
-                    SurveyId = table.Column<int>(nullable: true)
+                    SurveyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -207,13 +207,13 @@ namespace AppData.Migrations
                         column: x => x.RoomId,
                         principalTable: "Ressources",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Appointments_AppointmentSurveys_SurveyId",
                         column: x => x.SurveyId,
                         principalTable: "AppointmentSurveys",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,7 +221,7 @@ namespace AppData.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EndTime = table.Column<DateTime>(nullable: false),
                     RessourceId = table.Column<int>(nullable: true),
                     StartTime = table.Column<DateTime>(nullable: false)
@@ -256,7 +256,8 @@ namespace AppData.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -282,7 +283,8 @@ namespace AppData.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookedTimes_RessourceId",
