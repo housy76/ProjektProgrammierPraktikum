@@ -18,8 +18,8 @@ namespace AppData.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("AppData.Models.ApplicationUser", b =>
                 {
@@ -66,7 +66,8 @@ namespace AppData.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -80,7 +81,7 @@ namespace AppData.Migrations
 
                     b.Property<string>("Ressources");
 
-                    b.Property<int?>("RoomId");
+                    b.Property<int>("RoomId");
 
                     b.Property<DateTime>("StartTime");
 
@@ -168,7 +169,8 @@ namespace AppData.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex");
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -287,7 +289,8 @@ namespace AppData.Migrations
                 {
                     b.HasOne("AppData.Models.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AppData.Models.AppointmentSurvey", "Survey")
                         .WithMany("Appointments")

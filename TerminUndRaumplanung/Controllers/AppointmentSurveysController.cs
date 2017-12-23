@@ -25,20 +25,24 @@ namespace TerminUndRaumplanung.Controllers
             return View(await _context.AppointmentSurveys.ToListAsync());
         }
 
+
         // GET: AppointmentSurveys/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             var survey = await _context.AppointmentSurveys
                 .SingleOrDefaultAsync(m => m.Id == id);
 
+            //Simon
             var model = new SurveyDetailModel
             {
                 SurveyId = survey.Id,
                 Subject = survey.Subject,
                 Creator = survey.Creator,
                 Members = survey.Members,
-                Appointments = _survey.GetAppointments(survey.Id),
-
+                Appointments = _context
+                                    .Appointments
+                                    .Include(a => a.Room)
+                                    .Where(a => a.Survey.Id == survey.Id)
             };
 
             return View(model);
@@ -61,7 +65,8 @@ namespace TerminUndRaumplanung.Controllers
             {
                 _context.Add(appointmentSurvey);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //redirect to the detail view of this survey
+                return RedirectToAction("Details", "AppointmentSurveys", new { id = appointmentSurvey.Id });
             }
             return View(appointmentSurvey);
         }

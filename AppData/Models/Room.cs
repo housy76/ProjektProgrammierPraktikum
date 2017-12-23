@@ -9,12 +9,13 @@ namespace AppData.Models
     {
 
         [Required]
+        [Display(Name = "Anzahl Sitzplätze")]
         public int NumberOfSeats { get; set; }
 
-        [Required]
+        [Display(Name = "Beamer verfügbar")]
         public bool BeamerIsAvailable { get; set; }
 
-        [Required]
+        [Display(Name = "Lautsprecher verfügbar")]
         public bool SpeakerIsAvailable { get; set; }
     }
 }

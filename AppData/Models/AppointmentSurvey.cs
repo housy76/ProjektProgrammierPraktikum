@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace AppData.Models
 {
@@ -9,16 +8,16 @@ namespace AppData.Models
     {
         public int Id { get; set; }
 
-
         [Required]
+        [Display(Name = "Betreff")]
         public string Subject { get; set; }
 
-
         [Required]
+        [Display(Name = "Ersteller")]
         public string Creator { get; set; }
 
-
         [Required]
+        [Display(Name = "Teilnehmer")]
         public string Members { get; set; }
         public IEnumerable<Appointment> Appointments { get; set; }
     }
