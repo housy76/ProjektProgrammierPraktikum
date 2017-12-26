@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AppData.Models
@@ -20,8 +21,8 @@ namespace AppData.Models
         [Required]
         public Room Room { get; set; }
 
-        [Display(Name = "Ressourcen")]
-        public string Ressources { get; set; }
+        [Display(Name = "Weitere Ressourcen")]
+        public IEnumerable<Ressource> Ressources { get; set; }
 
         //Entity die die Referenz zum entsprechenden AppointmentSurvey Objekt
         //darstellt wurde in Survey umbenannt. Es handelt sich hier um ein 

@@ -12,38 +12,43 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
+
             <div class="hidden">
                 @Html.EditorFor(model => model.Survey.Id)
             </div>
-            
-            
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
-                <span asp-validation-for="StartTime" class="text-danger"></span>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.StartTime)
             </div>
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
-                <span asp-validation-for="EndTime" class="text-danger"></span>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.StartTime)
+                @Html.ValidationMessageFor(model => model.StartTime)
             </div>
 
-            
-            @*Simon*@
             <div class="editor-lable">
-                @Html.LabelFor(model => model.Room.Name)
+                @Html.LabelFor(model => model.EndTime)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.EndTime)
+                @Html.ValidationMessageFor(model => model.EndTime)
+            </div>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Room)
             </div>
             <div class="editor-field">
                 @Html.EditorFor(model => model.Room.Name)
-                @Html.ValidationMessageFor(model => model.Room.Name)
+                @Html.ValidationMessageFor(model => model.Room)
             </div>
 
-            <div class="form-group">
-                <label asp-for="Ressources" class="control-label"></label>
-                <input asp-for="Ressources" class="form-control" />
-                <span asp-validation-for="Ressources" class="text-danger"></span>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Ressources)
             </div>
+            @*<div class="editor-field">
+                @Html.EditorFor(model => model.Ressources)
+                @Html.ValidationMessageFor(model => model.Ressources)
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>

@@ -26,11 +26,13 @@ namespace TerminUndRaumplanung
             services.AddMvc();
             services.AddSingleton(Configuration);
             // so that AppointmentSurveyService is injected into controllers and other components that request IAppointmentSurvey
+            services.AddTransient<IAppointment, AppointmentService>();
             services.AddScoped<IAppointmentSurvey, AppointmentSurveyService>();
-            // Add application services.
+            services.AddTransient<IBeamer, BeamerService>();
+            services.AddTransient<IBookedTime, BookedTimeService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IRessource, RessourceService>();
-            services.AddTransient<IBeamer, BeamerService>();
+            services.AddTransient<IRoom, RoomService>();
 
 
             services.AddDbContext<AppointmentContext>(options =>

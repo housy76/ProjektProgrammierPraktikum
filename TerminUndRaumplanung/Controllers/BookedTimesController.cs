@@ -10,22 +10,26 @@ using AppData.Models;
 
 namespace TerminUndRaumplanung.Controllers
 {
-    public class RoomsController : Controller
+    public class BookedTimesController : Controller
     {
         private readonly AppointmentContext _context;
 
-        public RoomsController(AppointmentContext context)
+        public BookedTimesController(AppointmentContext context)
         {
             _context = context;
         }
 
-        // GET: Rooms
+        // GET: BookedTimes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Rooms.ToListAsync());
+            return View(await _context
+                .BookedTimes
+                .Include(b => b.Ressource)
+                .ToListAsync()
+                );
         }
 
-        // GET: Rooms/Details/5
+        // GET: BookedTimes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,40 +37,39 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms
-                .Include(m => m.BookedTimes)
+            var bookedTime = await _context.BookedTimes
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (room == null)
+            if (bookedTime == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(bookedTime);
         }
 
-        // GET: Rooms/Create
+        // GET: BookedTimes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Rooms/Create
+        // POST: BookedTimes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("NumberOfSeats,BeamerIsAvailable,SpeakerIsAvailable,Id,Name")] Room room)
+        public async Task<IActionResult> Create([Bind("Id,StartTime,EndTime")] BookedTime bookedTime)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(room);
+                _context.Add(bookedTime);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(room);
+            return View(bookedTime);
         }
 
-        // GET: Rooms/Edit/5
+        // GET: BookedTimes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,22 +77,22 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms.SingleOrDefaultAsync(m => m.Id == id);
-            if (room == null)
+            var bookedTime = await _context.BookedTimes.SingleOrDefaultAsync(m => m.Id == id);
+            if (bookedTime == null)
             {
                 return NotFound();
             }
-            return View(room);
+            return View(bookedTime);
         }
 
-        // POST: Rooms/Edit/5
+        // POST: BookedTimes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("NumberOfSeats,BeamerIsAvailable,SpeakerIsAvailable,Id,Name")] Room room)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,StartTime,EndTime")] BookedTime bookedTime)
         {
-            if (id != room.Id)
+            if (id != bookedTime.Id)
             {
                 return NotFound();
             }
@@ -98,12 +101,12 @@ namespace TerminUndRaumplanung.Controllers
             {
                 try
                 {
-                    _context.Update(room);
+                    _context.Update(bookedTime);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoomExists(room.Id))
+                    if (!BookedTimeExists(bookedTime.Id))
                     {
                         return NotFound();
                     }
@@ -114,10 +117,10 @@ namespace TerminUndRaumplanung.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(room);
+            return View(bookedTime);
         }
 
-        // GET: Rooms/Delete/5
+        // GET: BookedTimes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,30 +128,30 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Rooms
+            var bookedTime = await _context.BookedTimes
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (room == null)
+            if (bookedTime == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(bookedTime);
         }
 
-        // POST: Rooms/Delete/5
+        // POST: BookedTimes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var room = await _context.Rooms.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Rooms.Remove(room);
+            var bookedTime = await _context.BookedTimes.SingleOrDefaultAsync(m => m.Id == id);
+            _context.BookedTimes.Remove(bookedTime);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RoomExists(int id)
+        private bool BookedTimeExists(int id)
         {
-            return _context.Rooms.Any(e => e.Id == id);
+            return _context.BookedTimes.Any(e => e.Id == id);
         }
     }
 }

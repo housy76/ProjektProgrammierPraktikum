@@ -36,6 +36,39 @@
         </dd>
     </dl>
 </div>
+
+
+<div>
+    <h4>BookedTimes for this Room</h4>
+    <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>Edit</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bookedTime in @Model.BookedTimes)
+            {
+
+                <tr>
+                    <td>
+                        <a asp-controller="Appointments" asp-action="Edit" asp-route-id="@bookedTime.Id">Edit</a>
+                    </td>
+                    <td>
+                        @bookedTime.StartTime
+                    </td>
+                    <td>
+                        @bookedTime.EndTime
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
