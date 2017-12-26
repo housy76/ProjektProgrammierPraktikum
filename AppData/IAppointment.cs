@@ -13,7 +13,7 @@ namespace AppData
         //Simon
         //changed entity type from string to Room
         Room GetRoom(int id);
-        string GetRessources(int id);
+        IEnumerable<Ressource> GetRessources(int id);
         DateTime GetStartTime(int id);
         DateTime GetEndTime(int id);
         AppointmentSurvey GetSurvey(int id);

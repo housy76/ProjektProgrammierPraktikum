@@ -26,16 +26,17 @@ namespace AppServices
         public IEnumerable<Appointment> GetAll()
         {
             return _context.Appointments
-                .Include(a => a.StartTime);
+                .Include(a => a.Id)
+                .Include(a => a.StartTime)
+                .Include(a => a.EndTime)
+                .Include(a => a.Ressources)
+                .Include(a => a.Room)
+                .Include(a => a.Survey);
         }
 
         public Appointment GetById(int id)
         {
-            return _context.Appointments
-                .Include(a => a.StartTime)
-                .Include(a => a.EndTime)
-                .Include(a => a.Room)
-                .Include(a => a.Ressources)
+            return GetAll()
                 .FirstOrDefault(a => a.Id == id);
         }
 
@@ -47,7 +48,7 @@ namespace AppServices
                 .EndTime;
         }
 
-        public string GetRessources(int id)
+        public IEnumerable<Ressource> GetRessources(int id)
         {
             return
                 GetAll()
@@ -70,16 +71,11 @@ namespace AppServices
             return
                 GetAll()
                 .FirstOrDefault(a => a.Id == id)
-                .StartTime;
+                .EndTime;
         }
 
         public AppointmentSurvey GetSurvey(int id)
         {
-            //return
-            //    GetAll()
-            //    .FirstOrDefault(a => a.Id == id)
-            //    .SurveyId;
-
             return _context
                 .AppointmentSurveys
                 .FirstOrDefault(s => s.Id == id);

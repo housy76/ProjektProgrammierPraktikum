@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class FluentValidation2 : Migration
+    public partial class ICollection : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,24 +61,6 @@ namespace AppData.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ressources",
-                columns: table => new
-                {
-                    IsAvailable = table.Column<bool>(nullable: true),
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Discriminator = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    BeamerIsAvailable = table.Column<bool>(nullable: true),
-                    NumberOfSeats = table.Column<int>(nullable: true),
-                    SpeakerIsAvailable = table.Column<bool>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ressources", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,13 +170,31 @@ namespace AppData.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Ressources",
+                columns: table => new
+                {
+                    IsAvailable = table.Column<bool>(nullable: true),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AppointmentId = table.Column<int>(nullable: true),
+                    Discriminator = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    BeamerIsAvailable = table.Column<bool>(nullable: true),
+                    NumberOfSeats = table.Column<int>(nullable: true),
+                    SpeakerIsAvailable = table.Column<bool>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ressources", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EndTime = table.Column<DateTime>(nullable: false),
-                    Ressources = table.Column<string>(nullable: true),
                     RoomId = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     SurveyId = table.Column<int>(nullable: false)
@@ -223,7 +223,7 @@ namespace AppData.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EndTime = table.Column<DateTime>(nullable: false),
-                    RessourceId = table.Column<int>(nullable: true),
+                    RessourceId = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -234,7 +234,7 @@ namespace AppData.Migrations
                         column: x => x.RessourceId,
                         principalTable: "Ressources",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -290,12 +290,26 @@ namespace AppData.Migrations
                 name: "IX_BookedTimes_RessourceId",
                 table: "BookedTimes",
                 column: "RessourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ressources_AppointmentId",
+                table: "Ressources",
+                column: "AppointmentId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Ressources_Appointments_AppointmentId",
+                table: "Ressources",
+                column: "AppointmentId",
+                principalTable: "Appointments",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Appointments");
+            migrationBuilder.DropForeignKey(
+                name: "FK_Appointments_Ressources_RoomId",
+                table: "Appointments");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -316,9 +330,6 @@ namespace AppData.Migrations
                 name: "BookedTimes");
 
             migrationBuilder.DropTable(
-                name: "AppointmentSurveys");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -326,6 +337,12 @@ namespace AppData.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ressources");
+
+            migrationBuilder.DropTable(
+                name: "Appointments");
+
+            migrationBuilder.DropTable(
+                name: "AppointmentSurveys");
         }
     }
 }

@@ -12,27 +12,32 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            @{ 
-                var surveyId = Model.Survey.Id;
-            }
-            <input type="hidden" asp-for="@surveyId"/>
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
-                <span asp-validation-for="StartTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
-                <span asp-validation-for="EndTime" class="text-danger"></span>
+            <div class="hidden">
+                @Html.EditorFor(model => model.Survey.Id)
             </div>
 
-            @*Simon*@
-            <div class="form-group">
-                <label asp-for="Room" class="control-label"></label>
-                <input asp-for="Room.Name" class="form-control" />
-                <span asp-validation-for="Room.Name" class="text-danger"></span>
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.StartTime)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.StartTime)
+                @Html.ValidationMessageFor(model => model.StartTime)
+            </div>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.EndTime)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.EndTime)
+                @Html.ValidationMessageFor(model => model.EndTime)
+            </div>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Room)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Room.Name)
+                @Html.ValidationMessageFor(model => model.Room)
             </div>
             <div class="form-group">
                 <label asp-for="Ressources" class="control-label"></label>

@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20171223135650_FluentValidation2")]
-    partial class FluentValidation2
+    [Migration("20171225100203_ICollection")]
+    partial class ICollection
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,8 +80,6 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("EndTime");
 
-                    b.Property<string>("Ressources");
-
                     b.Property<int>("RoomId");
 
                     b.Property<DateTime>("StartTime");
@@ -123,7 +121,7 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("EndTime");
 
-                    b.Property<int?>("RessourceId");
+                    b.Property<int>("RessourceId");
 
                     b.Property<DateTime>("StartTime");
 
@@ -139,6 +137,8 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("AppointmentId");
+
                     b.Property<string>("Discriminator")
                         .IsRequired();
 
@@ -146,6 +146,8 @@ namespace AppData.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
 
                     b.ToTable("Ressources");
 
@@ -301,9 +303,17 @@ namespace AppData.Migrations
 
             modelBuilder.Entity("AppData.Models.BookedTime", b =>
                 {
-                    b.HasOne("AppData.Models.Ressource")
+                    b.HasOne("AppData.Models.Ressource", "Ressource")
                         .WithMany("BookedTimes")
-                        .HasForeignKey("RessourceId");
+                        .HasForeignKey("RessourceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AppData.Models.Ressource", b =>
+                {
+                    b.HasOne("AppData.Models.Appointment")
+                        .WithMany("Ressources")
+                        .HasForeignKey("AppointmentId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

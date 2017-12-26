@@ -26,31 +26,31 @@ namespace AppServices
         public IEnumerable<AppointmentSurvey> GetAll()
         {
             return _context.AppointmentSurveys
-                            .Include(a => a.Subject);
+                .Include(a => a.Subject);
         }
 
         public IEnumerable<Appointment> GetAppointments(int surveyId)
         {
             return _context.AppointmentSurveys
-                            .Include(s => s.Appointments)
-                            .FirstOrDefault(a => a.Id == surveyId)
-                            .Appointments;
+                .Include(s => s.Appointments)
+                .FirstOrDefault(a => a.Id == surveyId)
+                .Appointments;
         }
 
         public AppointmentSurvey GetById(int id)
         {
             return _context.AppointmentSurveys
-                            .Include(a => a.Subject)
-                            .Include(a => a.Creator)
-                            .FirstOrDefault(a => a.Id == id);
+                .Include(a => a.Subject)
+                .Include(a => a.Creator)
+                .FirstOrDefault(a => a.Id == id);
         }
 
         public string GetCreator(int id)
         {
             return
-                            GetAll()
-                            .FirstOrDefault(a => a.Id == id)
-                            .Creator;
+                GetAll()
+                .FirstOrDefault(a => a.Id == id)
+                .Creator;
         }
 
         public string GetMembers(int id)
@@ -64,9 +64,9 @@ namespace AppServices
         public string GetSubject(int id)
         {
             return
-                           GetAll()
-                           .FirstOrDefault(a => a.Id == id)
-                           .Subject;
+                GetAll()
+                .FirstOrDefault(a => a.Id == id)
+                .Subject;
         }
     }
 }

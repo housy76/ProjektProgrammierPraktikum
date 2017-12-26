@@ -1,4 +1,4 @@
-﻿@model AppData.Models.Appointment
+﻿@model AppData.Models.BookedTime
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +7,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Appointment</h4>
+    <h4>BookedTime</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -21,18 +21,6 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.EndTime)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Room)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Room.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Ressources)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Ressources)
         </dd>
     </dl>
 </div>

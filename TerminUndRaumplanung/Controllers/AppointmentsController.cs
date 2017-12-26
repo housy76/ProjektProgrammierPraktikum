@@ -43,29 +43,7 @@ namespace TerminUndRaumplanung.Controllers
             return View(appointment);
         }
 
-        ////// GET: Appointments/Create
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-
-        ////Add a New Appointment to an existing Survey
-        //public IActionResult Add(int id)
-        //{
-        //    var model = new Appointment
-        //    {
-        //        StartTime = System.DateTime.Now,
-
-        //        EndTime = System.DateTime.Now.AddHours(1),
-        //        Survey = _context
-        //                        .AppointmentSurveys
-        //                        .SingleOrDefault(s => s.Id == id)
-        //    };
-        //    return View(model);
-        //}
-
-
+        
         public IActionResult Create(int surveyId)
         //hand over the survey id from SurveyController or SurveyView
         //parameter surveyId must not be named "id"!!! The second Create 
@@ -78,8 +56,12 @@ namespace TerminUndRaumplanung.Controllers
                 EndTime = System.DateTime.Now.AddHours(1),
                 Survey = _context
                     .AppointmentSurveys
-                    .SingleOrDefault(s => s.Id == surveyId)
+                    .SingleOrDefault(s => s.Id == surveyId),
+                Ressources = _context
+                    .Ressources
+                    .Include(r => r.Name)
             };
+
             return View(model);
         }
 
@@ -102,11 +84,21 @@ namespace TerminUndRaumplanung.Controllers
                                     .Rooms
                                     .FirstOrDefault(r => r.Name.Contains(appointment.Room.Name));
 
+
             //get related Survey object from database and store it into the Appointment object
             //_context.AppointmentSurveys.Where(s => s.Id == appointment.Survey.Id).Load();
             appointment.Survey = _context
                                     .AppointmentSurveys
                                     .FirstOrDefault(s => s.Id == appointment.Survey.Id);
+
+            var bookedTime = new BookedTime
+            {
+                StartTime = appointment.StartTime,
+                EndTime = appointment.EndTime,
+                Ressource = appointment.Room
+            };
+
+
 
             //After model binding and validation are complete, you may want to repeat parts
             //of it. For example, a user may have entered text in a field expecting an 
@@ -117,59 +109,15 @@ namespace TerminUndRaumplanung.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(appointment);
+                _context.Add(bookedTime);
                 await _context.SaveChangesAsync();
-                //Simon
                 return RedirectToAction("Details", "AppointmentSurveys", new { id = appointment.Survey.Id });
-                //return RedirectToAction(nameof(Index));
             }
 
             return View(appointment);
         }
 
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(
-        //            [Bind("Id,StartTime,EndTime,Ressources")] Appointment appointment,
-        //            [Bind("surveyId")] int? surveyId
-        //    )
-        //{
-        //    appointment.Survey = _context.AppointmentSurveys.FirstOrDefault(s => s.Id == surveyId);
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(appointment);
-        //        await _context.SaveChangesAsync(); 
-
-        //        return RedirectToAction(
-        //            "Details",
-        //            "AppointmentSurveys",
-        //            //Man muss ein neues Objekt erzeugen, das wie die Variable der
-        //            //empfangenden Methode des Controllers heißt.
-        //            //Das Übergeben der id als direkte INT - Zahl funktioniert nicht.
-        //            new { id = surveyId });
-
-        //        //return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(appointment);
-        //}
-
-
-
-
-        //public async Task<IActionResult> Create(
-        //            [Bind("Id,StartTime,EndTime,Room,Ressources")] AppointmentAddModel addModel,
-        //            [Bind("surveyId")] int? surveyId
-        //    )
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(addModel);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(addModel);
-        //}
 
         // GET: Appointments/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -201,20 +149,7 @@ namespace TerminUndRaumplanung.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
-                    //Binding für das appointment Objekt wird benötigt!!
-                    //alle Entities des Bindings werden im Update-Befehl aktualisiert
-
-                    //Ohne Binding wird das Gesamte Objekt mit allen Entities aktualisiert.
-                    //Dabei werden aber durch das Lazy Loading aus der Datenbank die
-                    //zugehörigen Objekte, die als Entities vorhanden sind nicht automaitsch
-                    //mitgeladen und sind somit null. Beim Update werden diese aber auch 
-                    //mitaktualisiert und sind anschließend mit null in der Datenbank
-                    [Bind("Id,StartTime,EndTime,Room,Ressources")] Appointment appointment,
-
-                    //zusätzlicher Übergabeparameter für die SurveyId dieses Appointments
-                    //wird benötigt, um nach dem Speichern wieder auf die Ansicht der 
-                    //Survey zurück zu kehren, von der man gekommen ist.
-                    [Bind("surveyId")] int? surveyId
+                    [Bind("Id,StartTime,EndTime,Room,Ressources,Survey")] Appointment appointment
             )
         {
             if (id != appointment.Id)
@@ -242,13 +177,13 @@ namespace TerminUndRaumplanung.Controllers
                 }
 
                 return RedirectToAction(
-                    "Details",
-                    "AppointmentSurveys",
+                    "Details",  //controller action
+                    "AppointmentSurveys",   //controller
 
                     //Man muss ein neues Objekt erzeugen, das wie die Variable der
                     //empfangenden Methode des Controllers heißt.
                     //Das Übergeben der id als direkte INT - Zahl funktioniert nicht.
-                    new { id = surveyId });
+                    new { id = appointment.Survey.Id });
             }
             return View(appointment);
         }
