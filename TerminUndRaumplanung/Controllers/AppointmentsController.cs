@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AppData;
 using AppData.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace TerminUndRaumplanung.Controllers
 {
     public class AppointmentsController : Controller
     {
         private readonly AppointmentContext _context;
+        public IEnumerable<SelectListItem> RessourceList { get; set; }
 
         public AppointmentsController(AppointmentContext context)
         {
@@ -59,7 +62,7 @@ namespace TerminUndRaumplanung.Controllers
                     .SingleOrDefault(s => s.Id == surveyId),
                 Ressources = _context
                     .Ressources
-                    .Include(r => r.Name)
+                    .ToList()
             };
 
             return View(model);
@@ -91,6 +94,7 @@ namespace TerminUndRaumplanung.Controllers
                                     .AppointmentSurveys
                                     .FirstOrDefault(s => s.Id == appointment.Survey.Id);
 
+
             var bookedTime = new BookedTime
             {
                 StartTime = appointment.StartTime,
@@ -113,7 +117,10 @@ namespace TerminUndRaumplanung.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "AppointmentSurveys", new { id = appointment.Survey.Id });
             }
-
+            else
+            {
+                appointment.Ressources = _context.Ressources.ToList();
+            }
             return View(appointment);
         }
 
