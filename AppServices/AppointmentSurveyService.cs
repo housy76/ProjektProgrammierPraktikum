@@ -45,7 +45,7 @@ namespace AppServices
                 .FirstOrDefault(a => a.Id == id);
         }
 
-        public string GetCreator(int id)
+        public ApplicationUser GetCreator(int id)
         {
             return
                 GetAll()

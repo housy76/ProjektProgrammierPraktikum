@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20171225100203_ICollection")]
-    partial class ICollection
+    [Migration("20180101105239_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,10 @@ namespace AppData.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -100,7 +104,7 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Creator")
+                    b.Property<string>("CreatorId")
                         .IsRequired();
 
                     b.Property<string>("Members")
@@ -110,6 +114,8 @@ namespace AppData.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("AppointmentSurveys");
                 });
@@ -298,6 +304,14 @@ namespace AppData.Migrations
                     b.HasOne("AppData.Models.AppointmentSurvey", "Survey")
                         .WithMany("Appointments")
                         .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AppData.Models.AppointmentSurvey", b =>
+                {
+                    b.HasOne("AppData.Models.ApplicationUser", "Creator")
+                        .WithMany("Surveys")
+                        .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

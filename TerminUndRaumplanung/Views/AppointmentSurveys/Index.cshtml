@@ -31,7 +31,7 @@
                 <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Subject)</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Creator)
+                @Html.DisplayFor(modelItem => item.Creator.FirstName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Members)

@@ -59,6 +59,7 @@ namespace TerminUndRaumplanung.Controllers
                 EndTime = System.DateTime.Now.AddHours(1),
                 Survey = _context
                     .AppointmentSurveys
+                    .Include(s => s.Creator)
                     .SingleOrDefault(s => s.Id == surveyId),
                 Ressources = _context
                     .Ressources
@@ -92,6 +93,7 @@ namespace TerminUndRaumplanung.Controllers
             //_context.AppointmentSurveys.Where(s => s.Id == appointment.Survey.Id).Load();
             appointment.Survey = _context
                                     .AppointmentSurveys
+                                    .Include(s => s.Creator)
                                     .FirstOrDefault(s => s.Id == appointment.Survey.Id);
 
 

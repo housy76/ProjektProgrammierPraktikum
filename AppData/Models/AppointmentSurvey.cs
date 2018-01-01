@@ -14,7 +14,7 @@ namespace AppData.Models
 
         [Required]
         [Display(Name = "Ersteller")]
-        public string Creator { get; set; }
+        public ApplicationUser Creator { get; set; }
 
         [Required]
         [Display(Name = "Teilnehmer")]

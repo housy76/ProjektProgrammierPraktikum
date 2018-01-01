@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AppData;
 using AppData.Models;
 using TerminUndRaumplanung.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace TerminUndRaumplanung.Controllers
 {
@@ -12,17 +13,31 @@ namespace TerminUndRaumplanung.Controllers
     {
         private readonly AppointmentContext _context;
         private IAppointmentSurvey _survey;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AppointmentSurveysController(AppointmentContext context, IAppointmentSurvey survey)
+        //public AppointmentSurveysController(AppointmentContext context, IAppointmentSurvey survey)
+        //{
+        //    _context = context;
+        //    _survey = survey;
+        //}
+
+        public AppointmentSurveysController(AppointmentContext context, IAppointmentSurvey survey, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _survey = survey;
+            _userManager = userManager;
         }
 
         // GET: AppointmentSurveys
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AppointmentSurveys.ToListAsync());
+            return View(
+                await _context
+                    .AppointmentSurveys
+                    .Include(s => s.Creator)
+                    .Where(s => s.Creator.Id == _userManager.GetUserId(HttpContext.User))
+                    .ToListAsync()
+                );
         }
 
 
@@ -30,6 +45,7 @@ namespace TerminUndRaumplanung.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var survey = await _context.AppointmentSurveys
+                .Include(a => a.Creator)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             //Simon
@@ -51,6 +67,18 @@ namespace TerminUndRaumplanung.Controllers
         // GET: AppointmentSurveys/Create
         public IActionResult Create()
         {
+            var model = new AppointmentSurvey{ };
+
+            //get current User from database
+            var creator = _context
+                    .ApplicationUsers
+                    .Include(a => a.Surveys)
+                    .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
+            //store entities in ViewBag for displaying in view
+            ViewBag.Creator = creator;
+            ViewBag.Creator.FirstName = creator.FirstName;
+            ViewBag.Creator.LastName = creator.LastName;
+            ViewBag.Creator.Id = creator.Id;
             return View();
         }
 
@@ -61,9 +89,21 @@ namespace TerminUndRaumplanung.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Subject,Creator,Members")] AppointmentSurvey appointmentSurvey)
         {
+            appointmentSurvey.Creator = _context
+                    .ApplicationUsers
+                    .Include(a => a.Surveys)
+                    .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
+
+            var applicationUser = appointmentSurvey.Creator;
+            applicationUser.Surveys.Add(appointmentSurvey);
+
+            ModelState.Clear();
+            TryValidateModel(appointmentSurvey);
+
             if (ModelState.IsValid)
             {
                 _context.Add(appointmentSurvey);
+                _context.Update(applicationUser);
                 await _context.SaveChangesAsync();
                 //redirect to the detail view of this survey
                 return RedirectToAction("Details", "AppointmentSurveys", new { id = appointmentSurvey.Id });
@@ -136,6 +176,17 @@ namespace TerminUndRaumplanung.Controllers
             {
                 return NotFound();
             }
+
+            var creator = _context
+                    .AppointmentSurveys
+                    .Include(a => a.Creator)
+                    .FirstOrDefault(a => a.Id == id)
+                    .Creator;
+            //store entities in ViewBag for displaying in view
+            ViewBag.Creator = creator;
+            ViewBag.Creator.FirstName = creator.FirstName;
+            ViewBag.Creator.LastName = creator.LastName;
+            ViewBag.Creator.Id = creator.Id;
 
             return View(appointmentSurvey);
         }
