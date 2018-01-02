@@ -18,7 +18,7 @@ namespace AppData.Models
 
         [Required]
         [Display(Name = "Teilnehmer")]
-        public string Members { get; set; }
+        public ICollection<ApplicationUser> Members { get; set; }
         public IEnumerable<Appointment> Appointments { get; set; }
     }
 }

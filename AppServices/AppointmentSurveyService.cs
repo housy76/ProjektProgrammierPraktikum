@@ -53,11 +53,11 @@ namespace AppServices
                 .Creator;
         }
 
-        public string GetMembers(int id)
+        public ICollection<ApplicationUser> GetMembers(int id)
         {
             return
                 GetAll()
-                .FirstOrDefault(a => a.Id == id)
+                .FirstOrDefault(s => s.Id == id)
                 .Members;
         }
 

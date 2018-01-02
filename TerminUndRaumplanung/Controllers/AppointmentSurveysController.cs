@@ -54,7 +54,7 @@ namespace TerminUndRaumplanung.Controllers
                 SurveyId = survey.Id,
                 Subject = survey.Subject,
                 Creator = survey.Creator,
-                Members = survey.Members,
+                Members = survey.Members.ToString(),
                 Appointments = _context
                                     .Appointments
                                     .Include(a => a.Room)
@@ -72,7 +72,6 @@ namespace TerminUndRaumplanung.Controllers
             //get current User from database
             var creator = _context
                     .ApplicationUsers
-                    .Include(a => a.Surveys)
                     .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
             //store entities in ViewBag for displaying in view
             ViewBag.Creator = creator;
@@ -91,11 +90,7 @@ namespace TerminUndRaumplanung.Controllers
         {
             appointmentSurvey.Creator = _context
                     .ApplicationUsers
-                    .Include(a => a.Surveys)
                     .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
-
-            var applicationUser = appointmentSurvey.Creator;
-            applicationUser.Surveys.Add(appointmentSurvey);
 
             ModelState.Clear();
             TryValidateModel(appointmentSurvey);
@@ -103,7 +98,6 @@ namespace TerminUndRaumplanung.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(appointmentSurvey);
-                _context.Update(applicationUser);
                 await _context.SaveChangesAsync();
                 //redirect to the detail view of this survey
                 return RedirectToAction("Details", "AppointmentSurveys", new { id = appointmentSurvey.Id });
