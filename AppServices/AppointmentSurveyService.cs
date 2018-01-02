@@ -53,7 +53,7 @@ namespace AppServices
                 .Creator;
         }
 
-        public string GetMembers(int id)
+        public ICollection<ApplicationUser> GetMembers(int id)
         {
             return
                 GetAll()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppData.Models
 {
@@ -16,9 +17,8 @@ namespace AppData.Models
         [Display(Name = "Ersteller")]
         public ApplicationUser Creator { get; set; }
 
-        [Required]
         [Display(Name = "Teilnehmer")]
-        public string Members { get; set; }
+        public ICollection<ApplicationUser> Members { get; set; }
         public IEnumerable<Appointment> Appointments { get; set; }
     }
 }

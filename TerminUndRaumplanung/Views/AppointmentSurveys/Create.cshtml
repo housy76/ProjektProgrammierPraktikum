@@ -30,10 +30,12 @@
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Members)
             </div>
+
             <div class="editor-field">
-                @Html.EditorFor(model => model.Members)
+                @Html.DropDownListFor(model => model.Members, new SelectList(Model.Members, "Id", "Email", Model.Members), "Select one", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Members)
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>

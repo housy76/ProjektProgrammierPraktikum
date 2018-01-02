@@ -11,7 +11,7 @@ namespace AppData
         AppointmentSurvey GetById(int id);
         string GetSubject(int id);
         ApplicationUser GetCreator(int id);
-        string GetMembers(int id);
+        ICollection<ApplicationUser> GetMembers(int id);
         IEnumerable<Appointment> GetAppointments(int surveyId);
     }
 }

@@ -28,6 +28,8 @@ namespace AppData.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<int?>("AppointmentSurveyId");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -64,6 +66,8 @@ namespace AppData.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppointmentSurveyId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -104,9 +108,6 @@ namespace AppData.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("CreatorId")
-                        .IsRequired();
-
-                    b.Property<string>("Members")
                         .IsRequired();
 
                     b.Property<string>("Subject")
@@ -293,6 +294,13 @@ namespace AppData.Migrations
                     b.HasDiscriminator().HasValue("Room");
                 });
 
+            modelBuilder.Entity("AppData.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("AppData.Models.AppointmentSurvey")
+                        .WithMany("Members")
+                        .HasForeignKey("AppointmentSurveyId");
+                });
+
             modelBuilder.Entity("AppData.Models.Appointment", b =>
                 {
                     b.HasOne("AppData.Models.Room", "Room")
@@ -309,7 +317,7 @@ namespace AppData.Migrations
             modelBuilder.Entity("AppData.Models.AppointmentSurvey", b =>
                 {
                     b.HasOne("AppData.Models.ApplicationUser", "Creator")
-                        .WithMany("Surveys")
+                        .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

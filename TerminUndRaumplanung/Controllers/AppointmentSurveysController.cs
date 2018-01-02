@@ -6,6 +6,7 @@ using AppData;
 using AppData.Models;
 using TerminUndRaumplanung.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TerminUndRaumplanung.Controllers
 {
@@ -54,7 +55,9 @@ namespace TerminUndRaumplanung.Controllers
                 SurveyId = survey.Id,
                 Subject = survey.Subject,
                 Creator = survey.Creator,
-                Members = survey.Members,
+                //convert member list to string for displaying them in the view
+                //Members = survey.Members.ToString(),
+                Members = "Member1, Member2, ...",
                 Appointments = _context
                                     .Appointments
                                     .Include(a => a.Room)
@@ -67,19 +70,24 @@ namespace TerminUndRaumplanung.Controllers
         // GET: AppointmentSurveys/Create
         public IActionResult Create()
         {
-            var model = new AppointmentSurvey{ };
+            var model = new AppointmentSurvey
+            {
+                Members = _context
+                                .ApplicationUsers
+                                .ToList()
+            };
 
             //get current User from database
             var creator = _context
                     .ApplicationUsers
-                    .Include(a => a.Surveys)
                     .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
             //store entities in ViewBag for displaying in view
             ViewBag.Creator = creator;
             ViewBag.Creator.FirstName = creator.FirstName;
             ViewBag.Creator.LastName = creator.LastName;
             ViewBag.Creator.Id = creator.Id;
-            return View();
+
+            return View(model);
         }
 
         // POST: AppointmentSurveys/Create
@@ -91,11 +99,9 @@ namespace TerminUndRaumplanung.Controllers
         {
             appointmentSurvey.Creator = _context
                     .ApplicationUsers
-                    .Include(a => a.Surveys)
                     .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
 
-            var applicationUser = appointmentSurvey.Creator;
-            applicationUser.Surveys.Add(appointmentSurvey);
+            appointmentSurvey.Members = ViewBag.MembersList;
 
             ModelState.Clear();
             TryValidateModel(appointmentSurvey);
@@ -103,7 +109,6 @@ namespace TerminUndRaumplanung.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(appointmentSurvey);
-                _context.Update(applicationUser);
                 await _context.SaveChangesAsync();
                 //redirect to the detail view of this survey
                 return RedirectToAction("Details", "AppointmentSurveys", new { id = appointmentSurvey.Id });
