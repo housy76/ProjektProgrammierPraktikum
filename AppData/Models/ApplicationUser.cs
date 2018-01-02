@@ -10,5 +10,11 @@ namespace AppData.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
+        //Property is not used until now!!!
+        public ICollection<AppointmentSurvey> Surveys { get; set; }
+
     }
 }

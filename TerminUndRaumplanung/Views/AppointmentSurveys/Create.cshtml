@@ -12,20 +12,27 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Subject" class="control-label"></label>
-                <input asp-for="Subject" class="form-control" />
-                <span asp-validation-for="Subject" class="text-danger"></span>
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Subject)
             </div>
-            <div class="form-group">
-                <label asp-for="Creator" class="control-label"></label>
-                <input asp-for="Creator" class="form-control" />
-                <span asp-validation-for="Creator" class="text-danger"></span>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Subject)
+                @Html.ValidationMessageFor(model => model.Subject)
             </div>
-            <div class="form-group">
-                <label asp-for="Members" class="control-label"></label>
-                <input asp-for="Members" class="form-control" />
-                <span asp-validation-for="Members" class="text-danger"></span>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Creator)
+            </div>
+            <div class="text">
+                @Html.ViewBag.Creator.FirstName
+            </div>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Members)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Members)
+                @Html.ValidationMessageFor(model => model.Members)
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

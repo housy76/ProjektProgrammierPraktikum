@@ -10,7 +10,7 @@ namespace AppData
         IEnumerable<AppointmentSurvey> GetAll();
         AppointmentSurvey GetById(int id);
         string GetSubject(int id);
-        string GetCreator(int id);
+        ApplicationUser GetCreator(int id);
         string GetMembers(int id);
         IEnumerable<Appointment> GetAppointments(int surveyId);
     }

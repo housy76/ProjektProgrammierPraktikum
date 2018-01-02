@@ -1,3 +1,6 @@
 ﻿ASP.Net Core 2.0 Tutorial Teil 1
 https://www.youtube.com/watch?v=WTVcLFTgDqs
 
+
+Dropdown List 
+https://stackoverflow.com/questions/46454527/asp-net-core-2-0-retrieve-remove-dropdownlist-values
