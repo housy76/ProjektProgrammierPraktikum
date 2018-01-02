@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20171220161112_Initial")]
-    partial class Initial
+    [Migration("20180102113828_InitialWithApplicationUserEntities")]
+    partial class InitialWithApplicationUserEntities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,8 @@ namespace AppData.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<int?>("AppointmentSurveyId");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -36,6 +38,10 @@ namespace AppData.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -62,6 +68,8 @@ namespace AppData.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppointmentSurveyId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -79,9 +87,7 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("EndTime");
 
-                    b.Property<string>("Ressources");
-
-                    b.Property<int?>("RoomId");
+                    b.Property<int>("RoomId");
 
                     b.Property<DateTime>("StartTime");
 
@@ -101,16 +107,15 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Creator")
-                        .IsRequired();
-
-                    b.Property<string>("Members")
+                    b.Property<string>("CreatorId")
                         .IsRequired();
 
                     b.Property<string>("Subject")
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("AppointmentSurveys");
                 });
@@ -122,7 +127,7 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("EndTime");
 
-                    b.Property<int?>("RessourceId");
+                    b.Property<int>("RessourceId");
 
                     b.Property<DateTime>("StartTime");
 
@@ -138,6 +143,8 @@ namespace AppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("AppointmentId");
+
                     b.Property<string>("Discriminator")
                         .IsRequired();
 
@@ -145,6 +152,8 @@ namespace AppData.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
 
                     b.ToTable("Ressources");
 
@@ -284,11 +293,19 @@ namespace AppData.Migrations
                     b.HasDiscriminator().HasValue("Room");
                 });
 
+            modelBuilder.Entity("AppData.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("AppData.Models.AppointmentSurvey")
+                        .WithMany("Members")
+                        .HasForeignKey("AppointmentSurveyId");
+                });
+
             modelBuilder.Entity("AppData.Models.Appointment", b =>
                 {
                     b.HasOne("AppData.Models.Room", "Room")
                         .WithMany()
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("AppData.Models.AppointmentSurvey", "Survey")
                         .WithMany("Appointments")
@@ -296,11 +313,27 @@ namespace AppData.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("AppData.Models.AppointmentSurvey", b =>
+                {
+                    b.HasOne("AppData.Models.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("AppData.Models.BookedTime", b =>
                 {
-                    b.HasOne("AppData.Models.Ressource")
+                    b.HasOne("AppData.Models.Ressource", "Ressource")
                         .WithMany("BookedTimes")
-                        .HasForeignKey("RessourceId");
+                        .HasForeignKey("RessourceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AppData.Models.Ressource", b =>
+                {
+                    b.HasOne("AppData.Models.Appointment")
+                        .WithMany("Ressources")
+                        .HasForeignKey("AppointmentId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
