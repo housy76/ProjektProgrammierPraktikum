@@ -12,6 +12,8 @@ namespace AppData.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        //Property is not used until now!!!
         public ICollection<AppointmentSurvey> Surveys { get; set; }
 
     }
