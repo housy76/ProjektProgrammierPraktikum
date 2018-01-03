@@ -39,10 +39,12 @@
                 @Html.EditorFor(model => model.Room.Name)
                 @Html.ValidationMessageFor(model => model.Room)
             </div>
-            <div class="form-group">
-                <label asp-for="Ressources" class="control-label"></label>
-                <input asp-for="Ressources" class="form-control" />
-                <span asp-validation-for="Ressources" class="text-danger"></span>
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Ressources)
+            </div>
+            <div class="editor-field">
+                @Html.DropDownListFor(model => model.Ressources, new SelectList(Model.Ressources, "Id", "Name"), "Select one", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Ressources)
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

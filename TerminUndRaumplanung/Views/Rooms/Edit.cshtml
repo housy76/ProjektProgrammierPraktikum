@@ -13,7 +13,40 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.NumberOfSeats)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.NumberOfSeats)
+                @Html.ValidationMessageFor(model => model.NumberOfSeats)
+            </div>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.BeamerIsAvailable)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.BeamerIsAvailable)
+                @Html.ValidationMessageFor(model => model.BeamerIsAvailable)
+            </div>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.SpeakerIsAvailable)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.SpeakerIsAvailable)
+                @Html.ValidationMessageFor(model => model.SpeakerIsAvailable)
+            </div>
+
+            @*<div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
@@ -36,7 +69,7 @@
                         <input asp-for="SpeakerIsAvailable" /> @Html.DisplayNameFor(model => model.SpeakerIsAvailable)
                     </label>
                 </div>
-            </div>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>

@@ -72,20 +72,14 @@ namespace TerminUndRaumplanung.Controllers
         {
             var model = new AppointmentSurvey
             {
-                Members = _context
-                                .ApplicationUsers
-                                .ToList()
-            };
-
-            //get current User from database
-            var creator = _context
+                Creator = _context
                     .ApplicationUsers
-                    .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
-            //store entities in ViewBag for displaying in view
-            ViewBag.Creator = creator;
-            ViewBag.Creator.FirstName = creator.FirstName;
-            ViewBag.Creator.LastName = creator.LastName;
-            ViewBag.Creator.Id = creator.Id;
+                    .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User))),
+
+                Members = _context
+                    .ApplicationUsers
+                    .ToList()
+            };
 
             return View(model);
         }
@@ -124,11 +118,27 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var appointmentSurvey = await _context.AppointmentSurveys.SingleOrDefaultAsync(m => m.Id == id);
+            var appointmentSurvey = await _context.AppointmentSurveys
+                .Include(m => m.Creator)
+                .Include(m => m.Members)
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (appointmentSurvey == null)
             {
                 return NotFound();
             }
+
+            //generate list ob members for the view to be displayed
+            if(appointmentSurvey.Members == null)
+            {
+                appointmentSurvey.Members = _context
+                    .ApplicationUsers
+                    .ToList();
+            }
+            else
+            {
+                appointmentSurvey.Members = appointmentSurvey.Members.ToList();
+            }
+
             return View(appointmentSurvey);
         }
 
@@ -143,6 +153,12 @@ namespace TerminUndRaumplanung.Controllers
             {
                 return NotFound();
             }
+
+            //get mebmers form view and store them into the entity
+            appointmentSurvey.Members = ViewBag.MembersList;
+
+            ModelState.Clear();
+            TryValidateModel(appointmentSurvey);
 
             if (ModelState.IsValid)
             {
@@ -176,22 +192,23 @@ namespace TerminUndRaumplanung.Controllers
             }
 
             var appointmentSurvey = await _context.AppointmentSurveys
+                .Include(m => m.Creator)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (appointmentSurvey == null)
             {
                 return NotFound();
             }
 
-            var creator = _context
-                    .AppointmentSurveys
-                    .Include(a => a.Creator)
-                    .FirstOrDefault(a => a.Id == id)
-                    .Creator;
-            //store entities in ViewBag for displaying in view
-            ViewBag.Creator = creator;
-            ViewBag.Creator.FirstName = creator.FirstName;
-            ViewBag.Creator.LastName = creator.LastName;
-            ViewBag.Creator.Id = creator.Id;
+            //var creator = _context
+            //        .AppointmentSurveys
+            //        .Include(a => a.Creator)
+            //        .FirstOrDefault(a => a.Id == id)
+            //        .Creator;
+            ////store entities in ViewBag for displaying in view
+            //ViewBag.Creator = creator;
+            //ViewBag.Creator.FirstName = creator.FirstName;
+            //ViewBag.Creator.LastName = creator.LastName;
+            //ViewBag.Creator.Id = creator.Id;
 
             return View(appointmentSurvey);
         }
