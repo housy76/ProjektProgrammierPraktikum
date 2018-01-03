@@ -21,17 +21,20 @@ namespace TerminUndRaumplanung.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _roleManager = roleManager;
         }
 
         [TempData]
@@ -221,6 +224,59 @@ namespace TerminUndRaumplanung.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    //Simon
+                    //first User that will be generated will be a admin user!!!!
+                    //this code should be deleted and users + roles created on startup 
+                    //of the application. 
+                    if (!await _roleManager.RoleExistsAsync("Administrator"))
+                    {
+                        var role = new IdentityRole("Administrator");
+
+                        var res = await _roleManager.CreateAsync(role);
+
+                        if (res.Succeeded)
+                        {
+                            await _userManager.AddToRoleAsync(user, "Administrator");
+
+                            _logger.LogInformation("User created a new admin account with password.");
+
+                            var _code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            var _callbackUrl = Url.EmailConfirmationLink(user.Id, _code, Request.Scheme);
+                            await _emailSender.SendEmailConfirmationAsync(model.Email, _callbackUrl);
+
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            _logger.LogInformation("User created a new admin account with password.");
+                            return RedirectToLocal(returnUrl);
+                        }
+
+                    }
+
+                    //normal login procedure for a normal user
+                    if (!await _roleManager.RoleExistsAsync("User"))
+                    {
+                        var role = new IdentityRole("User");
+
+                        var res = await _roleManager.CreateAsync(role);
+
+                        if (res.Succeeded)
+                        {
+                            await _userManager.AddToRoleAsync(user, "User");
+
+                            _logger.LogInformation("User created a new admin account with password.");
+
+                            var _code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            var _callbackUrl = Url.EmailConfirmationLink(user.Id, _code, Request.Scheme);
+                            await _emailSender.SendEmailConfirmationAsync(model.Email, _callbackUrl);
+
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            _logger.LogInformation("User created a new admin account with password.");
+                            return RedirectToLocal(returnUrl);
+                        }
+
+                    }
+                    
+                    await _userManager.AddToRoleAsync(user, "User");
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -230,6 +286,7 @@ namespace TerminUndRaumplanung.Controllers
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
                     return RedirectToLocal(returnUrl);
+                    
                 }
                 AddErrors(result);
             }
