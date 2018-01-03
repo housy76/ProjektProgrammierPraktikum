@@ -37,4 +37,14 @@
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\lib\qrcode\.gitignore" />
+    <None Include="wwwroot\lib\qrcode\index.svg" />
+    <None Include="wwwroot\lib\qrcode\jquery.min.js" />
+    <None Include="wwwroot\lib\qrcode\LICENSE" />
+    <None Include="wwwroot\lib\qrcode\qrcode.js" />
+    <None Include="wwwroot\lib\qrcode\qrcode.min.js" />
+    <None Include="wwwroot\lib\qrcode\README.md" />
+  </ItemGroup>
+
 </Project>
