@@ -21,7 +21,7 @@
             @Html.DisplayNameFor(model => model.Creator)
         </dt>
         <dd>
-            @Html.ViewBag.Creator.FirstName
+            @Html.DisplayFor(model => model.Creator.Email)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Members)

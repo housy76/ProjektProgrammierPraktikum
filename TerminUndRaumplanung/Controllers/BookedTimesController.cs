@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AppData;
 using AppData.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TerminUndRaumplanung.Controllers
 {
@@ -20,6 +21,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
         // GET: BookedTimes
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
             return View(await _context
@@ -30,6 +32,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
         // GET: BookedTimes/Details/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,6 +51,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
         // GET: BookedTimes/Create
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
@@ -58,6 +62,7 @@ namespace TerminUndRaumplanung.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Create([Bind("Id,StartTime,EndTime")] BookedTime bookedTime)
         {
             if (ModelState.IsValid)
@@ -70,6 +75,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
         // GET: BookedTimes/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,6 +96,7 @@ namespace TerminUndRaumplanung.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,StartTime,EndTime")] BookedTime bookedTime)
         {
             if (id != bookedTime.Id)
@@ -121,6 +128,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
         // GET: BookedTimes/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -141,6 +149,7 @@ namespace TerminUndRaumplanung.Controllers
         // POST: BookedTimes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var bookedTime = await _context.BookedTimes.SingleOrDefaultAsync(m => m.Id == id);
@@ -149,6 +158,7 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Administrator")]
         private bool BookedTimeExists(int id)
         {
             return _context.BookedTimes.Any(e => e.Id == id);

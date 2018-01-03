@@ -4,3 +4,7 @@ https://www.youtube.com/watch?v=WTVcLFTgDqs
 
 Dropdown List 
 https://stackoverflow.com/questions/46454527/asp-net-core-2-0-retrieve-remove-dropdownlist-values
+
+
+User Roles creat on startup:
+https://forums.asp.net/t/2130410.aspx?Roles+and+RoleManager+in+ASP+NET+Core+2

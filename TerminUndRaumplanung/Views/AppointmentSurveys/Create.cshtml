@@ -24,16 +24,23 @@
                 @Html.LabelFor(model => model.Creator)
             </div>
             <div class="text">
-                @Html.ViewBag.Creator.FirstName
+                @Html.DisplayFor(model => model.Creator.Email)
             </div>
 
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Members)
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.Members)
-                @Html.ValidationMessageFor(model => model.Members)
+                @Html.DropDownListFor(model => model.Members, new SelectList(Model.Members, "Id", "Email", Model.Members), "Select one", new { @class = "form-control" })
+                @*The Selected Value has to be stored via JAVASCRIPT in an other
+                (or the same variable if possible) to be transfered to the 
+                controller again. By default the selected values are not
+                stored and passed to the controller automatically!!!
+                    
+                    Look at line 60 and later. There is a first try from a example on the internet.
+                    *@
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -48,3 +55,15 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script type="text/javascript">
+    $(function () {
+    //Dropdownlist Selectedchange event
+        $('#UserId').change(function () {
+            // Get Dropdownlist seleted item text
+            $("#lbltxt").text($("#UserId option:selected").text());
+            // Get Dropdownlist selected item value
+            $("#lblid").text($("#UserId").val());
+        })
+    })
+</script>
