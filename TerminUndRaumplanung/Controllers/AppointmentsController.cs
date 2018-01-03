@@ -22,7 +22,6 @@ namespace TerminUndRaumplanung.Controllers
 
         // GET: Appointments
         [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
         public async Task<IActionResult> Index()
         {
             return View(await _context
@@ -32,8 +31,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
         // GET: Appointments/Details/5
-        [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,8 +50,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
 
-        [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator,User")]
         public IActionResult Create(int surveyId)
         //hand over the survey id from SurveyController or SurveyView
         //parameter surveyId must not be named "id"!!! The second Create 
@@ -83,8 +80,7 @@ namespace TerminUndRaumplanung.Controllers
         // bind to, for more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Create(
             //Simon
             //binding now includes Room and Survey as direct object entities of 
@@ -138,8 +134,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         // GET: Appointments/Edit/5
-        [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -168,8 +163,7 @@ namespace TerminUndRaumplanung.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Edit(int id,
                     [Bind("Id,StartTime,EndTime,Room,Ressources,Survey")] Appointment appointment
             )
@@ -212,8 +206,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         // GET: Appointments/Delete/5
-        [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -234,8 +227,7 @@ namespace TerminUndRaumplanung.Controllers
         // POST: Appointments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var appointment = await _context.Appointments.SingleOrDefaultAsync(m => m.Id == id);
@@ -244,8 +236,7 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Administrator")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Administrator,User")]
         private bool AppointmentExists(int id)
         {
             return _context.Appointments.Any(e => e.Id == id);

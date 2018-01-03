@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20180102094959_Members5")]
-    partial class Members5
+    [Migration("20180103153028_Initial6")]
+    partial class Initial6
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

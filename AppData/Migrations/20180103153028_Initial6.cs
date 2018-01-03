@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class Members5 : Migration
+    public partial class Initial6 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
