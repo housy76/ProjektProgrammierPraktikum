@@ -7,7 +7,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>AppointmentSurvey</h4>
+    <h4>Survey</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -22,17 +22,34 @@
         <dd>
             @Html.DisplayTextFor(model => model.Creator)
         </dd>
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.Members)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Members)
-        </dd>
+        </dd>*@
     </dl>
 </div>
 
 <div>
-    <h4>Appointments For this AppointmentSurvey</h4>
+    @foreach (var item in Model.Members)
+    {
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Members)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Members)
+            </dd>
+        </dl>
+    }
+</div>
+
+<hr />
+
+<div>
+    <h4>Appointments For this Survey</h4>
     <table class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>

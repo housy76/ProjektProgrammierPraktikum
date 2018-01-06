@@ -74,10 +74,10 @@ namespace AppServices
                 .EndTime;
         }
 
-        public AppointmentSurvey GetSurvey(int id)
+        public Survey GetSurvey(int id)
         {
             return _context
-                .AppointmentSurveys
+                .Surveys
                 .FirstOrDefault(s => s.Id == id);
         }
     }

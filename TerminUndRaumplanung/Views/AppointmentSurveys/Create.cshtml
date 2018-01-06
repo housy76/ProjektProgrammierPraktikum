@@ -1,4 +1,4 @@
-﻿@model AppData.Models.AppointmentSurvey
+﻿@model AppData.Models.Survey
 
 @{
     ViewData["Title"] = "Create";
@@ -6,7 +6,7 @@
 
 <h2>Create</h2>
 
-<h4>AppointmentSurvey</h4>
+<h4>Survey</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -20,25 +20,31 @@
                 @Html.ValidationMessageFor(model => model.Subject)
             </div>
 
-            <div class="editor-lable">
+            @*<div class="editor-lable">
                 @Html.LabelFor(model => model.Creator)
             </div>
-            <div class="text">
+            <div>
                 @Html.DisplayFor(model => model.Creator.Email)
             </div>
+            <div class="editor-field" hidden>
+                @Html.EditorFor(model => model.Creator)
+            </div>*@
+
+            <div class="editor-lable" hidden>
+                @Html.LabelFor(model => model.Members)
+            </div>
+            <div class="editor-field" hidden>
+                @Html.EditorFor(model => model.Members)
+                @Html.ValidationMessageFor(model => model.Members)
+            </div>
+
 
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Members)
             </div>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.Members, new SelectList(Model.Members, "Id", "Email", Model.Members), "Select one", new { @class = "form-control" })
-                @*The Selected Value has to be stored via JAVASCRIPT in an other
-                (or the same variable if possible) to be transfered to the 
-                controller again. By default the selected values are not
-                stored and passed to the controller automatically!!!
-                    
-                    Look at line 60 and later. There is a first try from a example on the internet.
-                    *@
+            <div class="editor-field" id="dropDownMembers">
+                @Html.DropDownListFor(model => model.SelectedMember, new SelectList(Model.Members, "Id", "Email"), "Select one", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Members)
             </div>
 
             <div class="form-group">
@@ -50,20 +56,11 @@
 
 <div>
     <a asp-action="Index">Back to List</a>
+    <p id="demo"></p>
+
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
-<script type="text/javascript">
-    $(function () {
-    //Dropdownlist Selectedchange event
-        $('#UserId').change(function () {
-            // Get Dropdownlist seleted item text
-            $("#lbltxt").text($("#UserId option:selected").text());
-            // Get Dropdownlist selected item value
-            $("#lblid").text($("#UserId").val());
-        })
-    })
-</script>

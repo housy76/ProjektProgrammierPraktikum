@@ -6,24 +6,18 @@ using AppData;
 using AppData.Models;
 using TerminUndRaumplanung.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.ObjectModel;
 
 namespace TerminUndRaumplanung.Controllers
 {
     public class AppointmentSurveysController : Controller
     {
         private readonly AppointmentContext _context;
-        private IAppointmentSurvey _survey;
+        private ISurvey _survey;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        //public AppointmentSurveysController(AppointmentContext context, IAppointmentSurvey survey)
-        //{
-        //    _context = context;
-        //    _survey = survey;
-        //}
-
-        public AppointmentSurveysController(AppointmentContext context, IAppointmentSurvey survey, UserManager<ApplicationUser> userManager)
+        public AppointmentSurveysController(AppointmentContext context, ISurvey survey, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _survey = survey;
@@ -34,13 +28,33 @@ namespace TerminUndRaumplanung.Controllers
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Index()
         {
-            return View(
-                await _context
-                    .AppointmentSurveys
+
+            //var user = _context.ApplicationUsers.SingleOrDefault(
+            //    u => u.Id == _userManager.GetUserId(HttpContext.User)
+            //    );
+
+            if (User.IsInRole("Administrator"))
+            {
+                var content = await _context
+                    .Surveys
                     .Include(s => s.Creator)
+                    .Include(s => s.Members)
+                    .ToListAsync();
+                return View(content);
+
+            }
+            else
+            {
+                var content = await _context
+                    .Surveys
+                    .Include(s => s.Creator)
+                    .Include(s => s.Members)
                     .Where(s => s.Creator.Id == _userManager.GetUserId(HttpContext.User))
-                    .ToListAsync()
-                );
+                    .ToListAsync();
+                return View(content);
+
+            }
+
         }
 
 
@@ -48,8 +62,9 @@ namespace TerminUndRaumplanung.Controllers
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Details(int? id)
         {
-            var survey = await _context.AppointmentSurveys
+            var survey = await _context.Surveys
                 .Include(a => a.Creator)
+                .Include(a => a.Members)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             //Simon
@@ -58,9 +73,7 @@ namespace TerminUndRaumplanung.Controllers
                 SurveyId = survey.Id,
                 Subject = survey.Subject,
                 Creator = survey.Creator,
-                //convert member list to string for displaying them in the view
-                //Members = survey.Members.ToString(),
-                Members = "Member1, Member2, ...",
+                Members = survey.Members,
                 Appointments = _context
                                     .Appointments
                                     .Include(a => a.Room)
@@ -74,12 +87,8 @@ namespace TerminUndRaumplanung.Controllers
         [Authorize(Roles = "Administrator,User")]
         public IActionResult Create()
         {
-            var model = new AppointmentSurvey
+            var model = new Survey
             {
-                Creator = _context
-                    .ApplicationUsers
-                    .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User))),
-
                 Members = _context
                     .ApplicationUsers
                     .ToList()
@@ -94,25 +103,36 @@ namespace TerminUndRaumplanung.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> Create([Bind("Id,Subject,Creator,Members")] AppointmentSurvey appointmentSurvey)
+        public async Task<IActionResult> Create([Bind("Id,Subject,Members,SelectedMember")] Survey survey)
         {
-            appointmentSurvey.Creator = _context
+            //set current user as creator
+            survey.Creator = _context
                     .ApplicationUsers
                     .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
 
-            appointmentSurvey.Members = ViewBag.MembersList;
+            //members must not be null!!!
+            survey.Members = new Collection<ApplicationUser>
+            {
+                _context
+                .ApplicationUsers
+                .SingleOrDefault(u => u.Id == survey.SelectedMember)
+            };
+            if (survey.Members == null)
+            {
+                return View(survey);
+            }
 
             ModelState.Clear();
-            TryValidateModel(appointmentSurvey);
+            TryValidateModel(survey);
 
             if (ModelState.IsValid)
             {
-                _context.Add(appointmentSurvey);
+                _context.Add(survey);
                 await _context.SaveChangesAsync();
                 //redirect to the detail view of this survey
-                return RedirectToAction("Details", "AppointmentSurveys", new { id = appointmentSurvey.Id });
+                return RedirectToAction("Details", "AppointmentSurveys", new { id = survey.Id });
             }
-            return View(appointmentSurvey);
+            return View(survey);
         }
 
         // GET: AppointmentSurveys/Edit/5
@@ -124,28 +144,19 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var appointmentSurvey = await _context.AppointmentSurveys
+            var survey = await _context.Surveys
                 .Include(m => m.Creator)
                 .Include(m => m.Members)
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (appointmentSurvey == null)
+            if (survey == null)
             {
                 return NotFound();
             }
 
-            //generate list ob members for the view to be displayed
-            if (appointmentSurvey.Members == null)
-            {
-                appointmentSurvey.Members = _context
-                    .ApplicationUsers
-                    .ToList();
-            }
-            else
-            {
-                appointmentSurvey.Members = appointmentSurvey.Members.ToList();
-            }
 
-            return View(appointmentSurvey);
+            survey.Members = survey.Members.ToList();
+            
+            return View(survey);
         }
 
         // POST: AppointmentSurveys/Edit/5
@@ -154,29 +165,26 @@ namespace TerminUndRaumplanung.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Subject,Creator,Members")] AppointmentSurvey appointmentSurvey)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Subject,Creator,Members")] Survey survey)
         {
-            if (id != appointmentSurvey.Id)
+            if (id != survey.Id)
             {
                 return NotFound();
             }
 
-            //get mebmers form view and store them into the entity
-            appointmentSurvey.Members = ViewBag.MembersList;
-
             ModelState.Clear();
-            TryValidateModel(appointmentSurvey);
+            TryValidateModel(survey);
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(appointmentSurvey);
+                    _context.Update(survey);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AppointmentSurveyExists(appointmentSurvey.Id))
+                    if (!AppointmentSurveyExists(survey.Id))
                     {
                         return NotFound();
                     }
@@ -187,7 +195,7 @@ namespace TerminUndRaumplanung.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(appointmentSurvey);
+            return View(survey);
         }
 
         // GET: AppointmentSurveys/Delete/5
@@ -199,24 +207,13 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var appointmentSurvey = await _context.AppointmentSurveys
+            var appointmentSurvey = await _context.Surveys
                 .Include(m => m.Creator)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (appointmentSurvey == null)
             {
                 return NotFound();
             }
-
-            //var creator = _context
-            //        .AppointmentSurveys
-            //        .Include(a => a.Creator)
-            //        .FirstOrDefault(a => a.Id == id)
-            //        .Creator;
-            ////store entities in ViewBag for displaying in view
-            //ViewBag.Creator = creator;
-            //ViewBag.Creator.FirstName = creator.FirstName;
-            //ViewBag.Creator.LastName = creator.LastName;
-            //ViewBag.Creator.Id = creator.Id;
 
             return View(appointmentSurvey);
         }
@@ -227,8 +224,8 @@ namespace TerminUndRaumplanung.Controllers
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var appointmentSurvey = await _context.AppointmentSurveys.SingleOrDefaultAsync(m => m.Id == id);
-            _context.AppointmentSurveys.Remove(appointmentSurvey);
+            var appointmentSurvey = await _context.Surveys.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Surveys.Remove(appointmentSurvey);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -236,7 +233,7 @@ namespace TerminUndRaumplanung.Controllers
         [Authorize(Roles = "Administrator,User")]
         private bool AppointmentSurveyExists(int id)
         {
-            return _context.AppointmentSurveys.Any(e => e.Id == id);
+            return _context.Surveys.Any(e => e.Id == id);
         }
     }
 }

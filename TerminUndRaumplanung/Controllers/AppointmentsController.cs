@@ -62,13 +62,18 @@ namespace TerminUndRaumplanung.Controllers
                 StartTime = System.DateTime.Now,
                 EndTime = System.DateTime.Now.AddHours(1),
                 Survey = _context
-                    .AppointmentSurveys
-                    .Include(s => s.Creator)
+                    .Surveys
+                    .Include(s => s.Creator)    //ecplicitly loading of the related creator
                     .SingleOrDefault(s => s.Id == surveyId),
                 Ressources = _context
                     .Ressources
                     .ToList()
             };
+
+            ViewBag.RoomList = _context
+                .Rooms
+                .Any();
+
 
             return View(model);
         }
@@ -82,22 +87,25 @@ namespace TerminUndRaumplanung.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Create(
-            //Simon
             //binding now includes Room and Survey as direct object entities of 
             //Appointment with eager lodaing from the database
-            [Bind("Id,StartTime,EndTime,Room,Ressources,Survey")] Appointment appointment
-            )
+            [Bind("Id,StartTime,EndTime,Room,Ressources,Survey")] Appointment appointment)
         {
-            //get related Room Object from database and store it into the Appointment Object
-            appointment.Room = _context
-                                    .Rooms
-                                    .FirstOrDefault(r => r.Name.Contains(appointment.Room.Name));
 
+            //get related Room Object from database and store it into the Appointment Object
+            //appointment.Room = _context
+            //                        .Rooms
+            //                        .FirstOrDefault(r => r.Name.Contains(appointment.Room.Name));
+            var selectedRoom = appointment.Room;
+
+            appointment.Room = _context
+                .Rooms
+                .FirstOrDefault(r => r.Id == selectedRoom.Id);
 
             //get related Survey object from database and store it into the Appointment object
-            //_context.AppointmentSurveys.Where(s => s.Id == appointment.Survey.Id).Load();
+            //_context.Surveys.Where(s => s.Id == appointment.Survey.Id).Load();
             appointment.Survey = _context
-                                    .AppointmentSurveys
+                                    .Surveys
                                     .Include(s => s.Creator)
                                     .FirstOrDefault(s => s.Id == appointment.Survey.Id);
 
