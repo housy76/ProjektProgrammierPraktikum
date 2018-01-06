@@ -7,6 +7,7 @@ using AppData.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.ObjectModel;
 
 namespace TerminUndRaumplanung.Controllers
 {
@@ -39,7 +40,11 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var appointment = await _context.Appointments
+            var appointment = await _context
+                .Appointments
+                .Include(a => a.Ressources)
+                .Include(a => a.Room)
+                .Include(a => a.Survey)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (appointment == null)
             {
@@ -62,13 +67,19 @@ namespace TerminUndRaumplanung.Controllers
                 StartTime = System.DateTime.Now,
                 EndTime = System.DateTime.Now.AddHours(1),
                 Survey = _context
-                    .AppointmentSurveys
-                    .Include(s => s.Creator)
+                    .Surveys
+                    .Include(s => s.Creator)    //ecplicitly loading of the related creator
                     .SingleOrDefault(s => s.Id == surveyId),
                 Ressources = _context
                     .Ressources
+                    .OrderBy(r => r.Name)
                     .ToList()
             };
+
+            ViewBag.RoomList = _context
+                .Rooms
+                .OrderBy(r => r.Name)
+                .ToList();
 
             return View(model);
         }
@@ -82,34 +93,56 @@ namespace TerminUndRaumplanung.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Create(
-            //Simon
             //binding now includes Room and Survey as direct object entities of 
             //Appointment with eager lodaing from the database
-            [Bind("Id,StartTime,EndTime,Room,Ressources,Survey")] Appointment appointment
-            )
+            [Bind("Id,StartTime,EndTime,SelectedRoom,SelectedRessource,Survey")] Appointment appointment)
         {
-            //get related Room Object from database and store it into the Appointment Object
-            appointment.Room = _context
-                                    .Rooms
-                                    .FirstOrDefault(r => r.Name.Contains(appointment.Room.Name));
-
 
             //get related Survey object from database and store it into the Appointment object
-            //_context.AppointmentSurveys.Where(s => s.Id == appointment.Survey.Id).Load();
             appointment.Survey = _context
-                                    .AppointmentSurveys
+                                    .Surveys
                                     .Include(s => s.Creator)
                                     .FirstOrDefault(s => s.Id == appointment.Survey.Id);
 
+            //get selected Room Object from database and store it into the Appointment Object
+            appointment.Room = (Room)_context
+                .Ressources
+                .SingleOrDefault(r => r.Id == appointment.SelectedRoom);
+
+
+            //get selected Ressource Objects from database and store it into this Appointment
+            appointment.Ressources = new Collection<Ressource>();
+            appointment.Ressources.Add(
+                _context
+                    .Ressources
+                    .SingleOrDefault(r => r.Id == appointment.SelectedRessource)
+            );
 
             var bookedTime = new BookedTime
             {
                 StartTime = appointment.StartTime,
                 EndTime = appointment.EndTime,
-                Ressource = appointment.Room
             };
 
 
+            //add the time to the booked room
+            if (appointment.Room.BookedTimes == null)
+            {
+                appointment.Room.BookedTimes = new Collection<BookedTime>();
+            }
+            appointment.Room.BookedTimes.Add(bookedTime);
+            //bookedTime.Ressources.Add(appointment.Room);
+
+            //add time to the booked ressources
+            //foreach (var item in appointment.Ressources)
+            //{
+            //    if (item.BookedTimes == null)
+            //    {
+            //        item.BookedTimes = new Collection<BookedTime>();
+            //    }
+            //    item.BookedTimes.Add(bookedTime);
+            //    //bookedTime.Ressources.Add(item);
+            //}
 
             //After model binding and validation are complete, you may want to repeat parts
             //of it. For example, a user may have entered text in a field expecting an 
@@ -122,7 +155,7 @@ namespace TerminUndRaumplanung.Controllers
                 _context.Add(appointment);
                 _context.Add(bookedTime);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "AppointmentSurveys", new { id = appointment.Survey.Id });
+                return RedirectToAction("Details", "Surveys", new { id = appointment.Survey.Id });
             }
             else
             {
@@ -194,7 +227,7 @@ namespace TerminUndRaumplanung.Controllers
 
                 return RedirectToAction(
                     "Details",  //controller action
-                    "AppointmentSurveys",   //controller
+                    "Surveys",   //controller
 
                     //Man muss ein neues Objekt erzeugen, das wie die Variable der
                     //empfangenden Methode des Controllers heißt.

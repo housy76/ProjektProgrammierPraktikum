@@ -29,8 +29,8 @@ namespace AppServices
                 .BookedTimes
                 .Include(b => b.Id)
                 .Include(b => b.StartTime)
-                .Include(b => b.EndTime)
-                .Include(b => b.Ressource);
+                .Include(b => b.EndTime);
+                //.Include(b => b.Ressource);
         }
 
         public BookedTime GetById(int id)
@@ -46,12 +46,12 @@ namespace AppServices
                 .EndTime;
         }
 
-        public Ressource GetRessource(int id)
-        {
-            return GetAll()
-                .SingleOrDefault(b => b.Id == id)
-                .Ressource;
-        }
+        //public ICollection<Ressource> GetRessources(int id)
+        //{
+        //    return GetAll()
+        //        .SingleOrDefault(b => b.Id == id)
+        //        .Ressources;
+        //}
 
         public DateTime GetStartTime(int id)
         {

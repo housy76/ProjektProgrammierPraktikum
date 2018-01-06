@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace AppData.Models
 {
@@ -12,7 +10,7 @@ namespace AppData.Models
         [Required]
         [Display(Name = "Name / Bezeichnung")]
         public string Name { get; set; }
-        public IEnumerable<BookedTime> BookedTimes { get; set; }
+        public ICollection<BookedTime> BookedTimes { get; set; }
 
     }
 }

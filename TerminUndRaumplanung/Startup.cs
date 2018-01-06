@@ -27,9 +27,9 @@ namespace TerminUndRaumplanung
             //Simon
             services.AddMvc();
             services.AddSingleton(Configuration);
-            // so that AppointmentSurveyService is injected into controllers and other components that request IAppointmentSurvey
+            // so that SurveyService is injected into controllers and other components that request ISurvey
             services.AddTransient<IAppointment, AppointmentService>();
-            services.AddScoped<IAppointmentSurvey, AppointmentSurveyService>();
+            services.AddScoped<ISurvey, SurveyService>();
             services.AddTransient<IBeamer, BeamerService>();
             services.AddTransient<IBookedTime, BookedTimeService>();
             services.AddTransient<IEmailSender, EmailSender>();
@@ -73,6 +73,10 @@ namespace TerminUndRaumplanung
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "removeSurveyMember",
+                    template: "{controller=surveys}/{action=RemoveMember}/{userId,surveyId}");
             });
 
 

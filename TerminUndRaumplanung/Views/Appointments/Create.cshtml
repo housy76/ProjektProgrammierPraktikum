@@ -37,16 +37,15 @@
                 @Html.LabelFor(model => model.Room)
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.Room.Name)
+                @Html.DropDownListFor(model => model.SelectedRoom, new SelectList(ViewBag.RoomList, "Id", "Name"), "Select one", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Room)
             </div>
-
 
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Ressources)
             </div>
             <div class="editor-field">
-                @Html.DropDownListFor(model => model.Ressources, new SelectList(Model.Ressources, "Id", "Name"), "Select one", new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.SelectedRessource, new SelectList(Model.Ressources, "Id", "Name"), "Select one", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Ressources)
             </div>
             <div class="form-group">

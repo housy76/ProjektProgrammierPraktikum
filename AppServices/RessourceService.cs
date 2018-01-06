@@ -31,7 +31,7 @@ namespace AppServices
                 .Include(r => r.BookedTimes);
         }
 
-        public IEnumerable<BookedTime> GetBookedTimes(int id)
+        public ICollection<BookedTime> GetBookedTimes(int id)
         {
             return GetAll()
                 .FirstOrDefault(r => r.Id == id)

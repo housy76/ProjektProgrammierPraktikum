@@ -1,0 +1,47 @@
+﻿@model AppData.Models.Survey
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Survey</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Subject)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Subject)
+                @Html.ValidationMessageFor(model => model.Subject)
+            </div>
+
+            <div class="editor-lable">
+                @Html.LabelFor(model => model.Members)
+            </div>
+            <div class="editor-field" id="dropDownMembers">
+                @Html.DropDownListFor(model => model.SelectedMember, new SelectList(Model.Members, "Id", "Email"), "Select one", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Members)
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+    <p id="demo"></p>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

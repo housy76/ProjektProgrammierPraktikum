@@ -48,7 +48,7 @@ namespace AppServices
                 .EndTime;
         }
 
-        public IEnumerable<Ressource> GetRessources(int id)
+        public ICollection<Ressource> GetRessources(int id)
         {
             return
                 GetAll()
@@ -74,10 +74,10 @@ namespace AppServices
                 .EndTime;
         }
 
-        public AppointmentSurvey GetSurvey(int id)
+        public Survey GetSurvey(int id)
         {
             return _context
-                .AppointmentSurveys
+                .Surveys
                 .FirstOrDefault(s => s.Id == id);
         }
     }
