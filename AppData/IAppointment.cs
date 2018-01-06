@@ -16,7 +16,7 @@ namespace AppData
         IEnumerable<Ressource> GetRessources(int id);
         DateTime GetStartTime(int id);
         DateTime GetEndTime(int id);
-        AppointmentSurvey GetSurvey(int id);
+        Survey GetSurvey(int id);
     }
 
 }

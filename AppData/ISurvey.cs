@@ -5,13 +5,14 @@ using System.Text;
 
 namespace AppData
 {
-    public interface IAppointmentSurvey
+    public interface ISurvey
     {
-        IEnumerable<AppointmentSurvey> GetAll();
-        AppointmentSurvey GetById(int id);
+        IEnumerable<Survey> GetAll();
+        Survey GetById(int id);
         string GetSubject(int id);
         ApplicationUser GetCreator(int id);
         ICollection<ApplicationUser> GetMembers(int id);
         IEnumerable<Appointment> GetAppointments(int surveyId);
+        
     }
 }
