@@ -11,20 +11,20 @@ using System.Collections.ObjectModel;
 
 namespace TerminUndRaumplanung.Controllers
 {
-    public class AppointmentSurveysController : Controller
+    public class SurveysController : Controller
     {
         private readonly AppointmentContext _context;
         private ISurvey _survey;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AppointmentSurveysController(AppointmentContext context, ISurvey survey, UserManager<ApplicationUser> userManager)
+        public SurveysController(AppointmentContext context, ISurvey survey, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _survey = survey;
             _userManager = userManager;
         }
 
-        // GET: AppointmentSurveys
+        // GET: Surveys
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Index()
         {
@@ -58,7 +58,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
 
-        // GET: AppointmentSurveys/Details/5
+        // GET: Surveys/Details/5
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -83,7 +83,7 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
-        // GET: AppointmentSurveys/Create
+        // GET: Surveys/Create
         [Authorize(Roles = "Administrator,User")]
         public IActionResult Create()
         {
@@ -97,7 +97,7 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
-        // POST: AppointmentSurveys/Create
+        // POST: Surveys/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -130,12 +130,12 @@ namespace TerminUndRaumplanung.Controllers
                 _context.Add(survey);
                 await _context.SaveChangesAsync();
                 //redirect to the detail view of this survey
-                return RedirectToAction("Details", "AppointmentSurveys", new { id = survey.Id });
+                return RedirectToAction("Details", "Surveys", new { id = survey.Id });
             }
             return View(survey);
         }
 
-        // GET: AppointmentSurveys/Edit/5
+        // GET: Surveys/Edit/5
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -153,19 +153,22 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
+            ViewBag.MemberList = _context
+                .ApplicationUsers
+                .Where(u => u.Id != survey.Creator.Id)
+                .ToList();
 
-            survey.Members = survey.Members.ToList();
-            
             return View(survey);
         }
 
-        // POST: AppointmentSurveys/Edit/5
+        
+        // POST: Surveys/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Subject,Creator,Members")] Survey survey)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Subject,Creator,SelectedMembers,Members")] Survey survey)
         {
             if (id != survey.Id)
             {
@@ -198,7 +201,65 @@ namespace TerminUndRaumplanung.Controllers
             return View(survey);
         }
 
-        // GET: AppointmentSurveys/Delete/5
+
+        //POST: Surveys/UpdateMemberList
+        //adds an additional User to the existing member list of the survey
+        [HttpPost]
+        [Authorize(Roles = "Administrator,User")]
+        public async Task<IActionResult> UpdateMemberList(
+            [Bind("Id,Subject")]Survey survey,
+            string selectedMember)
+        {
+
+
+            survey = _context
+                .Surveys
+                .Include(s => s.Creator)
+                .Include(s => s.Members)
+                .Include(s => s.Appointments)
+                .SingleOrDefault(s => s.Id == survey.Id);
+
+            survey.Members.Add(
+                _context
+                    .ApplicationUsers
+                    .SingleOrDefault(u => u.Id == selectedMember)
+                );
+
+            _context.Update(survey);
+            await _context.SaveChangesAsync();
+
+
+            return RedirectToAction("Edit", survey);
+        }
+
+
+        [Authorize(Roles = "Administrator,User")]
+        public async Task<IActionResult> RemoveMember(string userId, int surveyId)
+        {
+
+            var survey = _context
+                .Surveys
+                .Include(s => s.Creator)
+                .Include(s => s.Members)
+                .Include(s => s.Appointments)
+                .SingleOrDefault(s => s.Id == surveyId);
+
+
+            survey.Members.Remove(
+                _context
+                    .ApplicationUsers
+                    .SingleOrDefault(u => u.Id == userId)
+                );
+
+            _context.Update(survey);
+            await _context.SaveChangesAsync();
+
+
+            return RedirectToAction("Edit", survey);
+        }
+
+
+        // GET: Surveys/Delete/5
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -218,7 +279,7 @@ namespace TerminUndRaumplanung.Controllers
             return View(appointmentSurvey);
         }
 
-        // POST: AppointmentSurveys/Delete/5
+        // POST: Surveys/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]

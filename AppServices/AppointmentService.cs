@@ -48,7 +48,7 @@ namespace AppServices
                 .EndTime;
         }
 
-        public IEnumerable<Ressource> GetRessources(int id)
+        public ICollection<Ressource> GetRessources(int id)
         {
             return
                 GetAll()

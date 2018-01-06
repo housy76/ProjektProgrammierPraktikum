@@ -12,6 +12,6 @@ namespace AppData
         BookedTime GetById(int id);
         DateTime GetStartTime(int id);
         DateTime GetEndTime(int id);
-        Ressource GetRessource(int id);
+        //ICollection<Ressource> GetRessources(int id);
     }
 }

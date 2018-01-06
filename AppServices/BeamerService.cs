@@ -34,7 +34,7 @@ namespace AppServices
         {
             return _context
                 .Beamers
-                .Include(b => b.IsAvailable == true)
+                //.Include(b => b.IsAvailable == true)
                 .Include(b => b.Name);
         }
 

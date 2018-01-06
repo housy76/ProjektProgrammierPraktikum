@@ -9,20 +9,28 @@ namespace AppData.Models
 
         public int Id { get; set; }
 
-        [Display(Name = "Beginn")]
         [Required]
+        [Display(Name = "Beginn")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm}", ApplyFormatInEditMode = true)]
+
         public DateTime StartTime { get; set; }
 
-        [Display(Name = "Ende")]
         [Required]
+        [Display(Name = "Ende")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm}", ApplyFormatInEditMode = true)]
         public DateTime EndTime { get; set; }
 
         [Display(Name = "Ort")]
         [Required]
         public Room Room { get; set; }
 
+        //necessary for the dropdownlists to store the selected
+        //value and send it back to the controller.
+        public int SelectedRoom { get; set; }
+
+
         [Display(Name = "Weitere Ressourcen")]
-        public IEnumerable<Ressource> Ressources { get; set; }
+        public ICollection<Ressource> Ressources { get; set; }
 
         //necessary for the dropdownlists to store the selected 
         //value and send it back to the controller.

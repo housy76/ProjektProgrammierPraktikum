@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class Init10 : Migration
+    public partial class Init12 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,7 +48,6 @@ namespace AppData.Migrations
                 name: "Ressources",
                 columns: table => new
                 {
-                    IsAvailable = table.Column<bool>(nullable: true),
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AppointmentId = table.Column<int>(nullable: true),
@@ -70,7 +69,7 @@ namespace AppData.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EndTime = table.Column<DateTime>(nullable: false),
-                    RessourceId = table.Column<int>(nullable: false),
+                    RessourceId = table.Column<int>(nullable: true),
                     StartTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -81,7 +80,7 @@ namespace AppData.Migrations
                         column: x => x.RessourceId,
                         principalTable: "Ressources",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,6 +168,7 @@ namespace AppData.Migrations
                     EndTime = table.Column<DateTime>(nullable: false),
                     RoomId = table.Column<int>(nullable: false),
                     SelectedRessource = table.Column<int>(nullable: false),
+                    SelectedRoom = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     SurveyId = table.Column<int>(nullable: false)
                 },

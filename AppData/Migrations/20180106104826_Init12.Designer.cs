@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20180105154455_Init10")]
-    partial class Init10
+    [Migration("20180106104826_Init12")]
+    partial class Init12
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -92,6 +92,8 @@ namespace AppData.Migrations
 
                     b.Property<int>("SelectedRessource");
 
+                    b.Property<int>("SelectedRoom");
+
                     b.Property<DateTime>("StartTime");
 
                     b.Property<int>("SurveyId");
@@ -112,7 +114,7 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("EndTime");
 
-                    b.Property<int>("RessourceId");
+                    b.Property<int?>("RessourceId");
 
                     b.Property<DateTime>("StartTime");
 
@@ -277,7 +279,6 @@ namespace AppData.Migrations
                 {
                     b.HasBaseType("AppData.Models.Ressource");
 
-                    b.Property<bool>("IsAvailable");
 
                     b.ToTable("Beamer");
 
@@ -321,10 +322,9 @@ namespace AppData.Migrations
 
             modelBuilder.Entity("AppData.Models.BookedTime", b =>
                 {
-                    b.HasOne("AppData.Models.Ressource", "Ressource")
+                    b.HasOne("AppData.Models.Ressource")
                         .WithMany("BookedTimes")
-                        .HasForeignKey("RessourceId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RessourceId");
                 });
 
             modelBuilder.Entity("AppData.Models.Ressource", b =>
