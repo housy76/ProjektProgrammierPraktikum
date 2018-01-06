@@ -20,25 +20,6 @@
                 @Html.ValidationMessageFor(model => model.Subject)
             </div>
 
-            @*<div class="editor-lable">
-                @Html.LabelFor(model => model.Creator)
-            </div>
-            <div>
-                @Html.DisplayFor(model => model.Creator.Email)
-            </div>
-            <div class="editor-field" hidden>
-                @Html.EditorFor(model => model.Creator)
-            </div>*@
-
-            <div class="editor-lable" hidden>
-                @Html.LabelFor(model => model.Members)
-            </div>
-            <div class="editor-field" hidden>
-                @Html.EditorFor(model => model.Members)
-                @Html.ValidationMessageFor(model => model.Members)
-            </div>
-
-
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Members)
             </div>
