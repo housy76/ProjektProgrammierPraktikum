@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class Init12 : Migration
+    public partial class Init14 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -151,7 +151,6 @@ namespace AppData.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreatorId = table.Column<string>(nullable: false),
-                    SelectedMember = table.Column<string>(nullable: true),
                     Subject = table.Column<string>(nullable: false)
                 },
                 constraints: table =>

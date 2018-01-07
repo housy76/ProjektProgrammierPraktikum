@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20180106104826_Init12")]
-    partial class Init12
+    [Migration("20180107083706_Init14")]
+    partial class Init14
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -154,8 +154,6 @@ namespace AppData.Migrations
 
                     b.Property<string>("CreatorId")
                         .IsRequired();
-
-                    b.Property<string>("SelectedMember");
 
                     b.Property<string>("Subject")
                         .IsRequired();

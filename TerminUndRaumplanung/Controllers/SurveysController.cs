@@ -103,20 +103,25 @@ namespace TerminUndRaumplanung.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> Create([Bind("Id,Subject,Members,SelectedMember")] Survey survey)
+        public async Task<IActionResult> Create([Bind("Id,Subject,SelectedMember")] Survey survey)
         {
             //set current user as creator
             survey.Creator = _context
                     .ApplicationUsers
                     .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
 
-            //members must not be null!!!
-            survey.Members = new Collection<ApplicationUser>
+            //members must be initialised before setting values!
+            survey.Members = new Collection<ApplicationUser>();
+
+            foreach (var item in survey.SelectedMember)
             {
-                _context
-                .ApplicationUsers
-                .SingleOrDefault(u => u.Id == survey.SelectedMember)
-            };
+                survey.Members.Add(
+                    _context
+                        .ApplicationUsers
+                        .SingleOrDefault(u => u.Id == item)
+                );
+            }
+
             if (survey.Members == null)
             {
                 return View(survey);

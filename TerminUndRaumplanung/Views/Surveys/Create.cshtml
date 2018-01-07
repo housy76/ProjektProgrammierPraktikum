@@ -23,9 +23,9 @@
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Members)
             </div>
-            <div class="editor-field" id="dropDownMembers">
-                @Html.DropDownListFor(model => model.SelectedMember, new SelectList(Model.Members, "Id", "Email"), "Select one", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Members)
+            <div class="editor-field">
+                @Html.ListBoxFor(model => model.SelectedMember, new MultiSelectList(Model.Members, "Id", "Email"))
+                @Html.ValidationMessageFor(model => model.SelectedMember)
             </div>
 
             <div class="form-group">

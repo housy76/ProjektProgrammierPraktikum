@@ -154,8 +154,6 @@ namespace AppData.Migrations
                     b.Property<string>("CreatorId")
                         .IsRequired();
 
-                    b.Property<string>("SelectedMember");
-
                     b.Property<string>("Subject")
                         .IsRequired();
 

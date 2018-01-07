@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ namespace AppData.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Betreff erforderlich!")]
         [Display(Name = "Betreff")]
         public string Subject { get; set; }
 
@@ -19,7 +20,12 @@ namespace AppData.Models
 
         [Display(Name = "Teilnehmer")]
         public ICollection<ApplicationUser> Members { get; set; }
-        public string SelectedMember { get; set; }
+
+        [NotMapped]
+        [Required(ErrorMessage = "Mindestens ein Teilnehmer erforderlich!")]
+        public IEnumerable<string> SelectedMember { get; set; }
+
+        [Display(Name = "Termine")]
         public IEnumerable<Appointment> Appointments { get; set; }
     }
 }
