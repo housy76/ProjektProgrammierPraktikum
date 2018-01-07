@@ -40,7 +40,13 @@
                 @Html.DisplayFor(modelItem => item.Room.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ressources)
+                @*Insert some javascript code, that displays only the first x charakters 
+                of all members seperated by a "," and if you click at the field, it 
+                should expand to display all members*@
+                @foreach (var res in item.Ressources)
+                {
+                    @res.Name
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

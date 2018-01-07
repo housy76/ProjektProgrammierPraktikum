@@ -28,6 +28,7 @@ namespace TerminUndRaumplanung.Controllers
             return View(await _context
                 .Appointments
                 .Include(a => a.Room)
+                .Include(a => a.Ressources)
                 .ToListAsync());
         }
 
