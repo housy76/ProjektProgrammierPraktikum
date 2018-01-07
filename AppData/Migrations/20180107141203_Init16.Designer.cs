@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20180107083706_Init14")]
-    partial class Init14
+    [Migration("20180107141203_Init16")]
+    partial class Init16
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -89,8 +89,6 @@ namespace AppData.Migrations
                     b.Property<DateTime>("EndTime");
 
                     b.Property<int>("RoomId");
-
-                    b.Property<int>("SelectedRessource");
 
                     b.Property<int>("SelectedRoom");
 

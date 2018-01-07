@@ -89,8 +89,6 @@ namespace AppData.Migrations
 
                     b.Property<int>("RoomId");
 
-                    b.Property<int>("SelectedRessource");
-
                     b.Property<int>("SelectedRoom");
 
                     b.Property<DateTime>("StartTime");

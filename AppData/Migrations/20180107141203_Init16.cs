@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class Init14 : Migration
+    public partial class Init16 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -166,7 +166,6 @@ namespace AppData.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EndTime = table.Column<DateTime>(nullable: false),
                     RoomId = table.Column<int>(nullable: false),
-                    SelectedRessource = table.Column<int>(nullable: false),
                     SelectedRoom = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     SurveyId = table.Column<int>(nullable: false)
