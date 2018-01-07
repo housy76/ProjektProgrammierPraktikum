@@ -234,6 +234,8 @@ namespace TerminUndRaumplanung.Controllers
 
 
         [Authorize(Roles = "Administrator,User")]
+        [Route("Surveys/RemoveMember/{userId},{surveyId}")] //attribute routing for specific 
+                                                            //url parameters
         public async Task<IActionResult> RemoveMember(string userId, int surveyId)
         {
 

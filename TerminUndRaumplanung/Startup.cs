@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AppData;
@@ -67,82 +68,89 @@ namespace TerminUndRaumplanung
             //create roles for users
             //CreateRoles(app.ApplicationServices).Wait();
 
-
             app.UseMvc(routes =>
             {
+                //attribute routing is autmatically activated / available 
+                //in asp.net core 2.0 and later. 
+                //If you have to add custom routes, please write them as annotations
+                //above your controller method. More information under:
+                //https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing#attribute-routing-ref-label
+
+                //default route will be used when no specific or custom route matches
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapRoute(
-                    name: "removeSurveyMember",
-                    template: "{controller=surveys}/{action=RemoveMember}/{userId,surveyId}");
+                
             });
 
 
         }
 
-        private async Task CreateRoles(IServiceProvider serviceProvider)
-        {
-
-            IServiceScopeFactory scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
-
-            using (IServiceScope scope = scopeFactory.CreateScope())
-            {
-                RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-                string[] roleNames = { "Admin", "Manager", "Member" };
-                IdentityResult roleResult;
-
-                foreach (var roleName in roleNames)
-                {
-                    var roleExist = await roleManager.RoleExistsAsync(roleName);
-                    if (!roleExist)
-                    {
-                        //create the roles and seed them to the database: Question 1
-                        roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
-                    }
-                }
-            }
 
 
-            //initializing custom roles 
-            //var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            //string[] roleNames = { "Admin", "Manager", "Member" };
-            //IdentityResult roleResult;
+        //Initialization of users and roles on startup is acutally not working
+        //uncomment this section and Line 68 for further tests 
+        //private async Task CreateRoles(IServiceProvider serviceProvider)
+        //{
 
-            //foreach (var roleName in roleNames)
-            //{
-            //    var roleExist = await RoleManager.RoleExistsAsync(roleName);
-            //    if (!roleExist)
-            //    {
-            //        //create the roles and seed them to the database: Question 1
-            //        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-            //    }
-            //}
+        //    IServiceScopeFactory scopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
 
-            //Here you could create a super user who will maintain the web app
-            var poweruser = new ApplicationUser
-            {
+        //    using (IServiceScope scope = scopeFactory.CreateScope())
+        //    {
+        //        RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-                UserName = Configuration["AppSettings:UserName"],
-                Email = Configuration["AppSettings:UserEmail"],
-            };
-            //Ensure you have these values in your appsettings.json file
-            string userPWD = Configuration["AppSettings:UserPassword"];
-            var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
+        //        string[] roleNames = { "Admin", "Manager", "Member" };
+        //        IdentityResult roleResult;
 
-            if (_user == null)
-            {
-                var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
-                if (createPowerUser.Succeeded)
-                {
-                    //here we tie the new user to the role
-                    await UserManager.AddToRoleAsync(poweruser, "Admin");
+        //        foreach (var roleName in roleNames)
+        //        {
+        //            var roleExist = await roleManager.RoleExistsAsync(roleName);
+        //            if (!roleExist)
+        //            {
+        //                //create the roles and seed them to the database: Question 1
+        //                roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+        //            }
+        //        }
+        //    }
 
-                }
-            }
-        }
+
+        //    //initializing custom roles 
+        //    //var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        //    var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        //    //string[] roleNames = { "Admin", "Manager", "Member" };
+        //    //IdentityResult roleResult;
+
+        //    //foreach (var roleName in roleNames)
+        //    //{
+        //    //    var roleExist = await RoleManager.RoleExistsAsync(roleName);
+        //    //    if (!roleExist)
+        //    //    {
+        //    //        //create the roles and seed them to the database: Question 1
+        //    //        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+        //    //    }
+        //    //}
+
+        //    //Here you could create a super user who will maintain the web app
+        //    var poweruser = new ApplicationUser
+        //    {
+
+        //        UserName = Configuration["AppSettings:UserName"],
+        //        Email = Configuration["AppSettings:UserEmail"],
+        //    };
+        //    //Ensure you have these values in your appsettings.json file
+        //    string userPWD = Configuration["AppSettings:UserPassword"];
+        //    var _user = await UserManager.FindByEmailAsync(Configuration["AppSettings:AdminUserEmail"]);
+
+        //    if (_user == null)
+        //    {
+        //        var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
+        //        if (createPowerUser.Succeeded)
+        //        {
+        //            //here we tie the new user to the role
+        //            await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+        //        }
+        //    }
+        //}
     }
 }
