@@ -46,6 +46,8 @@ namespace TerminUndRaumplanung.Controllers
                 .Include(a => a.Ressources)
                 .Include(a => a.Room)
                 .Include(a => a.Survey)
+                .OrderByDescending(a => a.StartTime)
+                //.Where(a => a.StartTime > System.DateTime.Now.AddDays(-1))
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (appointment == null)
             {
@@ -190,6 +192,7 @@ namespace TerminUndRaumplanung.Controllers
             var appointment = await _context.Appointments
                 .Include(a => a.Survey)
                 .Include(a => a.Room)
+                .Include(a => a.Ressources)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (appointment == null)
@@ -198,6 +201,11 @@ namespace TerminUndRaumplanung.Controllers
             }
 
             var sId = appointment.Survey.Id;
+
+            ViewBag.RoomList = _context
+                .Rooms
+                .OrderBy(r => r.Name)
+                .ToList();
 
             return View(appointment);
         }

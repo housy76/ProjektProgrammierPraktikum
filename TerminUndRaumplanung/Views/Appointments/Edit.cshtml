@@ -31,13 +31,12 @@
                 @Html.EditorFor(model => model.EndTime)
                 @Html.ValidationMessageFor(model => model.EndTime)
             </div>
-
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Room)
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.Room.Name)
-                @Html.ValidationMessageFor(model => model.Room)
+                @Html.DropDownListFor(model => model.SelectedRoom, new SelectList(ViewBag.RoomList, "Id", "Name"), new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SelectedRoom)
             </div>
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Ressources)
