@@ -31,28 +31,10 @@
                 <div>
                     @item.Email
                 </div>
-                @*<div>
-                    <a asp-action="RemoveMember" asp-route-id="@item.Id,@Model.Id">Remove Member</a>
-                </div>*@
             }
         </dd>
     </dl>
 </div>
-
-@*<div>
-    @foreach (var item in Model.Members)
-    {
-        <dl class="dl-horizontal">
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Members)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Members)
-            </dd>
-        </dl>
-    }
-</div>*@
 
 <hr />
 
@@ -90,7 +72,13 @@
                         @appointments.Room.Name
                     </td>
                     <td>
-                        @appointments.Ressources
+                        @*Insert some javascript code, that displays only the first x charakters 
+                        of all members seperated by a "," and if you click at the field, it 
+                        should expand to display all members*@
+                        @foreach (var item in appointments.Ressources)
+                        {
+                            @item.Name
+                        }
                     </td>
                 </tr>
             }

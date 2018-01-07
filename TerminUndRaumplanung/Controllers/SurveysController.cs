@@ -66,7 +66,9 @@ namespace TerminUndRaumplanung.Controllers
                 .Include(s => s.Creator)
                 .Include(s => s.Members)
                 .Include(s => s.Appointments)
-                    .ThenInclude(a => a.Room) //load appointment entity room explicitly
+                    .ThenInclude(a => a.Room)   //load appointment entity room explicitly
+                .Include(s => s.Appointments)   //loading different entities explicitly
+                    .ThenInclude(a => a.Ressources)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             return View(survey);
