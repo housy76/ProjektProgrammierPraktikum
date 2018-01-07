@@ -1,4 +1,4 @@
-﻿@model TerminUndRaumplanung.Models.SurveyDetailModel
+﻿@model AppData.Models.Survey
 
 @{
     ViewData["Title"] = "Details";
@@ -22,10 +22,24 @@
         <dd>
             @Html.DisplayTextFor(model => model.Creator)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Members)
+        </dt>
+        <dd>
+            @foreach (var item in Model.Members)
+            {
+                <div>
+                    @item.Email
+                </div>
+                @*<div>
+                    <a asp-action="RemoveMember" asp-route-id="@item.Id,@Model.Id">Remove Member</a>
+                </div>*@
+            }
+        </dd>
     </dl>
 </div>
 
-<div>
+@*<div>
     @foreach (var item in Model.Members)
     {
         <dl class="dl-horizontal">
@@ -38,7 +52,7 @@
             </dd>
         </dl>
     }
-</div>
+</div>*@
 
 <hr />
 
@@ -49,7 +63,7 @@
             <tr>
                 <th>
                     @*Simon*@
-                    @Html.ActionLink("Add Appointment", "Create", "Appointments", new { surveyId = Model.SurveyId}, null)
+                    @Html.ActionLink("Add Appointment", "Create", "Appointments", new { surveyId = Model.Id}, null)
                     
                 </th>
                 <th>Start Time</th>
@@ -86,6 +100,6 @@
 
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.SurveyId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

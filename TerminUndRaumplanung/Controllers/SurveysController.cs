@@ -63,24 +63,13 @@ namespace TerminUndRaumplanung.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var survey = await _context.Surveys
-                .Include(a => a.Creator)
-                .Include(a => a.Members)
+                .Include(s => s.Creator)
+                .Include(s => s.Members)
+                .Include(s => s.Appointments)
+                    .ThenInclude(a => a.Room) //load appointment entity room explicitly
                 .SingleOrDefaultAsync(m => m.Id == id);
 
-            //Simon
-            var model = new SurveyDetailModel
-            {
-                SurveyId = survey.Id,
-                Subject = survey.Subject,
-                Creator = survey.Creator,
-                Members = survey.Members,
-                Appointments = _context
-                                    .Appointments
-                                    .Include(a => a.Room)
-                                    .Where(a => a.Survey.Id == survey.Id)
-            };
-
-            return View(model);
+            return View(survey);
         }
 
         // GET: Surveys/Create
