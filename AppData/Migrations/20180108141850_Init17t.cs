@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class Init16 : Migration
+    public partial class Init17t : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,6 +21,20 @@ namespace AppData.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookedTimes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EndTime = table.Column<DateTime>(nullable: false),
+                    StartTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookedTimes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -63,24 +77,29 @@ namespace AppData.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookedTimes",
+                name: "RessourceBookedTime",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    EndTime = table.Column<DateTime>(nullable: false),
-                    RessourceId = table.Column<int>(nullable: true),
-                    StartTime = table.Column<DateTime>(nullable: false)
+                    BookedTimeId = table.Column<int>(nullable: false),
+                    RessourceId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookedTimes", x => x.Id);
+                    table.PrimaryKey("PK_RessourceBookedTime", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookedTimes_Ressources_RessourceId",
+                        name: "FK_RessourceBookedTime_BookedTimes_BookedTimeId",
+                        column: x => x.BookedTimeId,
+                        principalTable: "BookedTimes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RessourceBookedTime_Ressources_RessourceId",
                         column: x => x.RessourceId,
                         principalTable: "Ressources",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -276,8 +295,13 @@ namespace AppData.Migrations
                 column: "SurveyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookedTimes_RessourceId",
-                table: "BookedTimes",
+                name: "IX_RessourceBookedTime_BookedTimeId",
+                table: "RessourceBookedTime",
+                column: "BookedTimeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RessourceBookedTime_RessourceId",
+                table: "RessourceBookedTime",
                 column: "RessourceId");
 
             migrationBuilder.CreateIndex(
@@ -365,10 +389,13 @@ namespace AppData.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BookedTimes");
+                name: "RessourceBookedTime");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "BookedTimes");
 
             migrationBuilder.DropTable(
                 name: "Ressources");
