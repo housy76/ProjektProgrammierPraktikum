@@ -1,4 +1,4 @@
-﻿@model TerminUndRaumplanung.Models.SurveyDetailModel
+﻿@model AppData.Models.Survey
 
 @{
     ViewData["Title"] = "Details";
@@ -22,22 +22,18 @@
         <dd>
             @Html.DisplayTextFor(model => model.Creator)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Members)
+        </dt>
+        <dd>
+            @foreach (var item in Model.Members)
+            {
+                <div>
+                    @item.Email
+                </div>
+            }
+        </dd>
     </dl>
-</div>
-
-<div>
-    @foreach (var item in Model.Members)
-    {
-        <dl class="dl-horizontal">
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Members)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Members)
-            </dd>
-        </dl>
-    }
 </div>
 
 <hr />
@@ -49,7 +45,7 @@
             <tr>
                 <th>
                     @*Simon*@
-                    @Html.ActionLink("Add Appointment", "Create", "Appointments", new { surveyId = Model.SurveyId}, null)
+                    @Html.ActionLink("Add Appointment", "Create", "Appointments", new { surveyId = Model.Id}, null)
                     
                 </th>
                 <th>Start Time</th>
@@ -76,7 +72,13 @@
                         @appointments.Room.Name
                     </td>
                     <td>
-                        @appointments.Ressources
+                        @*Insert some javascript code, that displays only the first x charakters 
+                        of all members seperated by a "," and if you click at the field, it 
+                        should expand to display all members*@
+                        @foreach (var item in appointments.Ressources)
+                        {
+                            @item.Name
+                        }
                     </td>
                 </tr>
             }
@@ -86,6 +88,6 @@
 
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.SurveyId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

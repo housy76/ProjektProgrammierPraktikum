@@ -59,5 +59,12 @@ namespace AppServices
                 .SingleOrDefault(b => b.Id == id)
                 .StartTime;
         }
+
+        //public ICollection<Ressource> GetRessources(int id)
+        //{
+        //    return GetAll()
+        //        .SingleOrDefault(b => b.Id == id)
+        //        .Ressources;
+        //}
     }
 }

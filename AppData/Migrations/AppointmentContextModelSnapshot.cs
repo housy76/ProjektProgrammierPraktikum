@@ -88,8 +88,6 @@ namespace AppData.Migrations
 
                     b.Property<int>("RoomId");
 
-                    b.Property<int>("SelectedRessource");
-
                     b.Property<int>("SelectedRoom");
 
                     b.Property<DateTime>("StartTime");
@@ -112,13 +110,9 @@ namespace AppData.Migrations
 
                     b.Property<DateTime>("EndTime");
 
-                    b.Property<int?>("RessourceId");
-
                     b.Property<DateTime>("StartTime");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RessourceId");
 
                     b.ToTable("BookedTimes");
                 });
@@ -145,6 +139,24 @@ namespace AppData.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Ressource");
                 });
 
+            modelBuilder.Entity("AppData.Models.RessourceBookedTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("BookedTimeId");
+
+                    b.Property<int>("RessourceId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookedTimeId");
+
+                    b.HasIndex("RessourceId");
+
+                    b.ToTable("RessourceBookedTime");
+                });
+
             modelBuilder.Entity("AppData.Models.Survey", b =>
                 {
                     b.Property<int>("Id")
@@ -152,8 +164,6 @@ namespace AppData.Migrations
 
                     b.Property<string>("CreatorId")
                         .IsRequired();
-
-                    b.Property<string>("SelectedMember");
 
                     b.Property<string>("Subject")
                         .IsRequired();
@@ -317,18 +327,24 @@ namespace AppData.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("AppData.Models.BookedTime", b =>
-                {
-                    b.HasOne("AppData.Models.Ressource")
-                        .WithMany("BookedTimes")
-                        .HasForeignKey("RessourceId");
-                });
-
             modelBuilder.Entity("AppData.Models.Ressource", b =>
                 {
                     b.HasOne("AppData.Models.Appointment")
                         .WithMany("Ressources")
                         .HasForeignKey("AppointmentId");
+                });
+
+            modelBuilder.Entity("AppData.Models.RessourceBookedTime", b =>
+                {
+                    b.HasOne("AppData.Models.BookedTime", "BookedTime")
+                        .WithMany("RessourcesBookedTimes")
+                        .HasForeignKey("BookedTimeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("AppData.Models.Ressource", "Ressource")
+                        .WithMany("RessourceBookedTimes")
+                        .HasForeignKey("RessourceId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AppData.Models.Survey", b =>

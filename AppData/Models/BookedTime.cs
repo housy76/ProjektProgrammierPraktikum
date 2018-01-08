@@ -11,17 +11,17 @@ namespace AppData.Models
 
         [Required]
         [Display(Name = "Beginn")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime StartTime { get; set; }
 
         [Required]
         [Display(Name = "Ende")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime EndTime { get; set; }
 
 
-        //[Required]
-        //[Display(Name = "Ressource")]
-        //public ICollection<Ressource> Ressources { get; set; }
+        [Required]
+        [Display(Name = "Ressource")]
+        public List<RessourceBookedTime> RessourcesBookedTimes { get; set; }
     }
 }

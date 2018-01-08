@@ -12,7 +12,7 @@ namespace AppData
         Ressource GetById(int id);
         IEnumerable<Ressource> GetByName(string name);
         string GetName(int id);
-        ICollection<BookedTime> GetBookedTimes(int id);
+        ICollection<RessourceBookedTime> GetBookedTimes(int id);
 
     }
 }

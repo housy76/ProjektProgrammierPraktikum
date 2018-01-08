@@ -63,24 +63,15 @@ namespace TerminUndRaumplanung.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             var survey = await _context.Surveys
-                .Include(a => a.Creator)
-                .Include(a => a.Members)
+                .Include(s => s.Creator)
+                .Include(s => s.Members)
+                .Include(s => s.Appointments)
+                    .ThenInclude(a => a.Room)   //load appointment entity room explicitly
+                .Include(s => s.Appointments)   //loading different entities explicitly
+                    .ThenInclude(a => a.Ressources)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
-            //Simon
-            var model = new SurveyDetailModel
-            {
-                SurveyId = survey.Id,
-                Subject = survey.Subject,
-                Creator = survey.Creator,
-                Members = survey.Members,
-                Appointments = _context
-                                    .Appointments
-                                    .Include(a => a.Room)
-                                    .Where(a => a.Survey.Id == survey.Id)
-            };
-
-            return View(model);
+            return View(survey);
         }
 
         // GET: Surveys/Create
@@ -103,20 +94,25 @@ namespace TerminUndRaumplanung.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> Create([Bind("Id,Subject,Members,SelectedMember")] Survey survey)
+        public async Task<IActionResult> Create([Bind("Id,Subject,SelectedMember")] Survey survey)
         {
             //set current user as creator
             survey.Creator = _context
                     .ApplicationUsers
                     .FirstOrDefault(a => a.Id.Contains(_userManager.GetUserId(HttpContext.User)));
 
-            //members must not be null!!!
-            survey.Members = new Collection<ApplicationUser>
+            //members must be initialised before setting values!
+            survey.Members = new Collection<ApplicationUser>();
+
+            foreach (var item in survey.SelectedMember)
             {
-                _context
-                .ApplicationUsers
-                .SingleOrDefault(u => u.Id == survey.SelectedMember)
-            };
+                survey.Members.Add(
+                    _context
+                        .ApplicationUsers
+                        .SingleOrDefault(u => u.Id == item)
+                );
+            }
+
             if (survey.Members == null)
             {
                 return View(survey);
@@ -234,6 +230,8 @@ namespace TerminUndRaumplanung.Controllers
 
 
         [Authorize(Roles = "Administrator,User")]
+        [Route("Surveys/RemoveMember/{userId},{surveyId}")] //attribute routing for specific 
+                                                            //url parameters
         public async Task<IActionResult> RemoveMember(string userId, int surveyId)
         {
 

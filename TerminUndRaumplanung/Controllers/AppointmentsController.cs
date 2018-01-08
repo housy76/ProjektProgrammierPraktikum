@@ -28,6 +28,7 @@ namespace TerminUndRaumplanung.Controllers
             return View(await _context
                 .Appointments
                 .Include(a => a.Room)
+                .Include(a => a.Ressources)
                 .ToListAsync());
         }
 
@@ -45,6 +46,8 @@ namespace TerminUndRaumplanung.Controllers
                 .Include(a => a.Ressources)
                 .Include(a => a.Room)
                 .Include(a => a.Survey)
+                .OrderByDescending(a => a.StartTime)
+                //.Where(a => a.StartTime > System.DateTime.Now.AddDays(-1))
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (appointment == null)
             {
@@ -57,10 +60,6 @@ namespace TerminUndRaumplanung.Controllers
 
         [Authorize(Roles = "Administrator,User")]
         public IActionResult Create(int surveyId)
-        //hand over the survey id from SurveyController or SurveyView
-        //parameter surveyId must not be named "id"!!! The second Create 
-        //Controller that stores the object into the database can't differentiate 
-        //between the Survey Id and the Appointment Id!
         {
             var model = new Appointment
             {
@@ -68,7 +67,6 @@ namespace TerminUndRaumplanung.Controllers
                 EndTime = System.DateTime.Now.AddHours(1),
                 Survey = _context
                     .Surveys
-                    .Include(s => s.Creator)    //ecplicitly loading of the related creator
                     .SingleOrDefault(s => s.Id == surveyId),
                 Ressources = _context
                     .Ressources
@@ -93,11 +91,8 @@ namespace TerminUndRaumplanung.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Create(
-            //binding now includes Room and Survey as direct object entities of 
-            //Appointment with eager lodaing from the database
             [Bind("Id,StartTime,EndTime,SelectedRoom,SelectedRessource,Survey")] Appointment appointment)
         {
-
             //get related Survey object from database and store it into the Appointment object
             appointment.Survey = _context
                                     .Surveys
@@ -107,43 +102,78 @@ namespace TerminUndRaumplanung.Controllers
             //get selected Room Object from database and store it into the Appointment Object
             appointment.Room = (Room)_context
                 .Ressources
+                .Include(r => r.RessourceBookedTimes)
+                    .ThenInclude(s => s.Ressource)
+                .Include(r => r.RessourceBookedTimes)
+                    .ThenInclude(s => s.BookedTime)
                 .SingleOrDefault(r => r.Id == appointment.SelectedRoom);
 
-
-            //get selected Ressource Objects from database and store it into this Appointment
-            appointment.Ressources = new Collection<Ressource>();
-            appointment.Ressources.Add(
-                _context
-                    .Ressources
-                    .SingleOrDefault(r => r.Id == appointment.SelectedRessource)
-            );
-
+            //create bookedTime for booking room and ressources
             var bookedTime = new BookedTime
             {
                 StartTime = appointment.StartTime,
                 EndTime = appointment.EndTime,
             };
 
+            var ressourceBookedTime = new RessourceBookedTime
+            {
+                BookedTime = bookedTime,
+                BookedTimeId = bookedTime.Id,
+
+                Ressource = appointment.Room,
+                RessourceId = appointment.Room.Id
+            };
+
+
+            bookedTime.RessourcesBookedTimes = new List<RessourceBookedTime>
+            {
+                ressourceBookedTime
+            };
 
             //add the time to the booked room
-            if (appointment.Room.BookedTimes == null)
+            if (appointment.Room.RessourceBookedTimes == null)
             {
-                appointment.Room.BookedTimes = new Collection<BookedTime>();
+                appointment.Room.RessourceBookedTimes = new List<RessourceBookedTime>();
             }
-            appointment.Room.BookedTimes.Add(bookedTime);
-            //bookedTime.Ressources.Add(appointment.Room);
+            appointment.Room.RessourceBookedTimes.Add(ressourceBookedTime);
 
-            //add time to the booked ressources
-            //foreach (var item in appointment.Ressources)
-            //{
-            //    if (item.BookedTimes == null)
-            //    {
-            //        item.BookedTimes = new Collection<BookedTime>();
-            //    }
-            //    item.BookedTimes.Add(bookedTime);
-            //    //bookedTime.Ressources.Add(item);
-            //}
 
+            //get selected Ressource Objects from database and store it into this Appointment
+            if (appointment.SelectedRessource != null)
+            {
+                //get selected Ressource Objects from database and store them into this Appointment
+                appointment.Ressources = new Collection<Ressource>();
+
+                foreach (var item in appointment.SelectedRessource)
+                {
+                    var ressource = _context
+                            .Ressources
+                            .Include(r => r.RessourceBookedTimes)
+                            .SingleOrDefault(r => r.Id == item);
+
+                    var rbt = new RessourceBookedTime
+                    {
+                        BookedTime = bookedTime,
+                        BookedTimeId = bookedTime.Id,
+
+                        Ressource = appointment.Room,
+                        RessourceId = appointment.Room.Id
+                    };
+
+                    bookedTime.RessourcesBookedTimes.Add(rbt);
+
+                    ressource.RessourceBookedTimes.Add(rbt);
+                    
+                }
+
+            }
+
+            //survey is explicitly loaded. SelectedMember is a direct entity. This
+            //entity will never be saved into database. Everytime it's null.
+            //It's a requuired entity for the survey and is also checked during 
+            //appointment validation. Without this line it will always be unvalidated!
+            appointment.Survey.SelectedMember = new Collection<string>();
+            
             //After model binding and validation are complete, you may want to repeat parts
             //of it. For example, a user may have entered text in a field expecting an 
             //integer, or you may need to compute a value for a model's property.
@@ -154,12 +184,17 @@ namespace TerminUndRaumplanung.Controllers
             {
                 _context.Add(appointment);
                 _context.Add(bookedTime);
+                _context.Add(ressourceBookedTime);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Surveys", new { id = appointment.Survey.Id });
             }
             else
             {
                 appointment.Ressources = _context.Ressources.ToList();
+                ViewBag.RoomList = _context
+                    .Rooms
+                    .OrderBy(r => r.Name)
+                    .ToList();
             }
             return View(appointment);
         }
@@ -179,6 +214,7 @@ namespace TerminUndRaumplanung.Controllers
             var appointment = await _context.Appointments
                 .Include(a => a.Survey)
                 .Include(a => a.Room)
+                .Include(a => a.Ressources)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (appointment == null)
@@ -186,7 +222,15 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var sId = appointment.Survey.Id;
+            ViewBag.RoomList = _context
+                .Rooms
+                .OrderBy(r => r.Name)
+                .ToList();
+
+            ViewBag.RessourceList = _context
+                .Ressources
+                .OrderBy(r => r.Name)
+                .ToList();
 
             return View(appointment);
         }
@@ -198,12 +242,59 @@ namespace TerminUndRaumplanung.Controllers
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Edit(int id,
-                    [Bind("Id,StartTime,EndTime,Room,Ressources,Survey")] Appointment appointment
+                    [Bind("Id,StartTime,EndTime,SelectedRessource,SelectedRoom")] Appointment appointment
             )
         {
+
             if (id != appointment.Id)
             {
                 return NotFound();
+            }
+
+
+            //create new bookedTime for booking room and ressources
+            var newBookedTime = new BookedTime
+            {
+                StartTime = appointment.StartTime,
+                EndTime = appointment.EndTime,
+            };
+
+            appointment.Room = _context
+                .Rooms
+                //.Include(r => r.BookedTimes)
+                .SingleOrDefault(r => r.Id == appointment.SelectedRoom);
+
+            //add the time to the booked room
+            //if (appointment.Room.BookedTimes == null)
+            //{
+            //    appointment.Room.BookedTimes = new Collection<BookedTime>();
+            //}
+            //appointment.Room.BookedTimes.Add(newBookedTime);
+
+            //get selected Ressource Objects from database and store it into this Appointment
+            if (appointment.SelectedRessource != null)
+            {
+                //get selected Ressource Objects from database and store them into this Appointment
+                appointment.Ressources = new Collection<Ressource>();
+
+                //foreach (var item in appointment.SelectedRessource)
+                //{
+                //    appointment.Ressources.Add(
+                //        _context
+                //            .Ressources
+                //            .Include(r => r.BookedTimes)
+                //            .SingleOrDefault(r => r.Id == item)
+                //    );
+                //}
+
+                //foreach (var item in appointment.Ressources)
+                //{
+                //    if (item.BookedTimes == null)
+                //    {
+                //        item.BookedTimes = new Collection<BookedTime>();
+                //    }
+                //    item.BookedTimes.Add(newBookedTime);
+                //}
             }
 
             if (ModelState.IsValid)
@@ -236,6 +327,112 @@ namespace TerminUndRaumplanung.Controllers
             }
             return View(appointment);
         }
+
+
+
+        //POST: Surveys/UpdateRessourceList
+        //adds an additional User to the existing member list of the survey
+        [HttpPost]
+        [Authorize(Roles = "Administrator,User")]
+        public async Task<IActionResult> UpdateRessourceList(
+            [Bind("Id,Ressource")] Appointment appointment,
+            int selectedRessource)
+        {
+
+
+            appointment = _context
+                .Appointments
+                .Include(a => a.Survey)
+                .Include(a => a.Room)
+                .Include(a => a.Ressources)
+                .SingleOrDefault(a => a.Id == appointment.Id);
+
+            var newRessource = _context
+                    .Ressources
+                    //.Include(r => r.BookedTimes)
+                    .SingleOrDefault(r => r.Id == selectedRessource);
+
+            var bookedTime = new BookedTime()
+            {
+                StartTime = appointment.StartTime,
+                EndTime = appointment.EndTime
+            };
+
+            
+            //add bookedTime to new Ressource to book the new ressource!
+            //newRessource.BookedTimes.Add(bookedTime);
+
+            appointment.Ressources.Add(newRessource);
+
+
+            _context.Update(appointment);
+            _context.Update(newRessource);
+            await _context.SaveChangesAsync();
+
+
+            //create room list for view to be passed
+            ViewBag.RoomList = _context
+                .Rooms
+                .OrderBy(r => r.Name)
+                .ToList();
+
+            ViewBag.RessourceList = _context
+                .Ressources
+                .OrderBy(r => r.Name)
+                .ToList();
+
+
+            return RedirectToAction("Edit", appointment);
+        }
+
+
+
+        [Authorize(Roles = "Administrator,User")]
+        [Route("Appointments/RemoveRessource/{ressourceId},{appointmentId}")] //attribute routing for specific url parameters
+        public async Task<IActionResult> RemoveRessource(int ressourceId, int appointmentId)
+        {
+            
+            var appointment = _context
+                .Appointments
+                .Include(a => a.Survey)
+                .Include(a => a.Room)
+                .Include(a => a.Ressources)
+                    //.ThenInclude(r => r.BookedTimes)
+                .SingleOrDefault(a => a.Id == appointmentId);
+
+            var deletedRessource = _context
+                .Ressources
+                //.Include(r => r.BookedTimes)
+                .SingleOrDefault(r => r.Id == ressourceId);
+
+            var bookedTime = _context
+                .BookedTimes
+                .FirstOrDefault(b => b.StartTime == appointment.StartTime && b.EndTime == appointment.EndTime);
+
+            //var x = 45;
+
+            //remove booked time from ressource that it is again available in this time
+            //deletedRessource.BookedTimes.Remove(bookedTime);
+
+            //remove ressource from appointment
+            appointment.Ressources.Remove(deletedRessource);
+
+            _context.Update(appointment);
+            _context.Update(deletedRessource);
+            await _context.SaveChangesAsync();
+
+
+            //create room list for view to be passed
+            ViewBag.RoomList = _context
+                .Rooms
+                .OrderBy(r => r.Name)
+                .ToList();
+
+            return RedirectToAction("Edit", appointment);
+        }
+
+
+        
 
 
         // GET: Appointments/Delete/5

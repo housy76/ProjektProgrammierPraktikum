@@ -42,7 +42,7 @@ namespace TerminUndRaumplanung.Controllers
             }
 
             var room = await _context.Rooms
-                .Include(m => m.BookedTimes)
+                //.Include(m => m.BookedTimes)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (room == null)
             {
