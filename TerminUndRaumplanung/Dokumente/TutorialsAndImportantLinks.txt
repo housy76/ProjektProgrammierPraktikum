@@ -8,3 +8,7 @@ https://stackoverflow.com/questions/46454527/asp-net-core-2-0-retrieve-remove-dr
 
 User Roles creat on startup:
 https://forums.asp.net/t/2130410.aspx?Roles+and+RoleManager+in+ASP+NET+Core+2
+
+
+ASP.NET Core EF Many-To-Many Releationship:
+https://docs.microsoft.com/en-us/ef/core/modeling/relationships#other-relationship-patterns

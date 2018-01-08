@@ -28,14 +28,14 @@ namespace AppServices
                 .Ressources
                 .Include(r => r.Id)
                 .Include(r => r.Name)
-                .Include(r => r.BookedTimes);
+                .Include(r => r.RessourceBookedTimes);
         }
 
-        public ICollection<BookedTime> GetBookedTimes(int id)
+        public ICollection<RessourceBookedTime> GetBookedTimes(int id)
         {
             return GetAll()
                 .FirstOrDefault(r => r.Id == id)
-                .BookedTimes;
+                .RessourceBookedTimes;
         }
 
         public Ressource GetById(int id)

@@ -10,7 +10,7 @@ namespace AppData.Models
         [Required]
         [Display(Name = "Name / Bezeichnung")]
         public string Name { get; set; }
-        public ICollection<BookedTime> BookedTimes { get; set; }
+        public List<RessourceBookedTime> RessourceBookedTimes { get; set; }
 
     }
 }
