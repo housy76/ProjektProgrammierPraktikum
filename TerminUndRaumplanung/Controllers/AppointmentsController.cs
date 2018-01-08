@@ -144,24 +144,28 @@ namespace TerminUndRaumplanung.Controllers
                 //get selected Ressource Objects from database and store them into this Appointment
                 appointment.Ressources = new Collection<Ressource>();
 
-                //foreach (var item in appointment.SelectedRessource)
-                //{
-                //    appointment.Ressources.Add(
-                //        _context
-                //            .Ressources
-                //            .Include(r => r.BookedTimes)
-                //            .SingleOrDefault(r => r.Id == item)
-                //    );
-                //}
+                foreach (var item in appointment.SelectedRessource)
+                {
+                    var ressource = _context
+                            .Ressources
+                            .Include(r => r.RessourceBookedTimes)
+                            .SingleOrDefault(r => r.Id == item);
 
-                //foreach (var item in appointment.Ressources)
-                //{
-                //    if (item.BookedTimes == null)
-                //    {
-                //        item.BookedTimes = new Collection<BookedTime>();
-                //    }
-                //    item.BookedTimes.Add(bookedTime);
-                //}
+                    var rbt = new RessourceBookedTime
+                    {
+                        BookedTime = bookedTime,
+                        BookedTimeId = bookedTime.Id,
+
+                        Ressource = appointment.Room,
+                        RessourceId = appointment.Room.Id
+                    };
+
+                    bookedTime.RessourcesBookedTimes.Add(rbt);
+
+                    ressource.RessourceBookedTimes.Add(rbt);
+                    
+                }
+
             }
 
             //survey is explicitly loaded. SelectedMember is a direct entity. This
