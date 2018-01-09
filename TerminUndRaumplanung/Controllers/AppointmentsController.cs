@@ -222,11 +222,13 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
+            //create List of all rooms for dropdown menue to be selected
             ViewBag.RoomList = _context
                 .Rooms
                 .OrderBy(r => r.Name)
                 .ToList();
 
+            //create List of all ressources for dropdown menue to be selected
             ViewBag.RessourceList = _context
                 .Ressources
                 .OrderBy(r => r.Name)
@@ -241,9 +243,7 @@ namespace TerminUndRaumplanung.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> Edit(int id,
-                    [Bind("Id,StartTime,EndTime,SelectedRessource,SelectedRoom")] Appointment appointment
-            )
+        public async Task<IActionResult> Edit(int id,[Bind("Id,StartTime,EndTime,SelectedRoom")] Appointment appointment )
         {
 
             if (id != appointment.Id)
@@ -251,51 +251,160 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
+            //initialize necessary temp variables:
+            var newStartTime = appointment.StartTime;
+            var newEndTime = appointment.EndTime;
+            var newSelectedRoom = appointment.SelectedRoom;
 
-            //create new bookedTime for booking room and ressources
-            var newBookedTime = new BookedTime
-            {
-                StartTime = appointment.StartTime,
-                EndTime = appointment.EndTime,
-            };
-
-            appointment.Room = _context
+            var oldRoom = new Room();
+            var newRoom = _context
                 .Rooms
-                //.Include(r => r.BookedTimes)
+                .Include(r => r.RessourceBookedTimes)
                 .SingleOrDefault(r => r.Id == appointment.SelectedRoom);
 
-            //add the time to the booked room
-            //if (appointment.Room.BookedTimes == null)
-            //{
-            //    appointment.Room.BookedTimes = new Collection<BookedTime>();
-            //}
-            //appointment.Room.BookedTimes.Add(newBookedTime);
+            var oldBookedTime = new BookedTime();
+            var newBookedTime = new BookedTime();
 
-            //get selected Ressource Objects from database and store it into this Appointment
-            if (appointment.SelectedRessource != null)
+            var oldRessourceBookedTime = new RessourceBookedTime();
+            var newRessourceBookedTime = new RessourceBookedTime();
+
+            //loading appointment data from database 
+            appointment = await _context.Appointments
+                .Include(a => a.Survey)
+                    .ThenInclude(s => s.Creator)
+                .Include(a => a.Survey)
+                    .ThenInclude(s => s.Members)
+                .Include(a => a.Room)
+                    .ThenInclude(r => r.RessourceBookedTimes)
+                .Include(a => a.Ressources)
+                    .ThenInclude(res => res.RessourceBookedTimes)
+                .SingleOrDefaultAsync(m => m.Id == id);
+
+            
+
+            //avoid model validation problem
+            if (appointment.Survey.SelectedMember == null)
             {
-                //get selected Ressource Objects from database and store them into this Appointment
-                appointment.Ressources = new Collection<Ressource>();
-
-                //foreach (var item in appointment.SelectedRessource)
-                //{
-                //    appointment.Ressources.Add(
-                //        _context
-                //            .Ressources
-                //            .Include(r => r.BookedTimes)
-                //            .SingleOrDefault(r => r.Id == item)
-                //    );
-                //}
-
-                //foreach (var item in appointment.Ressources)
-                //{
-                //    if (item.BookedTimes == null)
-                //    {
-                //        item.BookedTimes = new Collection<BookedTime>();
-                //    }
-                //    item.BookedTimes.Add(newBookedTime);
-                //}
+                appointment.Survey.SelectedMember = new Collection<string>();
             }
+
+
+            //test if Room or Time changed.
+            if(appointment.Room == newRoom)
+            {
+                //Room did not change
+            }
+            else
+            {
+                //room changed
+                oldRessourceBookedTime = _context
+                    .RessourceBookedTimes
+                    .Include(r => r.BookedTime)
+                        .ThenInclude(b => b.RessourcesBookedTimes)
+                    .Include(r => r.Ressource)
+                    .SingleOrDefault(r => r.Ressource.Id == appointment.Room.Id &&
+                                        r.BookedTime.StartTime == appointment.StartTime &&
+                                        r.BookedTime.EndTime == appointment.EndTime);
+
+
+                //get old room and old bookedtime
+                oldBookedTime = oldRessourceBookedTime.BookedTime;
+                oldRoom = (Room)oldRessourceBookedTime.Ressource;
+
+
+                //remove connection between ressource and bookedtime in the objects itself
+                oldRoom.RessourceBookedTimes.Remove(oldRessourceBookedTime);
+                oldBookedTime.RessourcesBookedTimes.Remove(oldRessourceBookedTime);
+
+
+                //set connection between new room and booked time
+                newRessourceBookedTime.BookedTime = oldBookedTime;
+                newRessourceBookedTime.BookedTimeId = oldBookedTime.Id;
+                newRessourceBookedTime.Ressource = newRoom;
+                newRessourceBookedTime.RessourceId = newRoom.Id;
+
+                newRoom.RessourceBookedTimes.Add(newRessourceBookedTime);
+
+
+                //set new Room in appointment
+                appointment.Room = newRoom;
+
+            }
+
+
+            if (appointment.StartTime == newStartTime && appointment.EndTime == newEndTime)
+            {
+                //time did not change!! 
+            }
+            else
+            {
+                //time changed and must be updated in room and all ressources
+
+                oldRessourceBookedTime = _context
+                    .RessourceBookedTimes
+                    .Include(r => r.BookedTime)
+                    .Include(r => r.Ressource)
+                    .SingleOrDefault(r => r.Ressource.Id == appointment.Room.Id &&
+                                        r.BookedTime.StartTime == appointment.StartTime &&
+                                        r.BookedTime.EndTime == appointment.EndTime);
+
+
+                //get old bookedtime
+                oldBookedTime = oldRessourceBookedTime.BookedTime;
+
+
+                //get all RessourceBookedTimes with the same BookedTime ID
+                var rbtList = _context
+                    .RessourceBookedTimes
+                    .Include(r => r.BookedTime)
+                        .ThenInclude(b => b.RessourcesBookedTimes)
+                    .Include(r => r.Ressource)
+                    .Where(r => r.BookedTimeId == oldBookedTime.Id);
+
+                //create new bookedTime that will be referenced in all ressources by the RessourceBookedTime object 
+                newBookedTime = new BookedTime()
+                {
+                    StartTime = newStartTime,
+                    EndTime = newEndTime,
+                    RessourcesBookedTimes = new List<RessourceBookedTime>()
+                };
+
+
+                //update all RessourceBookedTime elements with the new BookedTime
+                foreach (var rbt in rbtList)
+                {
+                    rbt.BookedTime = newBookedTime;
+                    rbt.BookedTimeId = newBookedTime.Id;
+                    newBookedTime.RessourcesBookedTimes.Add(rbt);
+
+                    //update the rbt object
+                    _context.Update(rbt);
+                }
+                _context.Update(newBookedTime);
+
+
+                //remove old bookedtime from db. No longer used / refereced
+                _context.BookedTimes.Remove(oldBookedTime);
+
+
+            }
+
+
+            //create List of all rooms for dropdown menue to be selected
+            ViewBag.RoomList = _context
+                .Rooms
+                .OrderBy(r => r.Name)
+                .ToList();
+
+            //create List of all ressources for dropdown menue to be selected
+            ViewBag.RessourceList = _context
+                .Ressources
+                .OrderBy(r => r.Name)
+                .ToList();
+
+
+            ModelState.Clear();
+            TryValidateModel(appointment);
 
             if (ModelState.IsValid)
             {
