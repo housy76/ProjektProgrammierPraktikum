@@ -36,6 +36,7 @@ namespace TerminUndRaumplanung
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IRessource, RessourceService>();
             services.AddTransient<IRoom, RoomService>();
+            services.AddTransient<IRessourceBookedTime, RessourceBookedTimeService>();
 
             services.AddDbContext<AppointmentContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
