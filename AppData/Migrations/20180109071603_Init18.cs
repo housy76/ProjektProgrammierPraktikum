@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class Init17t : Migration
+    public partial class Init18 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -77,7 +77,7 @@ namespace AppData.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RessourceBookedTime",
+                name: "RessourceBookedTimes",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -87,15 +87,15 @@ namespace AppData.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RessourceBookedTime", x => x.Id);
+                    table.PrimaryKey("PK_RessourceBookedTimes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RessourceBookedTime_BookedTimes_BookedTimeId",
+                        name: "FK_RessourceBookedTimes_BookedTimes_BookedTimeId",
                         column: x => x.BookedTimeId,
                         principalTable: "BookedTimes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RessourceBookedTime_Ressources_RessourceId",
+                        name: "FK_RessourceBookedTimes_Ressources_RessourceId",
                         column: x => x.RessourceId,
                         principalTable: "Ressources",
                         principalColumn: "Id",
@@ -295,13 +295,13 @@ namespace AppData.Migrations
                 column: "SurveyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RessourceBookedTime_BookedTimeId",
-                table: "RessourceBookedTime",
+                name: "IX_RessourceBookedTimes_BookedTimeId",
+                table: "RessourceBookedTimes",
                 column: "BookedTimeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RessourceBookedTime_RessourceId",
-                table: "RessourceBookedTime",
+                name: "IX_RessourceBookedTimes_RessourceId",
+                table: "RessourceBookedTimes",
                 column: "RessourceId");
 
             migrationBuilder.CreateIndex(
@@ -389,7 +389,7 @@ namespace AppData.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "RessourceBookedTime");
+                name: "RessourceBookedTimes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

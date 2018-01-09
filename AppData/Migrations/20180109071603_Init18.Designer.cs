@@ -12,8 +12,8 @@ using System;
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]
-    [Migration("20180108141850_Init17t")]
-    partial class Init17t
+    [Migration("20180109071603_Init18")]
+    partial class Init18
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -156,7 +156,7 @@ namespace AppData.Migrations
 
                     b.HasIndex("RessourceId");
 
-                    b.ToTable("RessourceBookedTime");
+                    b.ToTable("RessourceBookedTimes");
                 });
 
             modelBuilder.Entity("AppData.Models.Survey", b =>

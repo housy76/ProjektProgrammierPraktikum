@@ -155,7 +155,7 @@ namespace AppData.Migrations
 
                     b.HasIndex("RessourceId");
 
-                    b.ToTable("RessourceBookedTime");
+                    b.ToTable("RessourceBookedTimes");
                 });
 
             modelBuilder.Entity("AppData.Models.Survey", b =>

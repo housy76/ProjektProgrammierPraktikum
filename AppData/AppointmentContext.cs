@@ -14,6 +14,7 @@ namespace AppData
         public DbSet<Beamer> Beamers { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<BookedTime> BookedTimes { get; set; }
+        public DbSet<RessourceBookedTime> RessourceBookedTimes { get; set; }
 
     }
 }
