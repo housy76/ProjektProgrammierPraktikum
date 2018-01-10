@@ -121,18 +121,22 @@ namespace TerminUndRaumplanung.Controllers
                 .SingleOrDefault(r => r.Id == appointment.SelectedRoom);
 
             //add selected ressources to the ressource list
-            foreach (var item in appointment.SelectedRessource)
+            if (appointment.SelectedRessource != null)
             {
-                ressourceList.Add(
-                    _context
-                        .Ressources
-                        .Include(r => r.RessourceBookedTimes)
-                            .ThenInclude(s => s.Ressource)
-                        .Include(r => r.RessourceBookedTimes)
-                            .ThenInclude(s => s.BookedTime)
-                        .SingleOrDefault(r => r.Id == item)
-                );
+                foreach (var item in appointment.SelectedRessource)
+                {
+                    ressourceList.Add(
+                        _context
+                            .Ressources
+                            .Include(r => r.RessourceBookedTimes)
+                                .ThenInclude(s => s.Ressource)
+                            .Include(r => r.RessourceBookedTimes)
+                                .ThenInclude(s => s.BookedTime)
+                            .SingleOrDefault(r => r.Id == item)
+                    );
+                }
             }
+            
 
 
             rbt = new RessourceBookedTime

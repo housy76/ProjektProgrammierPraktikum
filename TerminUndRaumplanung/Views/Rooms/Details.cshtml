@@ -49,7 +49,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var bookedTime in @Model.BookedTimes)
+            @foreach (var bookedTime in @Model.RessourceBookedTimes)
             {
 
                 <tr>
@@ -57,10 +57,10 @@
                         <a asp-controller="Appointments" asp-action="Edit" asp-route-id="@bookedTime.Id">Edit</a>
                     </td>
                     <td>
-                        @bookedTime.StartTime
+                        @bookedTime.BookedTimeId
                     </td>
                     <td>
-                        @bookedTime.EndTime
+                        @bookedTime.RessourceId
                     </td>
                 </tr>
             }
