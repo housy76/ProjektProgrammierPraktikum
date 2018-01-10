@@ -155,27 +155,30 @@ namespace TerminUndRaumplanung.Controllers
             _context.Add(rbt);
 
 
-            foreach (var item in ressourceList)
+            if (appointment.SelectedRessource != null)
             {
-                if (item.RessourceBookedTimes == null)
+                foreach (var item in ressourceList)
                 {
-                    item.RessourceBookedTimes = new List<RessourceBookedTime>();
+                    if (item.RessourceBookedTimes == null)
+                    {
+                        item.RessourceBookedTimes = new List<RessourceBookedTime>();
+                    }
+
+                    rbt = new RessourceBookedTime
+                    {
+                        BookedTime = bookedTime,
+                        BookedTimeId = bookedTime.Id,
+
+                        Ressource = item,
+                        RessourceId = item.Id
+                    };
+
+                    item.RessourceBookedTimes.Add(rbt);
+                    bookedTime.RessourcesBookedTimes.Add(rbt);
+
+                    _context.Add(rbt);
+                    appointment.Ressources.Add(item);
                 }
-
-                rbt = new RessourceBookedTime
-                {
-                    BookedTime = bookedTime,
-                    BookedTimeId = bookedTime.Id,
-
-                    Ressource = item,
-                    RessourceId = item.Id
-                };
-
-                item.RessourceBookedTimes.Add(rbt);
-                bookedTime.RessourcesBookedTimes.Add(rbt);
-
-                _context.Add(rbt);
-                appointment.Ressources.Add(item);
             }
 
 
