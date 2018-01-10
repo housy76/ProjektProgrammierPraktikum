@@ -93,13 +93,25 @@ namespace TerminUndRaumplanung.Controllers
         public async Task<IActionResult> Create(
             [Bind("Id,StartTime,EndTime,SelectedRoom,SelectedRessource,Survey")] Appointment appointment)
         {
+
+            //create variables
+            var bookedTime = new BookedTime
+            {
+                StartTime = appointment.StartTime,
+                EndTime = appointment.EndTime,
+                RessourcesBookedTimes = new List<RessourceBookedTime>()
+            };
+            var ressourceList = new List<Ressource>();
+            var rbt = new RessourceBookedTime();
+            appointment.Ressources = new Collection<Ressource>();
+
             //get related Survey object from database and store it into the Appointment object
             appointment.Survey = _context
                                     .Surveys
                                     .Include(s => s.Creator)
                                     .FirstOrDefault(s => s.Id == appointment.Survey.Id);
 
-            //get selected Room Object from database and store it into the Appointment Object
+            //get selected Room 
             appointment.Room = (Room)_context
                 .Ressources
                 .Include(r => r.RessourceBookedTimes)
@@ -108,14 +120,22 @@ namespace TerminUndRaumplanung.Controllers
                     .ThenInclude(s => s.BookedTime)
                 .SingleOrDefault(r => r.Id == appointment.SelectedRoom);
 
-            //create bookedTime for booking room and ressources
-            var bookedTime = new BookedTime
+            //add selected ressources to the ressource list
+            foreach (var item in appointment.SelectedRessource)
             {
-                StartTime = appointment.StartTime,
-                EndTime = appointment.EndTime,
-            };
+                ressourceList.Add(
+                    _context
+                        .Ressources
+                        .Include(r => r.RessourceBookedTimes)
+                            .ThenInclude(s => s.Ressource)
+                        .Include(r => r.RessourceBookedTimes)
+                            .ThenInclude(s => s.BookedTime)
+                        .SingleOrDefault(r => r.Id == item)
+                );
+            }
 
-            var ressourceBookedTime = new RessourceBookedTime
+
+            rbt = new RessourceBookedTime
             {
                 BookedTime = bookedTime,
                 BookedTimeId = bookedTime.Id,
@@ -125,48 +145,35 @@ namespace TerminUndRaumplanung.Controllers
             };
 
 
-            bookedTime.RessourcesBookedTimes = new List<RessourceBookedTime>
+            //book all ressources
+            appointment.Room.RessourceBookedTimes.Add(rbt);
+            bookedTime.RessourcesBookedTimes.Add(rbt);
+            _context.Add(rbt);
+
+
+            foreach (var item in ressourceList)
             {
-                ressourceBookedTime
-            };
-
-            //add the time to the booked room
-            if (appointment.Room.RessourceBookedTimes == null)
-            {
-                appointment.Room.RessourceBookedTimes = new List<RessourceBookedTime>();
-            }
-            appointment.Room.RessourceBookedTimes.Add(ressourceBookedTime);
-
-
-            //get selected Ressource Objects from database and store it into this Appointment
-            if (appointment.SelectedRessource != null)
-            {
-                //get selected Ressource Objects from database and store them into this Appointment
-                appointment.Ressources = new Collection<Ressource>();
-
-                foreach (var item in appointment.SelectedRessource)
+                if (item.RessourceBookedTimes == null)
                 {
-                    var ressource = _context
-                            .Ressources
-                            .Include(r => r.RessourceBookedTimes)
-                            .SingleOrDefault(r => r.Id == item);
-
-                    var rbt = new RessourceBookedTime
-                    {
-                        BookedTime = bookedTime,
-                        BookedTimeId = bookedTime.Id,
-
-                        Ressource = appointment.Room,
-                        RessourceId = appointment.Room.Id
-                    };
-
-                    bookedTime.RessourcesBookedTimes.Add(rbt);
-
-                    ressource.RessourceBookedTimes.Add(rbt);
-                    
+                    item.RessourceBookedTimes = new List<RessourceBookedTime>();
                 }
 
+                rbt = new RessourceBookedTime
+                {
+                    BookedTime = bookedTime,
+                    BookedTimeId = bookedTime.Id,
+
+                    Ressource = item,
+                    RessourceId = item.Id
+                };
+
+                item.RessourceBookedTimes.Add(rbt);
+                bookedTime.RessourcesBookedTimes.Add(rbt);
+
+                _context.Add(rbt);
+                appointment.Ressources.Add(item);
             }
+
 
             //survey is explicitly loaded. SelectedMember is a direct entity. This
             //entity will never be saved into database. Everytime it's null.
@@ -184,7 +191,6 @@ namespace TerminUndRaumplanung.Controllers
             {
                 _context.Add(appointment);
                 _context.Add(bookedTime);
-                _context.Add(ressourceBookedTime);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Surveys", new { id = appointment.Survey.Id });
             }
