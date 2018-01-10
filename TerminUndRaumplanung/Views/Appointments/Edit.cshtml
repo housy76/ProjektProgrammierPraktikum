@@ -50,23 +50,25 @@
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Ressources)
-            {
-                <tr>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        <a asp-action="RemoveRessource" asp-route-id="@item.Id,@Model.Id">Remove Ressource</a>
-                    </td>
-                </tr>
-}
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            <a asp-action="RemoveRessource" asp-route-id="@item.Id,@Model.Id">Remove Ressource</a>
+                        </td>
+                    </tr>
+        }
                     </tbody>
                 </table>
             </div>
 
             <div class="form-group">
+                <input type="button" class="btn btn-default" value="Delete" onclick="location.href='@Url.Action("Delete", "Appointments", new { id = Model.Id})'" />
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
+            
         </form>
     </div>
 </div>
@@ -86,7 +88,8 @@
 </form>
 
 <div>
-    <a asp-action="Details" asp-controller="Surveys" asp-route-id="@Model.Survey.Id">Back to Survey</a>
+    <a asp-action="Details" asp-controller="Surveys" asp-route-id="@Model.Survey.Id">Back to Survey</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
 </div>
 
 @section Scripts {
