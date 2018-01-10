@@ -22,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.EndTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Ressource)
+                @Html.DisplayNameFor(model => model.RessourcesBookedTimes)
             </th>
             <th />
         </tr>
@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.EndTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ressource.Name)
+                @Html.DisplayFor(modelItem => item.RessourcesBookedTimes)
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
