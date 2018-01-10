@@ -121,18 +121,22 @@ namespace TerminUndRaumplanung.Controllers
                 .SingleOrDefault(r => r.Id == appointment.SelectedRoom);
 
             //add selected ressources to the ressource list
-            foreach (var item in appointment.SelectedRessource)
+            if (appointment.SelectedRessource != null)
             {
-                ressourceList.Add(
-                    _context
-                        .Ressources
-                        .Include(r => r.RessourceBookedTimes)
-                            .ThenInclude(s => s.Ressource)
-                        .Include(r => r.RessourceBookedTimes)
-                            .ThenInclude(s => s.BookedTime)
-                        .SingleOrDefault(r => r.Id == item)
-                );
+                foreach (var item in appointment.SelectedRessource)
+                {
+                    ressourceList.Add(
+                        _context
+                            .Ressources
+                            .Include(r => r.RessourceBookedTimes)
+                                .ThenInclude(s => s.Ressource)
+                            .Include(r => r.RessourceBookedTimes)
+                                .ThenInclude(s => s.BookedTime)
+                            .SingleOrDefault(r => r.Id == item)
+                    );
+                }
             }
+            
 
 
             rbt = new RessourceBookedTime
@@ -151,27 +155,30 @@ namespace TerminUndRaumplanung.Controllers
             _context.Add(rbt);
 
 
-            foreach (var item in ressourceList)
+            if (appointment.SelectedRessource != null)
             {
-                if (item.RessourceBookedTimes == null)
+                foreach (var item in ressourceList)
                 {
-                    item.RessourceBookedTimes = new List<RessourceBookedTime>();
+                    if (item.RessourceBookedTimes == null)
+                    {
+                        item.RessourceBookedTimes = new List<RessourceBookedTime>();
+                    }
+
+                    rbt = new RessourceBookedTime
+                    {
+                        BookedTime = bookedTime,
+                        BookedTimeId = bookedTime.Id,
+
+                        Ressource = item,
+                        RessourceId = item.Id
+                    };
+
+                    item.RessourceBookedTimes.Add(rbt);
+                    bookedTime.RessourcesBookedTimes.Add(rbt);
+
+                    _context.Add(rbt);
+                    appointment.Ressources.Add(item);
                 }
-
-                rbt = new RessourceBookedTime
-                {
-                    BookedTime = bookedTime,
-                    BookedTimeId = bookedTime.Id,
-
-                    Ressource = item,
-                    RessourceId = item.Id
-                };
-
-                item.RessourceBookedTimes.Add(rbt);
-                bookedTime.RessourcesBookedTimes.Add(rbt);
-
-                _context.Add(rbt);
-                appointment.Ressources.Add(item);
             }
 
 
