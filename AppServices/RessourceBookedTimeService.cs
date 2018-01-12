@@ -7,6 +7,9 @@ using System.Text;
 
 namespace AppServices
 {
+    /// <summary>
+    /// Service implementing Interface
+    /// </summary>
     public class RessourceBookedTimeService : IRessourceBookedTime
     {
         AppointmentContext _context;

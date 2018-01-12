@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AppData
 {
+    /// <summary>
+    /// Survey Interface
+    /// </summary>
     public interface ISurvey
     {
         IEnumerable<Survey> GetAll();

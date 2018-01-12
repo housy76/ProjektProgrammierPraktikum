@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AppData
 {
+    /// <summary>
+    /// Room Interface
+    /// </summary>
     public interface IRoom
     {
         void Add(Room newRoom);

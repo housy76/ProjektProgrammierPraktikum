@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TerminUndRaumplanung.Controllers
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class RoomsController : Controller
     {
         private readonly AppointmentContext _context;
@@ -20,19 +24,33 @@ namespace TerminUndRaumplanung.Controllers
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public RoomsController(AppointmentContext context)
         {
             _context = context;
         }
 
-        // GET: Rooms
+        /// <summary>
+        /// GET: Rooms
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Rooms.ToListAsync());
         }
 
-        // GET: Rooms/Details/5
+
+
+        /// <summary>
+        /// GET: Rooms/Details/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -52,16 +70,27 @@ namespace TerminUndRaumplanung.Controllers
             return View(room);
         }
 
-        // GET: Rooms/Create
+
+
+        /// <summary>
+        /// GET: Rooms/Create
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Rooms/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+        /// <summary>
+        /// POST: Rooms/Create
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        /// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
@@ -76,7 +105,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(room);
         }
 
-        // GET: Rooms/Edit/5
+
+
+        /// <summary>
+        /// GET: Rooms/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -93,9 +128,16 @@ namespace TerminUndRaumplanung.Controllers
             return View(room);
         }
 
-        // POST: Rooms/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+        /// <summary>
+        /// POST: Rooms/Edit/5
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        /// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="room"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
@@ -129,7 +171,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(room);
         }
 
-        // GET: Rooms/Delete/5
+
+
+        /// <summary>
+        /// GET: Rooms/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -148,7 +196,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(room);
         }
 
-        // POST: Rooms/Delete/5
+
+
+        /// <summary>
+        /// POST: Rooms/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]

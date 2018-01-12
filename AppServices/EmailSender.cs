@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 
 namespace AppServices
 {
-    // This class is used by the application to send email for account confirmation and password reset.
-    // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
+    /// <summary>
+    /// This class is used by the application to send email for account confirmation and password reset
+    /// For more details see https://go.microsoft.com/fwlink/?LinkID=532713 
+    /// </summary>
     public class EmailSender : IEmailSender
     {
         public Task SendEmailAsync(string emailAddress, string subject, string message)
         {
             // Command line argument must the the SMTP host.
-            SmtpClient client = new SmtpClient("smtp-2.hof-university.de");
-
-            client.Credentials = new NetworkCredential("vi-shummel", "#VV20151006");
+            SmtpClient client = new SmtpClient("smtp-2.hof-university.de")
+            {
+                Credentials = new NetworkCredential("vi-shummel", "#VV20151006")
+            };
 
             // Specify the e-mail sender.
             // Create a mailing address that includes a UTF8 character

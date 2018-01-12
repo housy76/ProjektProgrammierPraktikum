@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppData
 {
+    /// <summary>
+    /// Database Context that creates necessary tables
+    /// </summary>
     public class AppointmentContext : IdentityDbContext<ApplicationUser>
     {
         public AppointmentContext(DbContextOptions options) : base(options) { }

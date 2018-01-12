@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AppData
 {
+    /// <summary>
+    /// RessourceBookedTimes  Interface
+    /// </summary>
     public interface IRessourceBookedTime
     {
         void Add(RessourceBookedTime newRessourceBookedTime);

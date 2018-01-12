@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace AppServices
 {
+    /// <summary>
+    /// Service implementing Interface
+    /// </summary>
     public class SurveyService : ISurvey
     {
         public AppointmentContext _context;

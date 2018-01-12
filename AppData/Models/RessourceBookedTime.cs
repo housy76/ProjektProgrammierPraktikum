@@ -4,6 +4,9 @@ using System.Text;
 
 namespace AppData.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class RessourceBookedTime
     {
         public int Id { get; set; }

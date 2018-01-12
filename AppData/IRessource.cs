@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AppData
 {
+    /// <summary>
+    /// Ressource Interface
+    /// </summary>
     public interface IRessource
     {
         void Add(Ressource newRessource);
