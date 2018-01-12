@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace TerminUndRaumplanung.Models.AccountViewModels
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class LoginWithRecoveryCodeViewModel
     {
+        /// <summary>
+        /// 
+        /// </summary>
             [Required]
             [DataType(DataType.Text)]
             [Display(Name = "Recovery Code")]
