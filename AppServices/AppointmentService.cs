@@ -8,6 +8,9 @@ using System.Text;
 
 namespace AppServices
 {
+    /// <summary>
+    /// Service implementing Interface
+    /// </summary>
     public class AppointmentService : IAppointment
     {
         public AppointmentContext _context;

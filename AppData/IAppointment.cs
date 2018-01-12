@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AppData
 {
+    /// <summary>
+    /// Appointment Interface
+    /// </summary>
     public interface IAppointment
     {
         IEnumerable<Appointment> GetAll();

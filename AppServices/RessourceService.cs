@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace AppServices
 {
+    /// <summary>
+    /// Service implementing Interface
+    /// </summary>
     public class RessourceService : IRessource
     {
         AppointmentContext _context;

@@ -12,7 +12,10 @@ using AppData.Models;
 using AppData;
 
 namespace TerminUndRaumplanung.Controllers
-{
+{ 
+    /// <summary>
+    /// Account controller that provides all functions and methods for the account class
+    /// </summary>
     [Authorize]
     [Route("[controller]/[action]")]
     public class AccountController : Controller
@@ -23,6 +26,14 @@ namespace TerminUndRaumplanung.Controllers
         private readonly ILogger _logger;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        /// <summary>
+        /// contstructor for the account controller
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="emailSender"></param>
+        /// <param name="logger"></param>
+        /// <param name="roleManager"></param>
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -37,9 +48,20 @@ namespace TerminUndRaumplanung.Controllers
             _roleManager = roleManager;
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
@@ -51,6 +73,13 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -87,6 +116,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rememberMe"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
@@ -105,6 +141,14 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="rememberMe"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -143,6 +187,12 @@ namespace TerminUndRaumplanung.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> LoginWithRecoveryCode(string returnUrl = null)
@@ -159,6 +209,13 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -197,6 +254,11 @@ namespace TerminUndRaumplanung.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Lockout()
@@ -204,6 +266,12 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
@@ -212,6 +280,14 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -295,6 +371,11 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -304,6 +385,13 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -315,6 +403,13 @@ namespace TerminUndRaumplanung.Controllers
             return Challenge(properties, provider);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <param name="remoteError"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
@@ -351,6 +446,12 @@ namespace TerminUndRaumplanung.Controllers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -383,6 +484,14 @@ namespace TerminUndRaumplanung.Controllers
             return View(nameof(ExternalLogin), model);
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
@@ -400,6 +509,11 @@ namespace TerminUndRaumplanung.Controllers
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -407,6 +521,12 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -434,6 +554,11 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
@@ -441,6 +566,12 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
@@ -453,6 +584,12 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -477,6 +614,11 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPasswordConfirmation()
@@ -485,6 +627,10 @@ namespace TerminUndRaumplanung.Controllers
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult AccessDenied()
         {

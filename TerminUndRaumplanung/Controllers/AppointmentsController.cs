@@ -11,17 +11,34 @@ using System.Collections.ObjectModel;
 
 namespace TerminUndRaumplanung.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AppointmentsController : Controller
     {
+        
         private readonly AppointmentContext _context;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public IEnumerable<SelectListItem> RessourceList { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public AppointmentsController(AppointmentContext context)
         {
             _context = context;
         }
 
-        // GET: Appointments
+
+
+        /// <summary>
+        /// GET: Appointments
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
@@ -32,7 +49,13 @@ namespace TerminUndRaumplanung.Controllers
                 .ToListAsync());
         }
 
-        // GET: Appointments/Details/5
+
+
+        /// <summary>
+        /// GET: Appointments/Details/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -58,6 +81,12 @@ namespace TerminUndRaumplanung.Controllers
         }
 
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="surveyId"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator,User")]
         public IActionResult Create(int surveyId)
         {
@@ -84,9 +113,13 @@ namespace TerminUndRaumplanung.Controllers
 
 
 
-        // POST: Appointments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to 
-        // bind to, for more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// POST: Appointments/Create
+        /// To protect from overposting attacks, please enable the specific properties you want to 
+        /// bind to, for more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// </summary>
+        /// <param name="appointment"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
@@ -214,7 +247,11 @@ namespace TerminUndRaumplanung.Controllers
 
 
 
-        // GET: Appointments/Edit/5
+        /// <summary>
+        /// GET: Appointments/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -250,9 +287,16 @@ namespace TerminUndRaumplanung.Controllers
             return View(appointment);
         }
 
-        // POST: Appointments/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+        /// <summary>
+        /// POST: Appointments/Edit/5
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        /// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="appointment"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
@@ -452,8 +496,13 @@ namespace TerminUndRaumplanung.Controllers
 
 
 
-        //POST: Surveys/UpdateRessourceList
-        //adds an additional User to the existing member list of the survey
+        /// <summary>
+        /// POST: Surveys/UpdateRessourceList
+        /// adds an additional User to the existing member list of the survey
+        /// </summary>
+        /// <param name="appointment"></param>
+        /// <param name="selectedRessource"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> UpdateRessourceList(
@@ -508,7 +557,12 @@ namespace TerminUndRaumplanung.Controllers
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ressourceId"></param>
+        /// <param name="appointmentId"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator,User")]
         [Route("Appointments/RemoveRessource/{ressourceId},{appointmentId}")] //attribute routing for specific url parameters
         public async Task<IActionResult> RemoveRessource(int ressourceId, int appointmentId)
@@ -554,10 +608,14 @@ namespace TerminUndRaumplanung.Controllers
         }
 
 
-        
 
 
-        // GET: Appointments/Delete/5
+
+        /// <summary>
+        /// GET: Appointments/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -576,7 +634,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(appointment);
         }
 
-        // POST: Appointments/Delete/5
+
+
+        /// <summary>
+        /// POST: Appointments/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator,User")]
@@ -587,6 +651,7 @@ namespace TerminUndRaumplanung.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         [Authorize(Roles = "Administrator,User")]
         private bool AppointmentExists(int id)

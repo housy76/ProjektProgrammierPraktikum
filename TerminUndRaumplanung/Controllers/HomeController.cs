@@ -5,14 +5,27 @@ using TerminUndRaumplanung.Models;
 
 namespace TerminUndRaumplanung.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class HomeController : Controller
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public IActionResult About()
         {
@@ -21,6 +34,11 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public IActionResult Contact()
         {
@@ -29,6 +47,11 @@ namespace TerminUndRaumplanung.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         public IActionResult Error()
         {

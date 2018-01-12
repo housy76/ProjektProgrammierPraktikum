@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AppData
 {
+    /// <summary>
+    /// BookedTime Interface
+    /// </summary>
     public interface IBookedTime
     {
         void Add(BookedTime newBookedTime);

@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-//Simon
-//Namespace geändert
+
 namespace AppData.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ApplicationUser : IdentityUser
     {
         public string FirstName { get; set; }

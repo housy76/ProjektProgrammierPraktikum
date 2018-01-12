@@ -15,6 +15,9 @@ using AppData;
 
 namespace TerminUndRaumplanung.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Authorize]
     [Route("[controller]/[action]")]
     public class ManageController : Controller
@@ -27,6 +30,14 @@ namespace TerminUndRaumplanung.Controllers
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="emailSender"></param>
+        /// <param name="logger"></param>
+        /// <param name="urlEncoder"></param>
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
@@ -41,9 +52,20 @@ namespace TerminUndRaumplanung.Controllers
             _urlEncoder = urlEncoder;
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -65,6 +87,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IndexViewModel model)
@@ -104,6 +133,13 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendVerificationEmail(IndexViewModel model)
@@ -128,6 +164,12 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
@@ -147,6 +189,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -176,6 +225,12 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(ChangePassword));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> SetPassword()
         {
@@ -196,6 +251,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
@@ -224,6 +286,12 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(SetPassword));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> ExternalLogins()
         {
@@ -243,6 +311,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LinkLogin(string provider)
@@ -256,6 +331,12 @@ namespace TerminUndRaumplanung.Controllers
             return new ChallengeResult(provider, properties);
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> LinkLoginCallback()
         {
@@ -284,6 +365,13 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(ExternalLogins));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
@@ -305,6 +393,12 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(ExternalLogins));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> TwoFactorAuthentication()
         {
@@ -324,6 +418,12 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Disable2faWarning()
         {
@@ -341,6 +441,12 @@ namespace TerminUndRaumplanung.Controllers
             return View(nameof(Disable2fa));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Disable2fa()
@@ -361,6 +467,12 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(TwoFactorAuthentication));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> EnableAuthenticator()
         {
@@ -386,6 +498,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(model);
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model)
@@ -418,12 +537,24 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(GenerateRecoveryCodes));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult ResetAuthenticatorWarning()
         {
             return View(nameof(ResetAuthenticator));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetAuthenticator()
@@ -441,6 +572,12 @@ namespace TerminUndRaumplanung.Controllers
             return RedirectToAction(nameof(EnableAuthenticator));
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> GenerateRecoveryCodes()
         {

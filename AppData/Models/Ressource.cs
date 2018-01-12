@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AppData.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class Ressource
     {
         public int Id { get; set; }

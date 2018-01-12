@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace AppServices
 {
-    // This class is used by the application to send email for account confirmation and password reset.
-    // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
+    /// <summary>
+    /// This class is used by the application to send email for account confirmation and password reset
+    /// For more details see https://go.microsoft.com/fwlink/?LinkID=532713 
+    /// </summary>
     public class EmailSender : IEmailSender
     {
         public Task SendEmailAsync(string emailAddress, string subject, string message)

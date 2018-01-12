@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-TerminUndRaumplanung-A5B95606-B2FA-4AC3-8B37-A6C7145327DD</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\TerminUndRaumplanung.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Properties\PublishProfiles\CustomProfile.pubxml" />
   </ItemGroup>

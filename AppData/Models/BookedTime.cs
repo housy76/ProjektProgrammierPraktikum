@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AppData.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BookedTime
     {
         public int Id { get; set; }

@@ -11,16 +11,29 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TerminUndRaumplanung.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BookedTimesController : Controller
     {
         private readonly AppointmentContext _context;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public BookedTimesController(AppointmentContext context)
         {
             _context = context;
         }
 
-        // GET: BookedTimes
+
+
+        /// <summary>
+        /// GET: BookedTimes
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
@@ -31,7 +44,12 @@ namespace TerminUndRaumplanung.Controllers
                 );
         }
 
-        // GET: BookedTimes/Details/5
+
+        /// <summary>
+        /// GET: BookedTimes/Details/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Details(int? id)
         {
@@ -50,16 +68,27 @@ namespace TerminUndRaumplanung.Controllers
             return View(bookedTime);
         }
 
-        // GET: BookedTimes/Create
+
+
+        /// <summary>
+        /// GET: BookedTimes/Create
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: BookedTimes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+        /// <summary>
+        /// POST: BookedTimes/Create
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        /// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// </summary>
+        /// <param name="bookedTime"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
@@ -74,7 +103,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(bookedTime);
         }
 
-        // GET: BookedTimes/Edit/5
+
+
+        /// <summary>
+        /// GET: BookedTimes/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -91,9 +126,16 @@ namespace TerminUndRaumplanung.Controllers
             return View(bookedTime);
         }
 
-        // POST: BookedTimes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+        /// <summary>
+        /// POST: BookedTimes/Edit/5
+        /// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        /// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="bookedTime"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
@@ -127,7 +169,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(bookedTime);
         }
 
-        // GET: BookedTimes/Delete/5
+
+
+        /// <summary>
+        /// GET: BookedTimes/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -146,7 +194,13 @@ namespace TerminUndRaumplanung.Controllers
             return View(bookedTime);
         }
 
-        // POST: BookedTimes/Delete/5
+
+
+        /// <summary>
+        /// POST: BookedTimes/Delete/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]

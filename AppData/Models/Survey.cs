@@ -6,6 +6,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AppData.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Survey
     {
         public int Id { get; set; }

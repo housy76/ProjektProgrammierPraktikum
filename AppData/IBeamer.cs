@@ -5,6 +5,9 @@ using System.Text;
 
 namespace AppData
 {
+    /// <summary>
+    /// Beamer Interface
+    /// </summary>
     public interface IBeamer
     {
         void Add(Beamer newBeamer);
