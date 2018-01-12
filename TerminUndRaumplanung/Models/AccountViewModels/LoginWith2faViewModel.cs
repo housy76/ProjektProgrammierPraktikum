@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TerminUndRaumplanung.Models.AccountViewModels
 {
@@ -26,7 +22,6 @@ namespace TerminUndRaumplanung.Models.AccountViewModels
         /// </summary>
         [Display(Name = "Remember this machine")]
         public bool RememberMachine { get; set; }
-
 
 
         /// <summary>
