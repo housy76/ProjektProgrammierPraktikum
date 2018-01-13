@@ -497,7 +497,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// POST: Surveys/UpdateRessourceList
+        /// POST: Surveys/AddRessource
         /// adds an additional User to the existing member list of the survey
         /// </summary>
         /// <param name="appointment"></param>
@@ -505,39 +505,76 @@ namespace TerminUndRaumplanung.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Administrator,User")]
-        public async Task<IActionResult> UpdateRessourceList(
-            [Bind("Id,Ressource")] Appointment appointment,
-            int selectedRessource)
+        public async Task<IActionResult> AddRessource([Bind("Id,Ressource")] Appointment appointment, int selectedRessource)
         {
-
-
+            //load appointment from DB
             appointment = _context
                 .Appointments
                 .Include(a => a.Survey)
+                    .ThenInclude(s => s.Creator)
+                .Include(a => a.Survey)
+                    .ThenInclude(s => s.Members)
                 .Include(a => a.Room)
+                    .ThenInclude(r => r.RessourceBookedTimes)
                 .Include(a => a.Ressources)
+                    .ThenInclude(res => res.RessourceBookedTimes)
                 .SingleOrDefault(a => a.Id == appointment.Id);
 
+            //load selected ressource object form DB
             var newRessource = _context
                     .Ressources
-                    //.Include(r => r.BookedTimes)
+                    .Include(r => r.RessourceBookedTimes)
                     .SingleOrDefault(r => r.Id == selectedRessource);
 
-            var bookedTime = new BookedTime()
+            //check if ressource is already member of the appointment
+            if (appointment.Room.Id == selectedRessource)
             {
-                StartTime = appointment.StartTime,
-                EndTime = appointment.EndTime
-            };
+                return RedirectToAction("Edit", appointment);
+            }
+
+            if (appointment.Ressources.Contains(newRessource))
+            {
+                return RedirectToAction("Edit", appointment);
+            }
+
+
+            //get bookedtime that belongs to this appointment
+            var bookedTime = (_context
+                    .RessourceBookedTimes
+                    .Include(r => r.BookedTime)
+                    .Include(r => r.Ressource)
+                    .SingleOrDefault(r => r.Ressource.Id == appointment.Room.Id &&
+                                        r.BookedTime.StartTime == appointment.StartTime &&
+                                        r.BookedTime.EndTime == appointment.EndTime)
+                ).BookedTime;
 
             
-            //add bookedTime to new Ressource to book the new ressource!
-            //newRessource.BookedTimes.Add(bookedTime);
 
+            //if ressource has never been booked befor, create new RBT list
+            if (newRessource.RessourceBookedTimes == null)
+            {
+                newRessource.RessourceBookedTimes = new List<RessourceBookedTime>();
+            }
+
+            //add ressource to appointment and book it
+            var newRBT = new RessourceBookedTime
+            {
+                BookedTime = bookedTime,
+                BookedTimeId = bookedTime.Id,
+                Ressource = newRessource,
+                RessourceId = newRessource.Id
+            };
+
+            bookedTime.RessourcesBookedTimes.Add(newRBT);
+            newRessource.RessourceBookedTimes.Add(newRBT);
             appointment.Ressources.Add(newRessource);
 
 
-            _context.Update(appointment);
+            //write changes into DB
+            _context.Add(newRBT);
+            _context.Update(bookedTime);
             _context.Update(newRessource);
+            _context.Update(appointment);
             await _context.SaveChangesAsync();
 
 
@@ -546,6 +583,7 @@ namespace TerminUndRaumplanung.Controllers
                 .Rooms
                 .OrderBy(r => r.Name)
                 .ToList();
+
 
             ViewBag.RessourceList = _context
                 .Ressources
@@ -567,34 +605,56 @@ namespace TerminUndRaumplanung.Controllers
         [Route("Appointments/RemoveRessource/{ressourceId},{appointmentId}")] //attribute routing for specific url parameters
         public async Task<IActionResult> RemoveRessource(int ressourceId, int appointmentId)
         {
-            
+
+            //load appointment from DB
             var appointment = _context
                 .Appointments
                 .Include(a => a.Survey)
+                    .ThenInclude(s => s.Creator)
+                .Include(a => a.Survey)
+                    .ThenInclude(s => s.Members)
                 .Include(a => a.Room)
+                    .ThenInclude(r => r.RessourceBookedTimes)
                 .Include(a => a.Ressources)
-                    //.ThenInclude(r => r.BookedTimes)
+                    .ThenInclude(res => res.RessourceBookedTimes)
                 .SingleOrDefault(a => a.Id == appointmentId);
 
+            //load ressource object for delete form DB
             var deletedRessource = _context
-                .Ressources
-                //.Include(r => r.BookedTimes)
-                .SingleOrDefault(r => r.Id == ressourceId);
+                    .Ressources
+                    .Include(r => r.RessourceBookedTimes)
+                    .SingleOrDefault(r => r.Id == ressourceId);
 
-            var bookedTime = _context
-                .BookedTimes
-                .FirstOrDefault(b => b.StartTime == appointment.StartTime && b.EndTime == appointment.EndTime);
+            //load bookedtime that belongs to this appointment from DB
+            var bookedTime = (_context
+                    .RessourceBookedTimes
+                    .Include(r => r.BookedTime)
+                    .Include(r => r.Ressource)
+                    .SingleOrDefault(r => r.Ressource.Id == appointment.Room.Id &&
+                                        r.BookedTime.StartTime == appointment.StartTime &&
+                                        r.BookedTime.EndTime == appointment.EndTime)
+                ).BookedTime;
 
-            //var x = 45;
 
-            //remove booked time from ressource that it is again available in this time
-            //deletedRessource.BookedTimes.Remove(bookedTime);
+            //load RessourceBookTime object from DB
+            var deletedRBT = _context
+                .RessourceBookedTimes
+                .Include(r => r.BookedTime)
+                .Include(r => r.Ressource)
+                .SingleOrDefault(r => r.Ressource == deletedRessource && r.BookedTime == bookedTime);
+
 
             //remove ressource from appointment
+            bookedTime.RessourcesBookedTimes.Remove(deletedRBT);
+            deletedRessource.RessourceBookedTimes.Remove(deletedRBT);
             appointment.Ressources.Remove(deletedRessource);
 
-            _context.Update(appointment);
+
+
             _context.Update(deletedRessource);
+            _context.Update(bookedTime);
+            _context.Update(appointment);
+            _context.Remove(deletedRBT);
             await _context.SaveChangesAsync();
 
 
