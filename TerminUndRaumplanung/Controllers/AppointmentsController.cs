@@ -717,6 +717,42 @@ namespace TerminUndRaumplanung.Controllers
                     .ThenInclude(r => r.RessourceBookedTimes)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
+
+            //load bookedtime that belongs to this appointment from DB
+            var bookedTime = (_context
+                    .RessourceBookedTimes
+                    .Include(r => r.BookedTime)
+                    .Include(r => r.Ressource)
+                    .SingleOrDefault(r => r.Ressource.Id == appointment.Room.Id &&
+                                        r.BookedTime.StartTime == appointment.StartTime &&
+                                        r.BookedTime.EndTime == appointment.EndTime)
+                ).BookedTime;
+
+            var rbtList = _context
+                .RessourceBookedTimes
+                .Include(r => r.BookedTime)
+                .Include(r => r.Ressource)
+                .Where(r => r.BookedTimeId == bookedTime.Id);
+
+
+            //delete all RBT and BookedTime for the appointment
+            foreach (var rbt in rbtList.ToList())
+            {
+
+                var ressource = _context
+                    .Ressources
+                    .Include(r => r.RessourceBookedTimes)
+                    .SingleOrDefault(r => r.Id == rbt.RessourceId);
+
+                ressource.RessourceBookedTimes.Remove(rbt);
+
+                _context.Update(ressource);
+                _context.Remove(rbt);
+            }
+
+            _context.Remove(bookedTime);
+
+
             _context.Appointments.Remove(appointment);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
