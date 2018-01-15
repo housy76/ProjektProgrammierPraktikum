@@ -27,7 +27,12 @@
             @Html.DisplayNameFor(model => model.Members)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Members)
+            @foreach (var item in Model.Members)
+            {
+                <div>
+                    @item.Email
+                </div>
+            }
         </dd>
     </dl>
     

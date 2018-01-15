@@ -227,7 +227,7 @@ namespace TerminUndRaumplanung.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AppointmentSurveyExists(survey.Id))
+                    if (!SurveyExists(survey.Id))
                     {
                         return NotFound();
                     }
@@ -327,8 +327,10 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var appointmentSurvey = await _context.Surveys
+            var appointmentSurvey = await _context
+                .Surveys
                 .Include(m => m.Creator)
+                .Include(m => m.Members)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (appointmentSurvey == null)
             {
@@ -350,14 +352,89 @@ namespace TerminUndRaumplanung.Controllers
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var appointmentSurvey = await _context.Surveys.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Surveys.Remove(appointmentSurvey);
+            var survey = await _context
+                .Surveys
+                .Include(s => s.Appointments)
+                    .ThenInclude(a => a.Ressources)
+                .Include(s => s.Appointments)
+                    .ThenInclude(a => a.Room)
+                .Include(s => s.Creator)
+                .Include(s => s.Members)
+                .SingleOrDefaultAsync(m => m.Id == id);
+
+
+            //unbook all ressources that have been booked in the appointments 
+            //that belong to this survey!
+            var appointmentList = _context
+                .Appointments
+                .Include(a => a.Room)
+                    .ThenInclude(r => r.RessourceBookedTimes)
+                .Include(a => a.Ressources)
+                    .ThenInclude(r => r.RessourceBookedTimes)
+                .Where(a => a.Survey == survey)
+                .ToList();
+
+            //call "DeleteConfirmed(apptointmentId)" for each appointment in this survey
+            //this method is in the appointment controller
+
+
+
+
+
+            //foreach (var app in appointmentList)
+            //{
+            //    foreach (var res in app.Ressources)
+            //    {
+            //        //load ressource object for delete form DB
+            //        var deletedRessource = _context
+            //                .Ressources
+            //                .Include(r => r.RessourceBookedTimes)
+            //                .SingleOrDefault(r => r.Id == res.Id);
+
+            //        //load bookedtime that belongs to this appointment from DB
+            //        var bookedTime = (_context
+            //                .RessourceBookedTimes
+            //                .Include(r => r.BookedTime)
+            //                .Include(r => r.Ressource)
+            //                .FirstOrDefault(r => r.Ressource.Id == app.Room.Id &&
+            //                                    r.BookedTime.StartTime == app.StartTime &&
+            //                                    r.BookedTime.EndTime == app.EndTime)
+            //            ).BookedTime;
+
+
+            //        //load RessourceBookTime object from DB
+            //        var deletedRBT = _context
+            //            .RessourceBookedTimes
+            //            .Include(r => r.BookedTime)
+            //            .Include(r => r.Ressource)
+            //            .SingleOrDefault(r => r.Ressource == deletedRessource && r.BookedTime == bookedTime);
+
+
+            //        //remove ressource from appointment
+            //        bookedTime.RessourcesBookedTimes.Remove(deletedRBT);
+            //        deletedRessource.RessourceBookedTimes.Remove(deletedRBT);
+            //        app.Ressources.Remove(deletedRessource);
+
+
+            //        //write changes into DB
+            //        _context.Update(deletedRessource);
+            //        _context.Update(bookedTime);
+            //        _context.Remove(deletedRBT);
+            //        //_context.Update(app);
+            //        await _context.SaveChangesAsync();
+
+
+            //    }
+            //}
+
+            _context.Update(survey);
+            _context.Surveys.Remove(survey);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Administrator,User")]
-        private bool AppointmentSurveyExists(int id)
+        private bool SurveyExists(int id)
         {
             return _context.Surveys.Any(e => e.Id == id);
         }
