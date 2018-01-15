@@ -684,7 +684,10 @@ namespace TerminUndRaumplanung.Controllers
                 return NotFound();
             }
 
-            var appointment = await _context.Appointments
+            var appointment = await _context
+                .Appointments
+                .Include(a => a.Room)
+                .Include(a => a.Ressources)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (appointment == null)
             {
@@ -706,7 +709,14 @@ namespace TerminUndRaumplanung.Controllers
         [Authorize(Roles = "Administrator,User")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var appointment = await _context.Appointments.SingleOrDefaultAsync(m => m.Id == id);
+            var appointment = await _context
+                .Appointments
+                .Include(a => a.Ressources)
+                    .ThenInclude(r => r.RessourceBookedTimes)
+                .Include(a => a.Room)
+                    .ThenInclude(r => r.RessourceBookedTimes)
+                .SingleOrDefaultAsync(m => m.Id == id);
+
             _context.Appointments.Remove(appointment);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
