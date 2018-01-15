@@ -33,7 +33,12 @@
             @Html.DisplayNameFor(model => model.Ressources)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Ressources)
+            @foreach (var item in Model.Ressources)
+            {
+                <div>
+                    @item.Name
+                </div>
+            }
         </dd>
     </dl>
     
