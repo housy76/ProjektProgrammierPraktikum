@@ -355,9 +355,6 @@ namespace TerminUndRaumplanung.Controllers
             var survey = await _context
                 .Surveys
                 .Include(s => s.Appointments)
-                    .ThenInclude(a => a.Ressources)
-                .Include(s => s.Appointments)
-                    .ThenInclude(a => a.Room)
                 .Include(s => s.Creator)
                 .Include(s => s.Members)
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -365,67 +362,60 @@ namespace TerminUndRaumplanung.Controllers
 
             //unbook all ressources that have been booked in the appointments 
             //that belong to this survey!
-            var appointmentList = _context
-                .Appointments
-                .Include(a => a.Room)
-                    .ThenInclude(r => r.RessourceBookedTimes)
-                .Include(a => a.Ressources)
-                    .ThenInclude(r => r.RessourceBookedTimes)
-                .Where(a => a.Survey == survey)
-                .ToList();
+            var appointmentList = survey.Appointments;
 
-            //call "DeleteConfirmed(apptointmentId)" for each appointment in this survey
-            //this method is in the appointment controller
-
-
-
-
-
-            //foreach (var app in appointmentList)
-            //{
-            //    foreach (var res in app.Ressources)
-            //    {
-            //        //load ressource object for delete form DB
-            //        var deletedRessource = _context
-            //                .Ressources
-            //                .Include(r => r.RessourceBookedTimes)
-            //                .SingleOrDefault(r => r.Id == res.Id);
-
-            //        //load bookedtime that belongs to this appointment from DB
-            //        var bookedTime = (_context
-            //                .RessourceBookedTimes
-            //                .Include(r => r.BookedTime)
-            //                .Include(r => r.Ressource)
-            //                .FirstOrDefault(r => r.Ressource.Id == app.Room.Id &&
-            //                                    r.BookedTime.StartTime == app.StartTime &&
-            //                                    r.BookedTime.EndTime == app.EndTime)
-            //            ).BookedTime;
+            //test if survey has appointments
+            if (appointmentList != null)
+            {
+                //delete all appointments and related bookedtimes and ResBoTimes
+                foreach (var appointm in appointmentList)
+                {
+                    var appointment = await _context
+                    .Appointments
+                    .Include(a => a.Ressources)
+                        .ThenInclude(r => r.RessourceBookedTimes)
+                    .Include(a => a.Room)
+                        .ThenInclude(r => r.RessourceBookedTimes)
+                    .SingleOrDefaultAsync(m => m.Id == appointm.Id);
 
 
-            //        //load RessourceBookTime object from DB
-            //        var deletedRBT = _context
-            //            .RessourceBookedTimes
-            //            .Include(r => r.BookedTime)
-            //            .Include(r => r.Ressource)
-            //            .SingleOrDefault(r => r.Ressource == deletedRessource && r.BookedTime == bookedTime);
+                    //load bookedtime that belongs to this appointment from DB
+                    var bookedTime = (_context
+                            .RessourceBookedTimes
+                            .Include(r => r.BookedTime)
+                            .Include(r => r.Ressource)
+                            .SingleOrDefault(r => r.Ressource.Id == appointment.Room.Id &&
+                                                r.BookedTime.StartTime == appointment.StartTime &&
+                                                r.BookedTime.EndTime == appointment.EndTime)
+                        ).BookedTime;
+
+                    var rbtList = _context
+                        .RessourceBookedTimes
+                        .Include(r => r.BookedTime)
+                        .Include(r => r.Ressource)
+                        .Where(r => r.BookedTimeId == bookedTime.Id);
 
 
-            //        //remove ressource from appointment
-            //        bookedTime.RessourcesBookedTimes.Remove(deletedRBT);
-            //        deletedRessource.RessourceBookedTimes.Remove(deletedRBT);
-            //        app.Ressources.Remove(deletedRessource);
+                    //delete all ResBoTimes and BookedTime for the appointment
+                    foreach (var rbt in rbtList.ToList())
+                    {
 
+                        var ressource = _context
+                            .Ressources
+                            .Include(r => r.RessourceBookedTimes)
+                            .SingleOrDefault(r => r.Id == rbt.RessourceId);
 
-            //        //write changes into DB
-            //        _context.Update(deletedRessource);
-            //        _context.Update(bookedTime);
-            //        _context.Remove(deletedRBT);
-            //        //_context.Update(app);
-            //        await _context.SaveChangesAsync();
+                        ressource.RessourceBookedTimes.Remove(rbt);
 
+                        _context.Update(ressource);
+                        _context.Remove(rbt);
+                    }
 
-            //    }
-            //}
+                    _context.Remove(bookedTime);
+                    _context.Appointments.Remove(appointment);
+                }
+            }
+
 
             _context.Update(survey);
             _context.Surveys.Remove(survey);
