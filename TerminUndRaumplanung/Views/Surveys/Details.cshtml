@@ -40,18 +40,20 @@
 
 <div>
     <h4>Appointments For this Survey</h4>
+
+    <input type="button" 
+           class="btn btn-default" 
+           value="Add Appointment" 
+           onclick="location.href='@Url.Action("Create", "Appointments", new { surveyId = Model.Id})'" />
+
     <table class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
-                <th>
-                    @*Simon*@
-                    @Html.ActionLink("Add Appointment", "Create", "Appointments", new { surveyId = Model.Id}, null)
-                    
-                </th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Room</th>
                 <th>Ressources</th>
+                <th />
             </tr>
         </thead>
         <tbody>
@@ -59,9 +61,6 @@
             {
 
                 <tr>
-                    <td>
-                        <a asp-controller="Appointments" asp-action="Edit" asp-route-id="@appointments.Id">Edit</a>
-                    </td>
                     <td>
                         @appointments.StartTime
                     </td>
@@ -72,13 +71,17 @@
                         @appointments.Room.Name
                     </td>
                     <td>
-                        @*Insert some javascript code, that displays only the first x charakters 
-                        of all members seperated by a "," and if you click at the field, it 
-                        should expand to display all members*@
+                        @*Insert some javascript code, that displays only the first x charakters
+                            of all members seperated by a "," and if you click at the field, it
+                            should expand to display all members*@
                         @foreach (var item in appointments.Ressources)
                         {
                             @item.Name
                         }
+                    </td>
+                    <td>
+                        <a asp-controller="Appointments" asp-action="Edit" asp-route-id="@appointments.Id">Edit</a> |
+                        <a asp-controller="Appointments" asp-action="Delete" asp-route-id="@appointments.Id">Delete</a>
                     </td>
                 </tr>
             }
