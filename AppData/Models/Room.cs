@@ -3,7 +3,7 @@
 namespace AppData.Models
 {
     /// <summary>
-    /// 
+    /// Data Model for Room 
     /// </summary>
     public class Room : Ressource
     {

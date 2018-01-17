@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 namespace TerminUndRaumplanung.Controllers
 {
     /// <summary>
-    /// 
+    /// Controller for Appointments
     /// </summary>
     public class AppointmentsController : Controller
     {
@@ -20,12 +20,12 @@ namespace TerminUndRaumplanung.Controllers
         private readonly AppointmentContext _context;
 
         /// <summary>
-        /// 
+        /// Ressource List
         /// </summary>
         public IEnumerable<SelectListItem> RessourceList { get; set; }
 
         /// <summary>
-        /// 
+        /// Conatructor for Appointment Controller
         /// </summary>
         /// <param name="context"></param>
         public AppointmentsController(AppointmentContext context)
@@ -596,7 +596,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method to remove a Ressource
         /// </summary>
         /// <param name="ressourceId"></param>
         /// <param name="appointmentId"></param>

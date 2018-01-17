@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace AppData.Models
 {
     /// <summary>
-    /// 
+    /// Data Model for Ressource
     /// </summary>
     public abstract class Ressource
     {

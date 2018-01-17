@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AppData.Models
 {
     /// <summary>
-    /// 
+    /// Data Model for Survey
     /// </summary>
     public class Survey
     {

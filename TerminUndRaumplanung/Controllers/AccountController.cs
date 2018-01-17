@@ -50,7 +50,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Error Message
         /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
@@ -58,7 +58,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Login method for User Login
         /// </summary>
         /// <param name="returnUrl"></param>
         /// <returns></returns>
@@ -75,7 +75,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Login method for User Login
         /// </summary>
         /// <param name="model"></param>
         /// <param name="returnUrl"></param>
@@ -118,7 +118,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Login method for 2-Factor-Authentification
         /// </summary>
         /// <param name="rememberMe"></param>
         /// <param name="returnUrl"></param>
@@ -143,7 +143,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Login method for 2-Factor-Authentification
         /// </summary>
         /// <param name="model"></param>
         /// <param name="rememberMe"></param>
@@ -189,7 +189,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Login method with Password Recovery
         /// </summary>
         /// <param name="returnUrl"></param>
         /// <returns></returns>
@@ -211,7 +211,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Login method with Password Recovery
         /// </summary>
         /// <param name="model"></param>
         /// <param name="returnUrl"></param>
@@ -256,7 +256,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Logout method for User
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -268,7 +268,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Register method for Account creation
         /// </summary>
         /// <param name="returnUrl"></param>
         /// <returns></returns>
@@ -283,7 +283,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Register method for Account creation
         /// </summary>
         /// <param name="model"></param>
         /// <param name="returnUrl"></param>
@@ -373,7 +373,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Logout method for User
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -387,7 +387,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for external Login
         /// </summary>
         /// <param name="provider"></param>
         /// <param name="returnUrl"></param>
@@ -405,7 +405,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for external Login
         /// </summary>
         /// <param name="returnUrl"></param>
         /// <param name="remoteError"></param>
@@ -447,7 +447,7 @@ namespace TerminUndRaumplanung.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Method for external Login Confimation
         /// </summary>
         /// <param name="model"></param>
         /// <param name="returnUrl"></param>
@@ -487,7 +487,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for confirming Account via Email
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="code"></param>
@@ -511,7 +511,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for forgetting Password
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -523,7 +523,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for forgetting Password
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -556,7 +556,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method to confirm the forgetten Password
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -568,7 +568,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for resetting Password
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
@@ -586,7 +586,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for resetting Password
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -616,7 +616,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for confirmation to reset the Password
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -628,7 +628,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Method for denied access
         /// </summary>
         /// <returns></returns>
         [HttpGet]

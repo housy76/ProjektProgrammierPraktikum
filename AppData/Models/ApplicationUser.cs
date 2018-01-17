@@ -4,7 +4,7 @@
 namespace AppData.Models
 {
     /// <summary>
-    /// 
+    /// Data Model for User
     /// </summary>
     public class ApplicationUser : IdentityUser
     {

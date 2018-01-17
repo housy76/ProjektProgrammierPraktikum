@@ -6,7 +6,7 @@ using TerminUndRaumplanung.Models;
 namespace TerminUndRaumplanung.Controllers
 {
     /// <summary>
-    /// 
+    /// Controller Home View
     /// </summary>
     public class HomeController : Controller
     {

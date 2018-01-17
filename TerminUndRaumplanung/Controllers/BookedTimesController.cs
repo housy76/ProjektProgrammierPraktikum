@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace TerminUndRaumplanung.Controllers
 {
     /// <summary>
-    /// 
+    /// Controller for Time Management (Booked Times Controller)
     /// </summary>
     public class BookedTimesController : Controller
     {
@@ -17,7 +17,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Constructor for Booked Times Controller
         /// </summary>
         /// <param name="context"></param>
         public BookedTimesController(AppointmentContext context)

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AppData.Models
 {
     /// <summary>
-    /// 
+    /// Data Model for Appointment
     /// </summary>
     public class Appointment
     {

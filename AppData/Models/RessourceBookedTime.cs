@@ -1,7 +1,7 @@
 ﻿namespace AppData.Models
 {
     /// <summary>
-    /// 
+    /// Data Model for RessourceBookedTime
     /// </summary>
     public class RessourceBookedTime
     {

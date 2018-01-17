@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace AppData.Models
 {
     /// <summary>
-    /// 
+    /// Data Model for BookedTime
     /// </summary>
     public class BookedTime
     {
