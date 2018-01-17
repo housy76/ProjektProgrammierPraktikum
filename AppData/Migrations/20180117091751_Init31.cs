@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AppData.Migrations
 {
-    public partial class _23 : Migration
+    public partial class Init31 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,6 +38,23 @@ namespace AppData.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Ressources",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Discriminator = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    BeamerIsAvailable = table.Column<bool>(nullable: true),
+                    NumberOfSeats = table.Column<int>(nullable: true),
+                    SpeakerIsAvailable = table.Column<bool>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ressources", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -56,24 +73,6 @@ namespace AppData.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ressources",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AppointmentId = table.Column<int>(nullable: true),
-                    Discriminator = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    BeamerIsAvailable = table.Column<bool>(nullable: true),
-                    NumberOfSeats = table.Column<int>(nullable: true),
-                    SpeakerIsAvailable = table.Column<bool>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ressources", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,6 +95,26 @@ namespace AppData.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RessourceBookedTimes_Ressources_RessourceId",
+                        column: x => x.RessourceId,
+                        principalTable: "Ressources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppointmentRessources",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AppointmentId = table.Column<int>(nullable: false),
+                    RessourceId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppointmentRessources", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppointmentRessources_Ressources_RessourceId",
                         column: x => x.RessourceId,
                         principalTable: "Ressources",
                         principalColumn: "Id",
@@ -241,6 +260,16 @@ namespace AppData.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppointmentRessources_AppointmentId",
+                table: "AppointmentRessources",
+                column: "AppointmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppointmentRessources_RessourceId",
+                table: "AppointmentRessources",
+                column: "RessourceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Appointments_RoomId",
                 table: "Appointments",
                 column: "RoomId");
@@ -305,22 +334,17 @@ namespace AppData.Migrations
                 column: "RessourceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ressources_AppointmentId",
-                table: "Ressources",
-                column: "AppointmentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Surveys_CreatorId",
                 table: "Surveys",
                 column: "CreatorId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Ressources_Appointments_AppointmentId",
-                table: "Ressources",
+                name: "FK_AppointmentRessources_Appointments_AppointmentId",
+                table: "AppointmentRessources",
                 column: "AppointmentId",
                 principalTable: "Appointments",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.NoAction); //simon
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserRoles_AspNetUsers_UserId",
@@ -366,12 +390,11 @@ namespace AppData.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Appointments_Ressources_RoomId",
-                table: "Appointments");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_AspNetUsers_Surveys_SurveyId",
                 table: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "AppointmentRessources");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -392,6 +415,9 @@ namespace AppData.Migrations
                 name: "RessourceBookedTimes");
 
             migrationBuilder.DropTable(
+                name: "Appointments");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -399,9 +425,6 @@ namespace AppData.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ressources");
-
-            migrationBuilder.DropTable(
-                name: "Appointments");
 
             migrationBuilder.DropTable(
                 name: "Surveys");

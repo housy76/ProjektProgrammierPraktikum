@@ -14,6 +14,7 @@ namespace AppData.Models
         [Display(Name = "Name / Bezeichnung")]
         public string Name { get; set; }
         public List<RessourceBookedTime> RessourceBookedTimes { get; set; }
+        public List<AppointmentRessource> AppointmentRessources { get; set; }
 
     }
 }

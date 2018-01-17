@@ -16,7 +16,7 @@ namespace AppData
         //Simon
         //changed entity type from string to Room
         Room GetRoom(int id);
-        ICollection<Ressource> GetRessources(int id);
+        List<AppointmentRessource> GetAppointmentRessources(int id);
         DateTime GetStartTime(int id);
         DateTime GetEndTime(int id);
         Survey GetSurvey(int id);

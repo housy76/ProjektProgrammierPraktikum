@@ -7,6 +7,8 @@ using AppData.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using TerminUndRaumplanung.Models;
 
 namespace TerminUndRaumplanung.Controllers
 {
@@ -86,10 +88,42 @@ namespace TerminUndRaumplanung.Controllers
                 .Include(s => s.Creator)
                 .Include(s => s.Members)
                 .Include(s => s.Appointments)
-                    .ThenInclude(a => a.Room)   //load appointment entity room explicitly
-                .Include(s => s.Appointments)   //loading different entities explicitly
-                    .ThenInclude(a => a.Ressources)
+                    .ThenInclude(a => a.Room)
+                .Include(s => s.Appointments)
+                    .ThenInclude(a => a.AppointmentRessources)
+                        .ThenInclude(ar => ar.Ressource)
                 .SingleOrDefaultAsync(m => m.Id == id);
+
+
+            //create List of Appointment for displaying them in the survey detail view
+            var appointmentList = new List<AppointmentViewModel>();
+
+            if (survey.Appointments != null)
+            {
+                foreach (var app in survey.Appointments)
+                {
+                    var salvm = new AppointmentViewModel
+                    {
+                        AppointmentId = app.Id,
+                        StartTime = app.StartTime,
+                        EndTime = app.EndTime,
+                        Room = app.Room,
+                        Ressources = new List<Ressource>()
+                    };
+
+                    if (app.AppointmentRessources != null)
+                    {
+                        foreach (var ar in app.AppointmentRessources)
+                        {
+                            salvm.Ressources.Add(ar.Ressource);
+                        }
+                    }
+
+                    appointmentList.Add(salvm);
+                }
+            }
+
+            ViewBag.AppointmentList = appointmentList;
 
             return View(survey);
         }
@@ -365,56 +399,56 @@ namespace TerminUndRaumplanung.Controllers
             var appointmentList = survey.Appointments;
 
             //test if survey has appointments
-            if (appointmentList != null)
-            {
-                //delete all appointments and related bookedtimes and ResBoTimes
-                foreach (var appointm in appointmentList)
-                {
-                    var appointment = await _context
-                    .Appointments
-                    .Include(a => a.Ressources)
-                        .ThenInclude(r => r.RessourceBookedTimes)
-                    .Include(a => a.Room)
-                        .ThenInclude(r => r.RessourceBookedTimes)
-                    .SingleOrDefaultAsync(m => m.Id == appointm.Id);
+            //if (appointmentList != null)
+            //{
+            //    //delete all appointments and related bookedtimes and ResBoTimes
+            //    foreach (var appointm in appointmentList)
+            //    {
+            //        var appointment = await _context
+            //        .Appointments
+            //        .Include(a => a.Ressources)
+            //            .ThenInclude(r => r.RessourceBookedTimes)
+            //        .Include(a => a.Room)
+            //            .ThenInclude(r => r.RessourceBookedTimes)
+            //        .SingleOrDefaultAsync(m => m.Id == appointm.Id);
 
 
-                    //load bookedtime that belongs to this appointment from DB
-                    var bookedTime = (_context
-                            .RessourceBookedTimes
-                            .Include(r => r.BookedTime)
-                            .Include(r => r.Ressource)
-                            .SingleOrDefault(r => r.Ressource.Id == appointment.Room.Id &&
-                                                r.BookedTime.StartTime == appointment.StartTime &&
-                                                r.BookedTime.EndTime == appointment.EndTime)
-                        ).BookedTime;
+            //        //load bookedtime that belongs to this appointment from DB
+            //        var bookedTime = (_context
+            //                .RessourceBookedTimes
+            //                .Include(r => r.BookedTime)
+            //                .Include(r => r.Ressource)
+            //                .SingleOrDefault(r => r.Ressource.Id == appointment.Room.Id &&
+            //                                    r.BookedTime.StartTime == appointment.StartTime &&
+            //                                    r.BookedTime.EndTime == appointment.EndTime)
+            //            ).BookedTime;
 
-                    var rbtList = _context
-                        .RessourceBookedTimes
-                        .Include(r => r.BookedTime)
-                        .Include(r => r.Ressource)
-                        .Where(r => r.BookedTimeId == bookedTime.Id);
+            //        var rbtList = _context
+            //            .RessourceBookedTimes
+            //            .Include(r => r.BookedTime)
+            //            .Include(r => r.Ressource)
+            //            .Where(r => r.BookedTimeId == bookedTime.Id);
 
 
-                    //delete all ResBoTimes and BookedTime for the appointment
-                    foreach (var rbt in rbtList.ToList())
-                    {
+            //        //delete all ResBoTimes and BookedTime for the appointment
+            //        foreach (var rbt in rbtList.ToList())
+            //        {
 
-                        var ressource = _context
-                            .Ressources
-                            .Include(r => r.RessourceBookedTimes)
-                            .SingleOrDefault(r => r.Id == rbt.RessourceId);
+            //            var ressource = _context
+            //                .Ressources
+            //                .Include(r => r.RessourceBookedTimes)
+            //                .SingleOrDefault(r => r.Id == rbt.RessourceId);
 
-                        ressource.RessourceBookedTimes.Remove(rbt);
+            //            ressource.RessourceBookedTimes.Remove(rbt);
 
-                        _context.Update(ressource);
-                        _context.Remove(rbt);
-                    }
+            //            _context.Update(ressource);
+            //            _context.Remove(rbt);
+            //        }
 
-                    _context.Remove(bookedTime);
-                    _context.Appointments.Remove(appointment);
-                }
-            }
+            //        _context.Remove(bookedTime);
+            //        _context.Appointments.Remove(appointment);
+            //    }
+            //}
 
 
             _context.Update(survey);

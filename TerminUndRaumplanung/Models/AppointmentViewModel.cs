@@ -1,16 +1,17 @@
-﻿using System;
+﻿using AppData.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AppData.Models
+namespace TerminUndRaumplanung.Models
 {
     /// <summary>
     /// 
     /// </summary>
-    public class Appointment
+    public class AppointmentViewModel
     {
-        public int Id { get; set; }
+        public int AppointmentId { get; set; }
 
         [Required]
         [Display(Name = "Beginn")]
@@ -32,9 +33,11 @@ namespace AppData.Models
         public int SelectedRoom { get; set; }
 
 
+        
+        [Display(Name = "Weitere Ressourcen")]
+        public List<Ressource> Ressources { get; set; }
 
         //entity for many-to-many connection
-        [Display(Name = "Weitere Ressourcen")]
         public List<AppointmentRessource> AppointmentRessources { get; set; }
 
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AppData.Models.Appointment>
+﻿@model IEnumerable<TerminUndRaumplanung.Models.AppointmentViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -24,7 +24,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Ressources)
                 </th>
-            <th></th>
+                <th></th>
         </tr>
     </thead>
     <tbody>
@@ -49,9 +49,9 @@
                 }
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
             </td>
         </tr>
 }

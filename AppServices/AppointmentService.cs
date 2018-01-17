@@ -32,9 +32,16 @@ namespace AppServices
                 .Include(a => a.Id)
                 .Include(a => a.StartTime)
                 .Include(a => a.EndTime)
-                .Include(a => a.Ressources)
+                .Include(a => a.AppointmentRessources)
                 .Include(a => a.Room)
                 .Include(a => a.Survey);
+        }
+
+        public List<AppointmentRessource> GetAppointmentRessources(int id)
+        {
+            return GetAll()
+                .FirstOrDefault(a => a.Id == id)
+                .AppointmentRessources;
         }
 
         public Appointment GetById(int id)
@@ -51,16 +58,7 @@ namespace AppServices
                 .EndTime;
         }
 
-        public ICollection<Ressource> GetRessources(int id)
-        {
-            return
-                GetAll()
-                .FirstOrDefault(a => a.Id == id)
-                .Ressources;
-        }
 
-        //Simon
-        //changed entity type from string to Room
         public Room GetRoom(int id)
         {
             return 

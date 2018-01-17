@@ -18,6 +18,7 @@ namespace AppData
         public DbSet<Room> Rooms { get; set; }
         public DbSet<BookedTime> BookedTimes { get; set; }
         public DbSet<RessourceBookedTime> RessourceBookedTimes { get; set; }
+        public DbSet<AppointmentRessource> AppointmentRessources { get; set; }
 
     }
 }
