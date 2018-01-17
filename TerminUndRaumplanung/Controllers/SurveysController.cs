@@ -96,13 +96,15 @@ namespace TerminUndRaumplanung.Controllers
 
 
             //create List of Appointment for displaying them in the survey detail view
-            var appointmentList = new List<AppointmentViewModel>();
+            var appointmentViewModelList = new List<AppointmentViewModel>();
 
             if (survey.Appointments != null)
             {
+                //create a new appointment view model object for each appointment
+                //and store it in a list for handing it over to the view in the viewbag
                 foreach (var app in survey.Appointments)
                 {
-                    var salvm = new AppointmentViewModel
+                    var appointment = new AppointmentViewModel
                     {
                         AppointmentId = app.Id,
                         StartTime = app.StartTime,
@@ -115,15 +117,40 @@ namespace TerminUndRaumplanung.Controllers
                     {
                         foreach (var ar in app.AppointmentRessources)
                         {
-                            salvm.Ressources.Add(ar.Ressource);
+                            appointment.Ressources.Add(ar.Ressource);
                         }
                     }
 
-                    appointmentList.Add(salvm);
+                    appointmentViewModelList.Add(appointment);
+                    
                 }
+
+
+
+                //foreach (var app in survey.Appointments)
+                //{
+                //    var salvm = new AppointmentViewModel
+                //    {
+                //        AppointmentId = app.Id,
+                //        StartTime = app.StartTime,
+                //        EndTime = app.EndTime,
+                //        Room = app.Room,
+                //        Ressources = new List<Ressource>()
+                //    };
+
+                //    if (app.AppointmentRessources != null)
+                //    {
+                //        foreach (var ar in app.AppointmentRessources)
+                //        {
+                //            salvm.Ressources.Add(ar.Ressource);
+                //        }
+                //    }
+
+                //    appointmentList.Add(salvm);
+                //}
             }
 
-            ViewBag.AppointmentList = appointmentList;
+            ViewBag.AppointmentList = appointmentViewModelList;
 
             return View(survey);
         }

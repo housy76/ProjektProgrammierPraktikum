@@ -59,7 +59,6 @@
         <tbody>
             @foreach (var appointments in @ViewBag.AppointmentList)
             {
-
                 <tr>
                     <td>
                         @appointments.StartTime
@@ -80,8 +79,8 @@
                         }
                     </td>
                     <td>
-                        <a asp-controller="Appointments" asp-action="Edit" asp-route-id="@appointments.Id">Edit</a> |
-                        <a asp-controller="Appointments" asp-action="Delete" asp-route-id="@appointments.Id">Delete</a>
+                        <a asp-controller="Appointments" asp-action="Edit" asp-route-id="@appointments.AppointmentId">Edit</a> |
+                        <a asp-controller="Appointments" asp-action="Delete" asp-route-id="@appointments.AppointmentId">Delete</a>
                     </td>
                 </tr>
             }

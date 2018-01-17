@@ -75,8 +75,6 @@ namespace TerminUndRaumplanung.Controllers
 
                 model.Add(appointment);
             }
-            
-
 
             return View(model);
         }
@@ -150,7 +148,7 @@ namespace TerminUndRaumplanung.Controllers
         /// To protect from overposting attacks, please enable the specific properties you want to 
         /// bind to, for more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         /// </summary>
-        /// <param name="appointment"></param>
+        /// <param name="appointmentModel"></param>
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -184,7 +182,9 @@ namespace TerminUndRaumplanung.Controllers
             //create variables
             var appointment = new Appointment
             {
-                AppointmentRessources = new List<AppointmentRessource>(),
+                StartTime = appointmentModel.StartTime,
+                EndTime = appointmentModel.EndTime,
+                AppointmentRessources = new List<AppointmentRessource>()
             };
 
             var bookedTime = new BookedTime
