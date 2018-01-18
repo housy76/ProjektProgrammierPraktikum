@@ -14,7 +14,7 @@ namespace AppData.Models
 
         [Required]
         [Display(Name = "Beginn")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy hh:mm}", ApplyFormatInEditMode = true)]
         public DateTime StartTime { get; set; }
 
         [Required]

@@ -1,4 +1,4 @@
-﻿@model AppData.Models.Appointment
+﻿@model TerminUndRaumplanung.Models.AppointmentViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,9 +12,11 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="hidden">
+            @*<div class="hidden">
                 @Html.EditorFor(model => model.Survey.Id)
-            </div>
+            </div>*@
+            @Html.HiddenFor(model => model.Survey.Id)
+            @Html.HiddenFor(mode => mode.AppointmentId)
 
             <div class="editor-lable">
                 @Html.LabelFor(model => model.StartTime)
@@ -56,7 +58,7 @@
                             @item.Name
                         </td>
                         <td>
-                            <a asp-action="RemoveRessource" asp-route-id="@item.Id,@Model.Id">Remove Ressource</a>
+                            <a asp-action="RemoveRessource" asp-route-id="@item.Id,@Model.AppointmentId">Remove Ressource</a>
                         </td>
                     </tr>
         }
@@ -65,7 +67,7 @@
             </div>
 
             <div class="form-group">
-                <input type="button" class="btn btn-default" value="Delete" onclick="location.href='@Url.Action("Delete", "Appointments", new { id = Model.Id})'" />
+                <input type="button" class="btn btn-default" value="Delete" onclick="location.href='@Url.Action("Delete", "Appointments", new { id = Model.AppointmentId})'" />
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
             
@@ -78,7 +80,7 @@
         @Html.Label("Add additional ressource:")
     </div>
     <div class="editor-field">
-        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.AppointmentId)
         @Html.HiddenFor(model => model.Ressources)
         @Html.HiddenFor(model => model.Room)
         @Html.HiddenFor(model => model.StartTime)
@@ -89,7 +91,7 @@
 
 <div>
     <a asp-action="Details" asp-controller="Surveys" asp-route-id="@Model.Survey.Id">Back to Survey</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    <a asp-action="Delete" asp-route-id="@Model.AppointmentId">Delete</a>
 </div>
 
 @section Scripts {
