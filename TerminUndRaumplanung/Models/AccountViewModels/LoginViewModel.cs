@@ -3,12 +3,12 @@
 namespace TerminUndRaumplanung.Models.AccountViewModels
 {
     /// <summary>
-    /// 
+    /// Model for Login View
     /// </summary>
     public class LoginViewModel
     {
         /// <summary>
-        /// 
+        /// Email Entity
         /// </summary>
         [Required]
         [EmailAddress]
@@ -16,7 +16,7 @@ namespace TerminUndRaumplanung.Models.AccountViewModels
 
 
         /// <summary>
-        /// 
+        /// Password Entity
         /// </summary>
         [Required]
         [DataType(DataType.Password)]
@@ -24,7 +24,7 @@ namespace TerminUndRaumplanung.Models.AccountViewModels
 
 
         /// <summary>
-        /// 
+        /// Remember me Entity
         /// </summary>
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }

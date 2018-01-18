@@ -3,7 +3,7 @@
 namespace TerminUndRaumplanung.Models.AccountViewModels
 {
     /// <summary>
-    /// 
+    /// Model for forgotten Password
     /// </summary>
     public class ForgotPasswordViewModel
     {
