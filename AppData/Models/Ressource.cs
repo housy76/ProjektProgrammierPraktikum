@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+// Erstellt durch Maximilian Freiberger
 namespace AppData.Models
 {
     /// <summary>

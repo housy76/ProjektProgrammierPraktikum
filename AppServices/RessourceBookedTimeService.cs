@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 
+// Erstelltt durch Daniel Hornauer
 namespace AppServices
 {
     /// <summary>

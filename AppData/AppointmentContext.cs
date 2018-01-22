@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
+// Erstellt durch Marco Geisthoff
 namespace AppData
 {
     /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+// Erstellt durch Daniel Hornauer
 namespace AppData.Models
 {
     /// <summary>

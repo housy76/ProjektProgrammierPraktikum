@@ -4,6 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
+<!-- Erstellt durch Marco Geisthoff -->
 <h2>Edit</h2>
 
 <h4>Survey</h4>
@@ -12,10 +13,10 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @*Hidden elements that will be posted back to controller*@ 
+            @*Hidden elements that will be posted back to controller*@
             @Html.HiddenFor(model => model.Id)
             @Html.HiddenFor(model => model.Subject)
-            
+
             <div class="editor-lable">
                 @Html.LabelFor(model => model.Subject)
             </div>
@@ -32,26 +33,26 @@
             </div>
 
             <div class="editor-lable">
-                
+
                 <table class="table">
                     <thead>
                         <tr>
                             @*<th>*@
-                                @Html.LabelFor(model => model.Members)
+                            @Html.LabelFor(model => model.Members)
                             @*</th>*@
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Members)
                         {
-                        <tr>
-                            <td>
-                                @item.Email
-                            </td>
-                            <td>
-                                <a asp-action="RemoveMember" asp-route-id="@item.Id,@Model.Id">Remove Member</a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    <a asp-action="RemoveMember" asp-route-id="@item.Id,@Model.Id">Remove Member</a>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>

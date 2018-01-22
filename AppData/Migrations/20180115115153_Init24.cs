@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
+// Bearbeitet Simon Hummel
 namespace AppData.Migrations
 {
     public partial class Init24 : Migration

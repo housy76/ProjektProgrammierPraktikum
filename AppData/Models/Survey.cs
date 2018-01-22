@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+// Erstellt durch Marco Geisthoff
 namespace AppData.Models
 {
     /// <summary>

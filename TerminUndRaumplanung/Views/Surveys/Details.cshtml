@@ -4,6 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
+<!-- Erstellt durch Marco Geisthoff -->
 <h2>Details</h2>
 
 <div>
@@ -41,9 +42,9 @@
 <div>
     <h4>Appointments For this Survey</h4>
 
-    <input type="button" 
-           class="btn btn-default" 
-           value="Add Appointment" 
+    <input type="button"
+           class="btn btn-default"
+           value="Add Appointment"
            onclick="location.href='@Url.Action("Create", "Appointments", new { surveyId = Model.Id})'" />
 
     <table class="table table-bordered table-hover table-condensed">

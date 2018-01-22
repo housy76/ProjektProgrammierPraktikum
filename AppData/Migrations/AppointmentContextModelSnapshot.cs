@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System;
 
+// Erstellt durch Marco Geisthoff
+
 namespace AppData.Migrations
 {
     [DbContext(typeof(AppointmentContext))]

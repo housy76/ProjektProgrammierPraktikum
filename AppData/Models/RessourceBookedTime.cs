@@ -1,4 +1,5 @@
-﻿namespace AppData.Models
+﻿// Erstellt durch Maximilian Freiberger
+namespace AppData.Models
 {
     /// <summary>
     /// Data Model for RessourceBookedTime

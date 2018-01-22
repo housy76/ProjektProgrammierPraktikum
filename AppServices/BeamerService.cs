@@ -4,6 +4,7 @@ using AppData.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
+// Erstellt durch Maximilian Freiberger
 namespace AppServices
 {
     /// <summary>

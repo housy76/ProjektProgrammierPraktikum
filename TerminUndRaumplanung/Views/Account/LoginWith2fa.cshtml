@@ -3,6 +3,7 @@
     ViewData["Title"] = "Two-factor authentication";
 }
 
+<!-- Bearbeitet durch Simon Hummel -->
 <h2>@ViewData["Title"]</h2>
 <hr />
 <p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
@@ -31,7 +32,7 @@
     </div>
 </div>
 <p>
-    Don't have access to your authenticator device? You can 
+    Don't have access to your authenticator device? You can
     <a asp-action="LoginWithRecoveryCode" asp-route-returnUrl="@ViewData["ReturnUrl"]">log in with a recovery code</a>.
 </p>
 

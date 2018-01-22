@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+// Bearbeitet durch Simon Hummel
+
 namespace TerminUndRaumplanung.Models.AccountViewModels
 {
     /// <summary>
