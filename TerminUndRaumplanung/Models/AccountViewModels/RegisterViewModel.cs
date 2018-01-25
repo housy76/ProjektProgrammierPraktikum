@@ -3,12 +3,12 @@
 namespace TerminUndRaumplanung.Models.AccountViewModels
 {
     /// <summary>
-    /// 
+    /// Model for Register View
     /// </summary>
     public class RegisterViewModel
     {
         /// <summary>
-        /// 
+        /// First Name Entity
         /// </summary>
         [Required]
         [Display(Name = "First Name")]
@@ -16,7 +16,7 @@ namespace TerminUndRaumplanung.Models.AccountViewModels
 
 
         /// <summary>
-        /// 
+        /// Last Name Entity
         /// </summary>
         [Required]
         [Display(Name = "Last Name")]
@@ -24,7 +24,7 @@ namespace TerminUndRaumplanung.Models.AccountViewModels
 
 
         /// <summary>
-        /// 
+        /// Email Entity
         /// </summary>
         [Required]
         [EmailAddress]

@@ -1,7 +1,7 @@
 ﻿namespace TerminUndRaumplanung.Models.ManageViewModels
 {
     /// <summary>
-    /// 
+    /// Model for Remove Login View
     /// </summary>
     public class RemoveLoginViewModel
     {

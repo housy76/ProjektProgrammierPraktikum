@@ -8,7 +8,7 @@ namespace TerminUndRaumplanung.Models.AccountViewModels
     public class ExternalLoginViewModel
     {
         /// <summary>
-        /// 
+        /// Email Entity
         /// </summary>
         [Required]
         [EmailAddress]

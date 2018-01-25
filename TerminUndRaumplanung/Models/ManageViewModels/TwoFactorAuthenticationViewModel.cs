@@ -1,7 +1,7 @@
 ﻿namespace TerminUndRaumplanung.Models.ManageViewModels
 {
     /// <summary>
-    /// 
+    /// Model for two Factor Authentication View
     /// </summary>
     public class TwoFactorAuthenticationViewModel
     {

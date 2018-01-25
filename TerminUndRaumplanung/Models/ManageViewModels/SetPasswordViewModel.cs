@@ -3,7 +3,7 @@
 namespace TerminUndRaumplanung.Models.ManageViewModels
 {
     /// <summary>
-    /// 
+    /// Model for Set Password View
     /// </summary>
     public class SetPasswordViewModel
     {

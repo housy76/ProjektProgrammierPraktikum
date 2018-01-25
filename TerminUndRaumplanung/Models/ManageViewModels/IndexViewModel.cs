@@ -3,7 +3,7 @@
 namespace TerminUndRaumplanung.Models.ManageViewModels
 {
     /// <summary>
-    /// 
+    /// Model for Index View
     /// </summary>
     public class IndexViewModel
     {

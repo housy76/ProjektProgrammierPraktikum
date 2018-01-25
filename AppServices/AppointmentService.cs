@@ -59,7 +59,6 @@ namespace AppServices
                 .Ressources;
         }
 
-        //Simon
         //changed entity type from string to Room
         public Room GetRoom(int id)
         {

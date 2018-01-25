@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 namespace TerminUndRaumplanung.Models.ManageViewModels
 {
     /// <summary>
-    /// 
+    /// Model for External Login View
     /// </summary>
     public class ExternalLoginsViewModel
     {

@@ -4,13 +4,13 @@ namespace TerminUndRaumplanung.Models.AccountViewModels
 {
 
     /// <summary>
-    /// 
+    /// Model for Password Reset View
     /// </summary>
     public class ResetPasswordViewModel
     {
 
         /// <summary>
-        /// 
+        /// Email Entity
         /// </summary>
         [Required]
         [EmailAddress]

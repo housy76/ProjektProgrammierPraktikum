@@ -3,7 +3,7 @@
 namespace TerminUndRaumplanung.Models.ManageViewModels
 {
     /// <summary>
-    /// 
+    /// Model for Change Password View
     /// </summary>
     public class ChangePasswordViewModel
     {

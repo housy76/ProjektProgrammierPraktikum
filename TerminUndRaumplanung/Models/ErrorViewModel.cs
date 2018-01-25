@@ -3,7 +3,7 @@ using System;
 namespace TerminUndRaumplanung.Models
 {
     /// <summary>
-    /// 
+    /// Model for Error View
     /// </summary>
     public class ErrorViewModel
     {

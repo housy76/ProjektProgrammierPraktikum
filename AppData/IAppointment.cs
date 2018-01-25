@@ -6,14 +6,13 @@ using System.Collections.Generic;
 namespace AppData
 {
     /// <summary>
-    /// Appointment Interface
+    /// Appointment Interface 
     /// </summary>
     public interface IAppointment
     {
         IEnumerable<Appointment> GetAll();
         Appointment GetById(int id);
 
-        //Simon
         //changed entity type from string to Room
         Room GetRoom(int id);
         ICollection<Ressource> GetRessources(int id);

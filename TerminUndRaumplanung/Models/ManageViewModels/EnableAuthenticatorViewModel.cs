@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace TerminUndRaumplanung.Models.ManageViewModels
 {
     /// <summary>
-    /// 
+    /// Model for Enable Authenticator View
     /// </summary>
     public class EnableAuthenticatorViewModel
     {
