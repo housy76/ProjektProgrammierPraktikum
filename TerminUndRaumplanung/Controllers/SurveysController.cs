@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 namespace TerminUndRaumplanung.Controllers
 {
     /// <summary>
-    /// 
+    /// Controller Class for Surveys
     /// </summary>
     public class SurveysController : Controller
     {
@@ -23,7 +23,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Constructor for Survey Controller
         /// </summary>
         /// <param name="context"></param>
         /// <param name="survey"></param>
