@@ -9,6 +9,10 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\TerminUndRaumplanung.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\TerminUndRaumplanung.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Properties\PublishProfiles\CustomProfile.pubxml" />
   </ItemGroup>
