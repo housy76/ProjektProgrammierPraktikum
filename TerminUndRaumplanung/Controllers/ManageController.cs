@@ -16,7 +16,7 @@ using AppData;
 namespace TerminUndRaumplanung.Controllers
 {
     /// <summary>
-    /// 
+    /// Manage Controller
     /// </summary>
     [Authorize]
     [Route("[controller]/[action]")]

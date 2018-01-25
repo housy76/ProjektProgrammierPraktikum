@@ -3,7 +3,7 @@
 namespace TerminUndRaumplanung.Models.AccountViewModels
 {
     /// <summary>
-    /// Model for Login with Recovery Code
+    /// Model for Login with Recovery Code View
     /// </summary>
     public class LoginWithRecoveryCodeViewModel
     {

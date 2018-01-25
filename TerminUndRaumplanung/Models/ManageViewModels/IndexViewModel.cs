@@ -20,7 +20,7 @@ namespace TerminUndRaumplanung.Models.ManageViewModels
 
 
         /// <summary>
-        /// 
+        /// Email Entity
         /// </summary>
         [Required]
         [EmailAddress]
@@ -28,7 +28,7 @@ namespace TerminUndRaumplanung.Models.ManageViewModels
 
 
         /// <summary>
-        /// 
+        ///PphoneNumber Entity
         /// </summary>
         [Phone]
         [Display(Name = "Phone number")]

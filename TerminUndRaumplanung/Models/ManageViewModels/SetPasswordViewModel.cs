@@ -8,7 +8,7 @@ namespace TerminUndRaumplanung.Models.ManageViewModels
     public class SetPasswordViewModel
     {
         /// <summary>
-        /// 
+        /// New Password Entity
         /// </summary>
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -18,7 +18,7 @@ namespace TerminUndRaumplanung.Models.ManageViewModels
 
 
         /// <summary>
-        /// 
+        /// Confirm Password Entity
         /// </summary>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]

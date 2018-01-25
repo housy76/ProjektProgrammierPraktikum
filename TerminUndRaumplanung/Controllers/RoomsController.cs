@@ -11,7 +11,7 @@ namespace TerminUndRaumplanung.Controllers
 {
 
     /// <summary>
-    /// 
+    /// Rooms Controller
     /// </summary>
     public class RoomsController : Controller
     {
@@ -24,7 +24,7 @@ namespace TerminUndRaumplanung.Controllers
 
 
         /// <summary>
-        /// 
+        /// Constructor for Rooms Controller
         /// </summary>
         /// <param name="context"></param>
         public RoomsController(AppointmentContext context)
