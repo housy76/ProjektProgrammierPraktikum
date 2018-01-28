@@ -1,4 +1,4 @@
-﻿// Erstellt durch Maximilian Freiberger
+﻿// Erstellt durch Daniel Hornauer
 namespace AppData.Models
 {
     /// <summary>
